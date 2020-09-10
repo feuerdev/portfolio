@@ -1,0 +1,38 @@
+body {
+  font-family: Merriweather,Georgia,serif;
+  margin: 0; 
+  background-color: #14213D;
+  color: #E5E5E5;
+}
+
+.container {
+  position: relative;
+  height: 100vh;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.arrow {
+  margin-right: 0.8rem;
+  color: #9A9A9A;
+  opacity: 0.5;
+}
+
+.code {
+  font-family: "Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;
+  font-weight: 300;
+  font-size: 0.875rem;
+  color: #fca311;
+}
