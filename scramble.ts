@@ -89,5 +89,3 @@ function getRandomInteger(min, max) {
 function randomCharacter(characters) {
   return characters[getRandomInteger(0, characters.length - 1)];
 };
-
-new Scrambler().scramble();
