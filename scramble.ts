@@ -3,27 +3,32 @@ class Scrambler {
   /**
    * Timeout between each random character
    */
-  private toChar = 5;
+  private toChar:number;
 
   /**
    * Timeout between each sentence
    */
-  private toSentence = 2000;
+  private toSentence:number;
 
   /**
    * Random characters to pick from
    */
-  private chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'x', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'X', '#', '%', '&', '-', '+', '_', '?', '/', '\\', '='];
+  private chars:string[];
 
   /**
    * Texts to shuffle through
    */
-  private sentences = ["Hey, I'm Jannik", "Hi, ich bin Jannik", "嗨，我是季焱"];
+  private sentences:string[];
 
   /**
    * The element to be used
    */
-  private element = document.querySelector('[data-target-resolver]')
+  private element;
+
+  /**
+   * Times to show a random Char 
+   */
+  private iterations:number;
 
   /**
    * currently scrambled text
@@ -35,12 +40,20 @@ class Scrambler {
    */
   private idxChar = 0;
 
-  /**
-   * Times to show a random Char 
-   */
-  private iterations = 10;
-
   private partialString = "";
+
+  constructor(element, toChar, toSentence, chars, sentences, iterations) {
+    this.element = element;
+    this.toChar = toChar;
+    this.toSentence = toSentence;
+    this.chars = chars;
+    this.sentences = sentences;
+    this.iterations = iterations;
+
+    //Calculate the height of the h1 div before the text gets scrambled and set it as the min height to prevent the content from twitching up and down
+    this.element.style.minHeight = this.element.offsetHeight +"px";
+
+  }
 
   public scramble() {
     const currentString = this.sentences[this.idxSentence];
