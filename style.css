@@ -37,3 +37,23 @@ h1 {
   font-size: 0.875rem;
   color: #fca311;
 }
+
+.links {
+  display: flex;
+}
+
+.link {
+  margin-right: 0.8rem;
+  height: 2.5rem;
+  min-width: 8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: #fca311; */
+    border: 1px solid #fca311;
+    font-size: 0.875rem;
+    letter-spacing: 0.6px;
+    color: #ffffff;
+    text-decoration: none;
+    
+}
