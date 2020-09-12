@@ -1,6 +1,6 @@
 body {
-  font-family: Merriweather,Georgia,serif;
-  margin: 0; 
+  font-family: Merriweather, Georgia, serif;
+  margin: 0;
   background-color: #14213D;
   color: #E5E5E5;
 }
@@ -22,7 +22,7 @@ body {
 h1 {
   font-weight: 700;
   font-size: 2rem;
-  min-height:3rem;
+  min-height: 3rem;
 }
 
 .arrow {
@@ -32,7 +32,7 @@ h1 {
 }
 
 .code {
-  font-family: "Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;
+  font-family: "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   font-weight: 300;
   font-size: 0.875rem;
   color: #fca311;
@@ -49,11 +49,10 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* background-color: #fca311; */
-    border: 1px solid #fca311;
-    font-size: 0.875rem;
-    letter-spacing: 0.6px;
-    color: #ffffff;
-    text-decoration: none;
-    
+  border: 1px solid #fca311;
+  font-size: 0.875rem;
+  letter-spacing: 0.6px;
+  color: #ffffff;
+  text-decoration: none;
+
 }
