@@ -6,9 +6,12 @@ body {
 }
 
 a {
-  color:  #fca311;
+  color: #fca311;
   -webkit-text-decoration: none;
   text-decoration: none;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 3px;
 }
 
 a:hover {
@@ -16,7 +19,7 @@ a:hover {
   text-decoration: underline; */
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
 }
 
 .detail .closebtn {
@@ -80,7 +83,7 @@ a:hover {
   text-align: center;
 }
 
-.images > img {
+.images > a > img {
   padding: 8px;
   width: 40%;
 }
