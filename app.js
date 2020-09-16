@@ -15,6 +15,9 @@ particlesJS.load("particle-container", "particles.json");
 let detail = document.getElementsByClassName("detail")[0];
 let content = document.getElementsByClassName("content")[0];
 
+//Set the transition property after the page load (otherwise the content will look like its flying in)
+content.style.transition = ".5s";
+
 function openNav() {
   detail.classList.add("show-detail");
   content.classList.add("show-detail");
