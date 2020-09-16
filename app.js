@@ -26,21 +26,46 @@ function closeNav() {
 }
 
 function wilo() {
+  hideAll();
   openNav();
+  document.getElementById("wilo").style.display = "block";
+  document.getElementById("wilo").style.visibility = "visible";
+  document.getElementById("wilo").style.opacity = 1;
   return false;
 }
 
 function feuer() {
+  hideAll();
   openNav();
+  document.getElementById("feuer").style.display = "block";
+  document.getElementById("feuer").style.visibility = "visible";
+  document.getElementById("feuer").style.opacity = 1;
   return false;
 }
 
 function awt() {
+  hideAll();
   openNav();
+  document.getElementById("awt").style.display = "block";
+  document.getElementById("awt").style.visibility = "visible";
+  document.getElementById("awt").style.opacity = 1;
   return false;
 }
 
 function ttc() {
+  hideAll();
   openNav();
+  document.getElementById("ttc").style.display = "block";
+  document.getElementById("ttc").style.visibility = "visible";
+  document.getElementById("ttc").style.opacity = 1;
   return false;
+}
+
+function hideAll() {
+  let divs = document.getElementsByClassName("detail-content");
+  for(let div of divs) {
+    div.style.visibility = "hidden"
+    div.style.opacity = 0;
+    div.style.display = "none";
+  }
 }
