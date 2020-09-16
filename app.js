@@ -9,3 +9,38 @@ new Scrambler(element, toChar, toSentence, chars, sentences, iterations).scrambl
 
 //Launch the particle generator
 particlesJS.load("particle-container", "particles.json");
+
+//pJSDom[0].pJS.fn.particlesRefresh() to refresh
+
+let detail = document.getElementsByClassName("detail")[0];
+let content = document.getElementsByClassName("content")[0];
+
+function openNav() {
+  detail.classList.add("show-detail");
+  content.classList.add("show-detail");
+}
+
+function closeNav() {
+  detail.classList.remove("show-detail");
+  content.classList.remove("show-detail");
+}
+
+function wilo() {
+  openNav();
+  return false;
+}
+
+function feuer() {
+  openNav();
+  return false;
+}
+
+function awt() {
+  openNav();
+  return false;
+}
+
+function ttc() {
+  openNav();
+  return false;
+}

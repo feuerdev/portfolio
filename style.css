@@ -5,9 +5,32 @@ body {
   color: #E5E5E5;
 }
 
+a {
+  color:  #fca311;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+a:hover {
+  /* -webkit-text-decoration: underline;
+  text-decoration: underline; */
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 2px;
+}
+
+.detail .closebtn {
+  position: relative;
+  top: 0;
+  right: 0;
+  font-size: 36px;  
+  border: none;
+}
+
 .container {
   position: relative;
   height: 100vh;
+  transition: margin-right .5s;
 }
 
 .content {
@@ -17,6 +40,28 @@ body {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   margin-bottom: 1rem;
+  transition: .5s;
+}
+
+.detail {
+  background-color: #14213D;
+  transition: 0.5s;
+  position: fixed;
+  border-left: 1px solid #fca311;
+  top: 0;
+  right: -10px;
+  height: 100%;
+  width: 0;
+}
+
+.padding {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.detail.show-detail {
+  width: 50%;
+  right: 0;
 }
 
 h1 {
@@ -30,6 +75,14 @@ h1 {
   color: #9A9A9A;
   opacity: 0.5;
 }
+
+.content.show-detail {
+  left: 0%;
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0, -50%);
+  margin-left: 50px;
+}
+
 
 .code {
   font-family: "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
@@ -54,21 +107,24 @@ h1 {
   letter-spacing: 0.6px;
   color: #ffffff;
   text-decoration: none;
-
 }
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 479px
 */
-@media (min-width: 320px) and (max-width: 480px) {
-  
+@media (min-width: 140px) and (max-width: 480px) {
+
   .link {
     margin-bottom: 0.8rem;
   }
 
-.links {
-  flex-direction: column;
-}
+  .links {
+    flex-direction: column;
+  }
   
+  .detail.show-detail {
+    width: 100%;
+  }
+
 }
