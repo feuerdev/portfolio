@@ -51,11 +51,19 @@ function showDetail(index) {
     div.style.display = "block";
     div.style.visibility = "visible";
     div.style.opacity = 1;
+
+    //load images
+    let imgs = div.getElementsByTagName("img"); 
+    for(let img of imgs) {
+      let data_src = img.getAttribute("data-src");
+      if(data_src && data_src !== "null") {
+        img.setAttribute("data-src", null);
+        img.src = data_src;
+      }
+    }
   }
   if(!detailOpen) {
-    console.log("added pushstate");
     history.pushState(null, null, null);
-    console.log(history.length);
   }
   detailOpen = true;
 }
