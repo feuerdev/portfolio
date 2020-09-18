@@ -17,6 +17,16 @@ let content = document.getElementsByClassName("content")[0];
 //Set the transition property after the page load (otherwise the content will look like its flying in)
 content.style.transition = ".5s";
 
+//load images
+let imgs = document.getElementsByTagName("img"); 
+for(let img of imgs) {
+  let data_src = img.getAttribute("data-src");
+  if(data_src && data_src !== "null") {
+    img.setAttribute("data-src", null);
+    img.src = data_src;
+  }
+}
+
 function openNav() {
   detail.classList.add("show-detail");
   content.classList.add("show-detail");
@@ -51,16 +61,6 @@ function showDetail(index) {
     div.style.display = "block";
     div.style.visibility = "visible";
     div.style.opacity = 1;
-
-    //load images
-    let imgs = div.getElementsByTagName("img"); 
-    for(let img of imgs) {
-      let data_src = img.getAttribute("data-src");
-      if(data_src && data_src !== "null") {
-        img.setAttribute("data-src", null);
-        img.src = data_src;
-      }
-    }
   }
   if(!detailOpen) {
     history.pushState(null, null, null);
