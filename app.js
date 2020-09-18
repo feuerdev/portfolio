@@ -9,7 +9,6 @@ new Scrambler(element, toChar, toSentence, chars, sentences, iterations).scrambl
 
 //Launch the particle generator
 particlesJS.load("particle-container", "particles.json");
-
 //pJSDom[0].pJS.fn.particlesRefresh() to refresh
 
 let detail = document.getElementsByClassName("detail")[0];
@@ -24,44 +23,48 @@ function openNav() {
 }
 
 function closeNav() {
+  detailOpen = false;
   detail.classList.remove("show-detail");
   content.classList.remove("show-detail");
 }
 
-function wilo() {
+//To close the menu on back button
+let detailOpen = false;
+
+window.addEventListener("popstate", function (e) {
+  if(detailOpen) {
+    closeNav();
+  }
+});
+
+function showDetail(index) {
   hideAll();
   openNav();
-  document.getElementById("wilo").style.display = "block";
-  document.getElementById("wilo").style.visibility = "visible";
-  document.getElementById("wilo").style.opacity = 1;
-  return false;
+  let div;
+  switch(index) {
+    case 0: div = document.getElementById("wilo"); break;
+    case 1: div = document.getElementById("feuer"); break;
+    case 2: div = document.getElementById("awt"); break;
+    case 3: div = document.getElementById("ttc"); break;
+  }
+  if(div) {
+    div.style.display = "block";
+    div.style.visibility = "visible";
+    div.style.opacity = 1;
+  }
+  if(!detailOpen) {
+    console.log("added pushstate");
+    history.pushState(null, null, null);
+    console.log(history.length);
+  }
+  detailOpen = true;
 }
 
-function feuer() {
-  hideAll();
-  openNav();
-  document.getElementById("feuer").style.display = "block";
-  document.getElementById("feuer").style.visibility = "visible";
-  document.getElementById("feuer").style.opacity = 1;
-  return false;
-}
-
-function awt() {
-  hideAll();
-  openNav();
-  document.getElementById("awt").style.display = "block";
-  document.getElementById("awt").style.visibility = "visible";
-  document.getElementById("awt").style.opacity = 1;
-  return false;
-}
-
-function ttc() {
-  hideAll();
-  openNav();
-  document.getElementById("ttc").style.display = "block";
-  document.getElementById("ttc").style.visibility = "visible";
-  document.getElementById("ttc").style.opacity = 1;
-  return false;
+function hideDetail() {
+  if(detailOpen) {
+    history.back();
+    closeNav();
+  }
 }
 
 function hideAll() {
