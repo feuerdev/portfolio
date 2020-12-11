@@ -19,23 +19,26 @@ canvas {
 }
 
 .content {
-  width: 480px;
-  margin-left: auto;
-  margin-right: auto;
   margin-bottom: 1rem;
 }
 
-.description {
+.introduction {
+  margin-left: auto;
+  margin-right: auto;
+  width: 480px;
+}
+
+.introduction-container {
   display: flex;
   margin-bottom: 16px;
 }
 
-.desc-text {
+.introduction-text {
   font-size: 1em;
   text-align: center;
 }
 
-.desc-portrait {
+.introduction-portrait {
   margin-right: 16px;
   
   align-self: start;
@@ -47,6 +50,16 @@ canvas {
   border-style: dashed;
   border-width: 1px;
   border-color: #fca311;
+}
+
+.projects {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-container:nth-child(2) {
+  flex-direction: row-reverse;
 }
 
 .project-container {
@@ -94,7 +107,6 @@ canvas {
   height: 100%;
   width: 50%;
 }
-
 
 .detail.show-detail {
   right: 0;
@@ -188,7 +200,6 @@ h2 {
   margin-left: 30px;
 }
 
-
 .code {
   font-family: "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   font-weight: 300;
@@ -196,13 +207,51 @@ h2 {
   color: #fca311;
 }
 
+@media (max-width: 780px) {
 
+  .projects {
+    width: auto;
+    min-width: 75%;
+  }
+
+  .project-container {
+    flex-direction: column !important;
+  }
+
+  .project-container > img {
+    align-self: center;
+    width: 60%;
+    margin-right: 16px;
+  }
+
+}
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 479px
 */
 @media (max-width: 500px) {
+
+  .content {
+    /* width: auto; */
+    min-width: 75%;
+
+    /* top: 0%;
+    left: 50%;
+    -ms-transform: translate(-50%, 0%);
+    transform: translate(-50%, 0%); */
+  }
+  .introduction {
+    flex-direction: column;
+  }
+
+  .introduction-portrait {
+    margin-right: 0px;
+    margin-bottom: 20px;
+    align-self: center;
+    width: 100%;
+
+  }
 
   .link {
     margin-bottom: 0.8rem;
@@ -219,28 +268,7 @@ h2 {
     margin-right: 0
   }
 
-  .content {
-    width: auto;
-    min-width: 75%;
-
-    top: 0%;
-    left: 50%;
-    -ms-transform: translate(-50%, 0%);
-    transform: translate(-50%, 0%);
-  }
-
-
-  .description {
-    flex-direction: column;
-  }
-
-  .desc-portrait {
-    margin-right: 0px;
-    margin-bottom: 20px;
-    align-self: center;
-    width: 100%;
-
-  }
+  
 
   .detail {
     width: 100%;
