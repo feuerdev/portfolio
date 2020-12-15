@@ -23,7 +23,8 @@ canvas {
 }
 
 .introduction {
-  width: 480px;
+  max-width: 480px;
+  width: 100%;
 }
 
 .introduction-container {
@@ -75,7 +76,8 @@ canvas {
 }
 
 .projects {
-    width: 760px;
+    max-width: 760px;
+    width: 100%;
 }
 
 .project-container:nth-child(2) {
@@ -227,40 +229,23 @@ h3 {
 
 @media (max-width: 780px) {
 
-  .projects {
-    width: auto;
-    min-width: 75%;
+  h1, h2 {
+    padding: 0 20px;
+    text-align: center;
   }
-
-  .project-container {
-    flex-direction: column !important;
-  }
-
-  .project-container > img {
-    align-self: center;
-    width: 60%;
-    margin-right: 16px;
-  }
-
-  .content {
-    /* width: auto; */
-    min-width: 75%;
-
-    /* top: 0%;
-    left: 50%;
-    -ms-transform: translate(-50%, 0%);
-    transform: translate(-50%, 0%); */
-  }
-  .introduction {
+  
+  .introduction-container {
     flex-direction: column;
+    padding: 0 20px;
   }
 
   .introduction-portrait {
     margin-right: 0px;
     margin-bottom: 20px;
     align-self: center;
-    width: 100%;
 
+    object-position: 0 38%;
+    width: 100%;
   }
 
   .link {
@@ -278,7 +263,20 @@ h3 {
     margin-right: 0
   }
 
-  
+  .project-container {
+    flex-direction: column !important;
+  }
+
+  .project-container > img {
+    align-self: center;
+    width: 60%;
+    margin-right: 16px;
+  }
+
+  .project-teaser {
+    padding: 0 20px;
+    text-align: center;
+  }
 
   .detail {
     width: 100%;
