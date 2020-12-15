@@ -87,4 +87,5 @@ const louis = document.querySelector(".louis")
 
 louis.onclick = () => {
   content.style.display = "none"
+  pJSDom[0].pJS.fn.particlesCreate()
 }
