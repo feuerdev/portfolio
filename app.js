@@ -54,8 +54,7 @@ function showDetail(index) {
   switch(index) {
     case 0: div = document.getElementById("wilo"); break;
     case 1: div = document.getElementById("feuer"); break;
-    case 2: div = document.getElementById("awt"); break;
-    case 3: div = document.getElementById("ttc"); break;
+    case 2: div = document.getElementById("others"); break;
   }
   if(div) {
     div.style.display = "block";
