@@ -34,6 +34,7 @@ canvas {
 
 .introduction-text {
   font-size: 1em;
+  flex: 1;
   text-align: center;
 }
 
@@ -41,7 +42,8 @@ canvas {
   margin-right: 16px;
   
   align-self: start;
-  width: 250px;
+  flex: 1.4;
+  /* width: 250px; */
   height: 250px;
   object-fit: cover;
   object-position: 0 95%;
@@ -242,6 +244,7 @@ h3 {
   .introduction-portrait {
     margin-right: 0px;
     margin-bottom: 20px;
+    flex: none;
     align-self: center;
 
     object-position: 0 38%;
