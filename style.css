@@ -331,4 +331,18 @@ h3 {
     padding-bottom: 2px;
   }
 
+  .louis {
+    top: auto;
+    bottom: -25px;
+  }
+
+  .louis:hover {
+    top: auto;
+    bottom: -150px;
+  }
+  
+  .hide-content {
+    top: 0px;
+  }
+
 }
