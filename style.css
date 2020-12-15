@@ -42,11 +42,11 @@ canvas {
   margin-right: 16px;
   
   align-self: start;
-  flex: 1.4;
+  flex: 1.2;
   /* width: 250px; */
   height: 250px;
   object-fit: cover;
-  object-position: 0 95%;
+  object-position: 0 100%;
   
   border-style: dashed;
   border-width: 1px;
