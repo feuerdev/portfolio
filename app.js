@@ -82,3 +82,9 @@ function hideAll() {
     div.style.display = "none";
   }
 }
+
+const louis = document.querySelector(".louis")
+
+louis.onclick = () => {
+  content.style.display = "none"
+}
