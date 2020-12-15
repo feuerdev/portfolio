@@ -84,8 +84,10 @@ function hideAll() {
 }
 
 const louis = document.querySelector(".louis")
+const count = document.querySelector(".particle-count")
 
 louis.onclick = () => {
   content.style.display = "none"
   pJSDom[0].pJS.fn.particlesCreate()
+  count.textContent = pJSDom[0].pJS.particles.array.length +" Particles"
 }
