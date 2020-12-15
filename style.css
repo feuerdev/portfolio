@@ -125,6 +125,7 @@ canvas {
   right: -200px;
   bottom: 0px;
   max-width: 350px;
+  pointer-events:none; 
 }
 
 /* Detail */
