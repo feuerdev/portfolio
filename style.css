@@ -135,6 +135,10 @@ canvas {
   border: none;
 }
 
+.other-project:not(:last-child) {
+  border-bottom: #fca311 1px dashed;
+}
+
 /* Global */
 .center-content {
   margin-left: auto;
