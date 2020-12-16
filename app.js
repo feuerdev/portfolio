@@ -89,5 +89,13 @@ const count = document.querySelector(".particle-count")
 louis.onclick = () => {
   content.style.display = "none"
   pJSDom[0].pJS.fn.particlesCreate()
+  updateParticleCount()
+}
+
+louis.onmouseover = () => {
+  updateParticleCount()
+}
+
+function updateParticleCount() {
   count.textContent = pJSDom[0].pJS.particles.array.length +" Particles"
 }
