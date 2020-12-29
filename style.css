@@ -332,6 +332,7 @@ h3 {
   }
 
   .louis {
+    position: fixed;
     top: auto;
     bottom: -25px;
   }
