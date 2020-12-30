@@ -264,6 +264,11 @@ h3 {
   color: #fca311;
 }
 
+.privacy {
+  position: relative;
+  float: right;
+}
+
 @media (max-width: 780px) {
 
   h1, h2 {
