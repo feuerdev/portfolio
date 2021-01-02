@@ -14,7 +14,7 @@
   <meta property="og:image" content="https://feuer.dev/assets/teaser.png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="mask-icon" href="assets/favicon.svg" color="#14213D">
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -27,7 +27,9 @@
     }
     gtag('js', new Date());
 
-    gtag('config', 'UA-177847474-1', { 'anonymize_ip': true });
+    gtag('config', 'UA-177847474-1', {
+      'anonymize_ip': true
+    });
   </script>
 
   <link href="https://fonts.googleapis.com/css?family=Merriweather:300,700" rel="stylesheet">
@@ -58,6 +60,16 @@
         <h2>Recent Projects</h2>
       </div>
       <div class="projects center-content">
+        <div class="project-container">
+          <img src="assets/screenshots_fish.png" alt="">
+          <div class="project-teaser">
+            <h3>Big Pond</h3>
+            <div class="light">Sole Developer</div>
+            <p>Have you ever wondered what exactly is roaming around at your favorite beach, surfing or diving spot?</p>
+            <p>Big Pond can help you satisfy your curiosity!</p>
+            <span class="arrow">></span><a href="javascript:showDetail(3)">Details</a>
+          </div>
+        </div>
         <div class="project-container">
           <img src="assets/screenshots_wilo.png" alt="">
           <div class="project-teaser">
@@ -122,18 +134,30 @@
   <div class="detail code">
     <div class="padding">
       <a href="javascript:hideDetail()" class="closebtn">&times;</a>
-      <div class="detail-content" id="wilo">
-        <p><span class="white">Project Name:</span> Wilo App Relaunch 2019</p>
-        <p><span class="white">Project Type:</span> Employee</p>
-        <p><span class="white">Client:</span> Wilo SE</p>
+      <div class="detail-content" id="fish">
+        <p><span class="white">Project Name:</span> Big Pond</p>
+        <p><span class="white">Project Type:</span> Personal Project</p>
         <p><span class="white">Description:</span>
           <div class="indent">
-            The “Wilo Assistant” makes the entire world of high-efficiency pump technology available on smartphones and
-            tablets for sanitation, heating and air-conditioning specialists and specialist consultants of technical
-            building equipment.
-            <br>
-            The free “Wilo Assistant” app is an easy-to-use mobile application and offers support in designing, customer
-            consultation and installation.
+            Big Pond can help you satisfy your curiosity!<br>
+            <p>If you are like me and didn't grow up around the ocean, hopefully Big Pond can also help you get over
+              your
+              fear of the unknown.
+              If you ever googled "dangerous marine animal at location X" you might be totally discouraged by all of the
+              deadly sharks and venomous jellyfish horror stories that will come up.</p>
+
+
+            <p>Big Pond tries to solve this problem.
+              Each Animal is put in to one of three categories:
+              Green, Yellow or Red.
+              Green animals are safe and harmless.
+              By default the "scary" yellow animals are hidden to you to not discourage you from having fun in the
+              water.
+              But don't worry, as long as you follow the simple "don't touch" rule, you will be safe to enjoy the ocean.
+              If there are animals of the actually dangerous red category at your searched location the App will warn
+              you.
+              Happy Exploring!
+            </p>
           </div>
         </p>
         <p><span class="white">Responsibilities:</span>
@@ -167,6 +191,28 @@
               Store (iOS)</a><br><br>
             <a target="_blank" href="https://play.google.com/store/apps/details?id=wilo.droid&hl=en">Google Play
               Store (Android)</a>
+          </div>
+        </p>
+      </div>
+      <div class="detail-content" id="wilo">
+        <p><span class="white">Project Name:</span> Wilo App Relaunch 2019</p>
+        <p><span class="white">Project Type:</span> Employee</p>
+        <p><span class="white">Client:</span> Wilo SE</p>
+        <p><span class="white">Description:</span>
+          <div class="indent">
+            The “Wilo Assistant” makes the entire world of high-efficiency pump technology available on smartphones and
+            tablets for sanitation, heating and air-conditioning specialists and specialist consultants of technical
+            building equipment.
+            <br>
+            The free “Wilo Assistant” app is an easy-to-use mobile application and offers support in designing, customer
+            consultation and installation.
+          </div>
+        </p>
+        <p><span class="white">Tech Stack:</span> iOS, Swift, CocoaPods, Reachability</p>
+        <p><span class="white">Links:</span>
+          <div class="indent">
+            <a target="_blank" href="https://itunes.apple.com/de/app/wilo-assistant/id397747214?l=en&mt=8">App
+              Store (iOS)</a><br><br>
           </div>
         </p>
       </div>
@@ -282,14 +328,14 @@
         </div>
         <div class="other-project">
           <p><span class="white">Project Name: </span>Tire Testing Rig - Python Scripts</p>
-          <p><span class="white">Description:</span> 
-          <div class="indent">
-            I got contracted to complete the following tasks on a tire testing rig:<br><br>
-            Version Control: Integrate the project into a Version Control System<br><br>
-            Command queue: Implement a command queue system (ControlDesk -> dSPACE) to improve robustness<br><br>
-            Decoupling: Implement decoupling of UI and business logic to ensure maintanability<br><br>
-            Performance optimization: Improve python script performance to allow running of complex simulations<br>
-          </div>
+          <p><span class="white">Description:</span>
+            <div class="indent">
+              I got contracted to complete the following tasks on a tire testing rig:<br><br>
+              Version Control: Integrate the project into a Version Control System<br><br>
+              Command queue: Implement a command queue system (ControlDesk -> dSPACE) to improve robustness<br><br>
+              Decoupling: Implement decoupling of UI and business logic to ensure maintanability<br><br>
+              Performance optimization: Improve python script performance to allow running of complex simulations<br>
+            </div>
           </p>
         </div>
       </div>
