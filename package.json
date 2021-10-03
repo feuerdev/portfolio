@@ -6,7 +6,8 @@
   "scripts": {
     "update": "git pull",
     "compile": "tsc scramble.ts",
-    "build": "npm run update && npm run compile"
+    "build": "npm run update && npm run compile",
+    "deploy": "npm run compile && npx serve ."
   },
   "repository": {
     "type": "git",
