@@ -7,8 +7,8 @@ pipeline {
     stage("Deploy") {
       steps {
         sh "whoami"
-        docker -v
-        sudo docker -v
+        sh "docker -v"
+        sh "sudo docker -v"
       }
     }
   }
