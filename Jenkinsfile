@@ -13,8 +13,10 @@ pipeline {
       }
       steps {
         sh "npx semantic-release --branches a"
-        COMPUTED_VERSION = sh (script: "git describe --tags", returnStdout: true).trim()
-        echo "Computed version: ${COMPUTED_VERSION}"
+        script {
+          COMPUTED_VERSION = sh (script: "git describe --tags", returnStdout: true).trim()
+          echo "Computed version: ${COMPUTED_VERSION}"
+        }
       }
     }
     stage("Deploy") {
