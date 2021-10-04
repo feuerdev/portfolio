@@ -1,8 +1,8 @@
 pipeline {
   agent any
-  options {
-    // skipDefaultCheckout true
-  }
+  // options {
+  //   skipDefaultCheckout true
+  // }
   environment {
     GH_TOKEN = credentials("gh-pat")
   }
