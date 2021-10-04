@@ -4,7 +4,7 @@ pipeline {
     stage("Hello") {
       steps {
         echo "hello yo"
-        sh pwd
+        sh "echo heloo"
       }
     }
   }
