@@ -3,7 +3,18 @@ pipeline {
   options {
     skipDefaultCheckout true
   }
+  environment {
+    GH_TOKEN = credentials("gh-pat")
+  }
   stages {
+    stage("Semantic Release") {
+      tools {
+        nodejs "node16"
+      }
+      steps {
+        sh "npx semantic-release"
+      }
+    }
     stage("Deploy") {
       steps {
         sh "whoami"
