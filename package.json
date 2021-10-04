@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "none",
+  "private": "true",
   "scripts": {
     "update": "git pull",
     "compile": "tsc scramble.ts",
