@@ -12,7 +12,7 @@ pipeline {
         nodejs "node16"
       }
       steps {
-        sh "npx semantic-release"
+        sh "npx semantic-release --branches a --dry-run"
       }
     }
     stage("Deploy") {
