@@ -7,7 +7,7 @@ services:
       - "5000:5000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portfolio.rule=Host(`feuer.dev`)"
+      - "traefik.http.routers.portfolio.rule=Host(`www.feuer.dev`, `feuer.dev`)"
       - "traefik.http.routers.portfolio.entrypoints=websecure"
       - "traefik.http.routers.portfolio.tls.certresolver=letsencrypt"
     networks:
