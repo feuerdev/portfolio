@@ -1,9 +1,11 @@
 pipeline {
   agent any
+  options {
+    skipDefaultCheckout true
+  }
   stages {
-    stage("Hello") {
+    stage("Deploy") {
       steps {
-        echo "hello yoa"
         sh "whoami"
       }
     }
