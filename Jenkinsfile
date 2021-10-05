@@ -23,8 +23,8 @@ pipeline {
       steps {
         echo "Computed version2: ${COMPUTED_VERSION}"
         sh "whoami"
-        sh "docker -v"
-        sh "sudo docker -v"
+        // sh "docker -v"
+        // sh "sudo docker -v"
       }
     }
   }
