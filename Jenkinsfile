@@ -12,6 +12,7 @@ pipeline {
         nodejs "node16"
       }
       steps {
+        sh "git pull --tags"
         sh "npx semantic-release"
         script {
           COMPUTED_VERSION = sh (script: "git describe --tags", returnStdout: true).trim()
