@@ -1,4 +1,5 @@
 ARG PORT
+ENV PORT $PORT
 FROM node:16-alpine3.11
 
 ENV NODE_ENV=production
@@ -14,4 +15,4 @@ COPY . .
 
 RUN npm run build
 
-CMD [ "npx", "serve", ".", "-l", $PORT]
+CMD npx serve . -l $PORT
