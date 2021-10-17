@@ -3,10 +3,8 @@ services:
   portfolio:
     build:
       context: .
-      args:
-        PORT: ${PORT}
     ports:
-      - "${PORT}:${PORT}"
+      - 5000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${ROUTER}.rule=Host(${HOST})"
