@@ -14,4 +14,4 @@ COPY . .
 
 RUN npm run build
 
-CMD [ "npx", "serve", ".", "-l", "$PORT"]
+CMD [ "npx", "serve", ".", "-l", $PORT]
