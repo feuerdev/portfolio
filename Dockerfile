@@ -1,7 +1,7 @@
 ARG PORT
 FROM node:16-alpine3.11
 
-ENV PORT $PORT
+ENV PORT_ENV $PORT
 ENV NODE_ENV=production
 EXPOSE $PORT
 
@@ -15,4 +15,4 @@ COPY . .
 
 RUN npm run build
 
-CMD npx serve . -l $PORT
+CMD npx serve . -l $PORT_ENV
