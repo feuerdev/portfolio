@@ -1,13 +1,15 @@
-version: '3.5'
+version: "3.5"
 services:
   portfolio:
-    build: .
-    container_name: "portfolio"
+    build:
+      context: .
+      args:
+        PORT: ${PORT}
     ports:
-      - "5000:5000"
+      - "${PORT}:${PORT}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portfolio.rule=Host(`www.feuer.dev`, `feuer.dev`)"
+      - "traefik.http.routers.portfolio.rule=Host(${HOST})"
       - "traefik.http.routers.portfolio.entrypoints=websecure"
       - "traefik.http.routers.portfolio.tls.certresolver=letsencrypt"
     networks:
