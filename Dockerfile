@@ -12,4 +12,6 @@ RUN npm install --production
 
 COPY . .
 
-CMD [ "npm", "start"]
+RUN npm run build
+
+CMD [ "npx", "serve", ".", "-l", "$PORT"]
