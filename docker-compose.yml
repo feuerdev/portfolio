@@ -9,9 +9,9 @@ services:
       - "${PORT}:${PORT}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portfolio.rule=Host(${HOST})"
-      - "traefik.http.routers.portfolio.entrypoints=websecure"
-      - "traefik.http.routers.portfolio.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.${ROUTER}.rule=Host(${HOST})"
+      - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
+      - "traefik.http.routers.${ROUTER}.tls.certresolver=letsencrypt"
     networks:
       - jnet
 networks:
