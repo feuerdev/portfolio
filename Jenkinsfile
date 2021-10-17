@@ -20,11 +20,6 @@ pipeline {
             sh "npm ci"
           }
         }
-        stage("Lint") {
-          steps {
-            sh "npm run lint"
-          }
-        }
         stage("Versioning") {
           when { branch 'master' }
           steps {
