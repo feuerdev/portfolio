@@ -1,7 +1,7 @@
 ARG PORT
-ENV PORT $PORT
 FROM node:16-alpine3.11
 
+ENV PORT $PORT
 ENV NODE_ENV=production
 EXPOSE $PORT
 
