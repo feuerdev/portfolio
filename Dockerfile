@@ -13,4 +13,4 @@ COPY . .
 
 RUN npm run build
 
-CMD npx serve .
+CMD npm start

@@ -5,7 +5,7 @@
   "private": "true",
   "scripts": {
     "build": "tsc scramble.ts",
-    "start": "npm run build && npx serve ."
+    "start": "npx serve . -p 5000"
   },
   "repository": {
     "type": "git",
