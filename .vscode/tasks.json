@@ -7,12 +7,6 @@
       "label": "Typescript",
       "type": "shell",
       "command": "tsc scrambler.ts -w",
-      // "presentation": {
-      //   "echo": true,
-      //   "reveal": "never",
-      //   "focus": false,
-      //   "panel": "shared"
-      // },
       "runOptions": {
         "runOn": "folderOpen"
       }
