@@ -5,6 +5,7 @@ pipeline {
   }
   environment {
     GH_TOKEN = credentials("gh-pat")
+    ENVIRONMENT = "${env.BRANCH_NAME == "master" ? "production" : "staging"}"
   }
   stages {
     stage("Skip Gate") {
@@ -47,8 +48,9 @@ pipeline {
           }
         }
         stage("Deploy") {
-          when { expression { env.CHANGE_ID == null } }
+          when { expression { env.CHANGE_ID == null } } //Don't deploy a "PR"-Branch
           steps {
+            sh "(echo; echo ENVIRONMENT=${env.ENVIRONMENT}) >> .env"
             script {
               withCredentials([usernamePassword(credentialsId: 'jenkinsUser', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 def remote = [:]
@@ -57,11 +59,12 @@ pipeline {
                 remote.host = "feuer.dev"
                 remote.password = "$PASSWORD"
                 remote.allowAnyHosts = true
-                sshRemove remote: remote, path: "${env.BRANCH_NAME}"
-                sshCommand remote: remote, command: "git clone -b ${env.BRANCH_NAME} --single-branch ${GIT_URL} ${env.BRANCH_NAME}"
-                sshPut remote: remote, from: ".env", into: "${env.BRANCH_NAME}"
-                sshCommand remote: remote, command: "cd ${env.BRANCH_NAME}; sudo docker-compose down; sudo docker-compose up -d --build"
-                sshRemove remote: remote, path: "${env.BRANCH_NAME}"
+                sshCommand remote: remote, command: "cd ${env.ENVIRONMENT}; sudo docker-compose down || true"
+                sshRemove remote: remote, path: "${env.ENVIRONMENT}" //Defensive cleaning of the workspace
+                sshCommand remote: remote, command: "git clone -b ${env.BRANCH_NAME} --single-branch ${GIT_URL} ${env.ENVIRONMENT}"
+                sshPut remote: remote, from: ".env", into: "${env.ENVIRONMENT}"
+                sshCommand remote: remote, command: "cd ${env.ENVIRONMENT}; sudo docker-compose down; sudo docker-compose up -d --build"
+                sshRemove remote: remote, path: "${env.ENVIRONMENT}"
               }
             }
           }

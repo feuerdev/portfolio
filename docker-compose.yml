@@ -1,18 +1,18 @@
 version: "3.5"
 services:
   portfolio:
-    build:
-      context: .
+    build: .
+    image: "portfolio_${ENVIRONMENT}"
     ports:
       - 5000
+    restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${ROUTER}.rule=Host(${HOST})"
-      - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
-      - "traefik.http.routers.${ROUTER}.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.portfolio_${ENVIRONMENT}.rule=Host(${HOST})"
+      - "traefik.http.routers.portfolio_${ENVIRONMENT}.entrypoints=websecure"
+      - "traefik.http.routers.portfolio_${ENVIRONMENT}.tls.certresolver=letsencrypt"
     networks:
       - jnet
 networks:
   jnet:
-    external:
-      name: jnet
+    name: jnet
