@@ -1,14 +1,7 @@
 class Scrambler {
 
-  /**
-   * Timeout between each random character
-   */
-  private toChar:number;
-
-  /**
-   * Timeout between each sentence
-   */
-  private toSentence:number;
+  private characterDuration:number;
+  private sentenceDuration:number;
 
   /**
    * Random characters to pick from
@@ -44,8 +37,8 @@ class Scrambler {
 
   constructor(element, toChar, toSentence, chars, sentences, iterations) {
     this.element = element;
-    this.toChar = toChar;
-    this.toSentence = toSentence;
+    this.characterDuration = toChar;
+    this.sentenceDuration = toSentence;
     this.chars = chars;
     this.sentences = sentences;
     this.iterations = iterations;
@@ -68,7 +61,7 @@ class Scrambler {
         this.idxSentence = (this.idxSentence+1) % (this.sentences.length);
         setTimeout(() => {
           this.scramble();
-        }, this.toSentence);
+        }, this.sentenceDuration);
         
       }
     });
@@ -91,7 +84,7 @@ class Scrambler {
         this.iterations = 10;
         callback();
       }
-    }, this.toChar);
+    }, this.characterDuration);
   }
 }
 
