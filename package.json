@@ -4,8 +4,8 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "build": "tsc scramble.ts",
-    "start": "npx serve . -p 5000"
+    "build": "tsc",
+    "start": "npx serve public -p 5000"
   },
   "repository": {
     "type": "git",

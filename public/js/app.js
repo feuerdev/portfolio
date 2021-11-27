@@ -8,8 +8,7 @@ let iterations = 10;
 new Scrambler(element, toChar, toSentence, chars, sentences, iterations).scramble();
 
 //Launch the particle generator
-particlesJS.load("particle-container", "particles.json");
-//pJSDom[0].pJS.fn.particlesRefresh() to refresh
+particlesJS.load("particle-container", "assets/particles.json");
 
 let detail = document.getElementsByClassName("detail")[0];
 let content = document.getElementsByClassName("content")[0];
