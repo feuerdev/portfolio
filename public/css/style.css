@@ -23,7 +23,7 @@ canvas {
 }
 
 .introduction {
-  max-width: 480px;
+  max-width: 496px;
   width: 100%;
 }
 
@@ -43,8 +43,7 @@ canvas {
   
   align-self: start;
   flex: 1.2;
-  /* width: 250px; */
-  height: 250px;
+  height: 264px;
   object-fit: cover;
   object-position: 0 100%;
   
