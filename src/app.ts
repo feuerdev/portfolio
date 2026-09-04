@@ -47,8 +47,8 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
       cleanup?.();
       cleanup = undefined;
       root.classList.toggle('fancy', fancy);
-      toggle!.setAttribute('aria-pressed', String(fancy));
-      label!.textContent = fancy ? 'Back to plain HTML' : 'Fancy mode?';
+      toggle!.title = fancy ? 'Switch to plain HTML' : 'Switch to fancy mode';
+      label!.textContent = fancy ? 'Back to plain HTML' : "Didn't this guy say he's a frontend dev?";
       if (fancy && enhancement) cleanup = enhancement.start();
       if (updateURL) {
         const url = new URL(location.href);

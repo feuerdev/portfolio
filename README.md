@@ -29,7 +29,8 @@ The default is an unstyled document with native links and expandable project not
 It uses the browser's default margins, fonts and spacing, with no centred column.
 It works without JavaScript and fetches no project artwork, external fonts or analytics.
 
-The corner button loads the fancy stylesheet and animation module. It adds large
+The top-right “Didn't this guy say he's a frontend dev?” button loads the fancy
+stylesheet and animation module. On small screens it sits above the content. It adds large
 typography, project artwork, scroll reveals and an interactive particle sculpture.
 Use **Back to plain HTML** to return. `?mode=fancy` opens the fancy view directly.
 The choice is in the URL, with no cookie or browser-storage preference.

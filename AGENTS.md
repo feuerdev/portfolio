@@ -24,7 +24,7 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 ## Structure and design rules
 
 - `public/index.html`: the shared content, navigation, native project details and metadata.
-- `public/css/style.css`: only hides decorative/accessibility elements, positions the mode switch and keeps plain mode light.
+- `public/css/style.css`: only hides decorative/accessibility elements, styles the top-right mode switch and keeps plain mode light.
 - `public/css/fancy.css`: optional presentation, loaded on demand. Scope rules to `.fancy`.
 - `src/app.ts`: mode switching, lazy loading, URL state and the optional View Transition.
 - `src/fancy.ts`: canvas artwork, motion controls and scroll reveals. Return cleanup when disabled.
@@ -38,7 +38,9 @@ Do not add cookies or storage just to remember the presentation. Switching must 
 content, native details state, keyboard focus and reading position usable.
 
 Plain mode uses browser-default layout, fonts, spacing and colours in light mode.
-Do not centre it, constrain its width or introduce a visual theme. Fancy mode alone
+Do not centre it, constrain its width or introduce a visual theme. The mode switch
+is the deliberate exception: a prominent fancy pill at the top right, above the
+content on narrow screens. Fancy mode alone
 follows `prefers-color-scheme`. Respect `prefers-reduced-motion`
 in CSS and JavaScript. Provide a motion pause control and stop rendering when the
 canvas is offscreen, the tab is hidden or fancy mode is disabled. Always show content

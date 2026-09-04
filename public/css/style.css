@@ -1,6 +1,12 @@
 :root { color-scheme: only light; }
 .fancy-only, [hidden] { display: none !important; }
-.mode-control { position: fixed; z-index: 20; bottom: max(.5rem, env(safe-area-inset-bottom)); right: max(.5rem, env(safe-area-inset-right)); }
-#mode-toggle { min-height: 44px; }
+.mode-control { position: absolute; z-index: 20; top: max(1rem, env(safe-area-inset-top)); right: max(1rem, env(safe-area-inset-right)); max-width: calc(100% - 2rem); }
+#mode-toggle { display: inline-flex; align-items: center; gap: .65rem; box-sizing: border-box; max-width: 100%; min-height: 44px; padding: .85rem 1.2rem; border: 1px solid #232620; border-radius: 999px; background: #232620; color: #f3f0e9; box-shadow: 0 4px 18px #0002; font: 500 12px/1.45 ui-monospace, monospace; text-align: left; cursor: pointer; }
+#mode-toggle:hover { box-shadow: 0 6px 24px #0003; border-color: #c04421; }
+#mode-toggle:focus-visible { outline: 2px solid #c04421; outline-offset: 4px; }
+.mode-spark { flex: none; color: #ff875c; font-size: 18px; line-height: 1; }
+@media (max-width: 700px) {
+  .mode-control { position: relative; top: auto; right: auto; width: fit-content; max-width: 100%; margin: .75rem 0 1rem auto; }
+}
 .sr-only, .skip-link:not(:focus) { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media print { .mode-control { display: none !important; } }

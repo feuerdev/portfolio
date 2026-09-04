@@ -18,9 +18,7 @@
   .fancy details[open] summary { margin-bottom: .5rem; }
   .fancy li { margin: .5rem 0; }
   .fancy .footer { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
-  .fancy .mode-control { bottom: max(1rem, env(safe-area-inset-bottom)); right: max(1rem, env(safe-area-inset-right)); }
   .fancy #mode-toggle { cursor: pointer; }
-  .fancy .mode-spark { display: inline-block; }
   .fancy .skip-link:focus { position: fixed; z-index: 100; top: 1rem; left: 1rem; padding: .75rem; background: var(--paper); }
   .fancy body { max-width: 1600px; padding: 0 clamp(1.25rem, 5vw, 5rem); margin: 0 auto; }
   .fancy ::selection { background: var(--accent); color: var(--paper); }
@@ -29,7 +27,7 @@
   .fancy a { color: var(--link); text-decoration: none; }
   .fancy a:hover { text-decoration: underline; text-underline-offset: .25em; }
   .fancy :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-  .fancy .masthead { padding: 1.7rem 0; border-bottom: 1px solid var(--line); font-size: .78rem; }
+  .fancy .masthead { padding: 1.7rem 15rem 1.7rem 0; border-bottom: 1px solid var(--line); font-size: .78rem; }
   .fancy .wordmark { font-size: 1.25rem; letter-spacing: -.06em; font-weight: 700; }
   .fancy .wordmark span { color: var(--accent); margin-left: .1rem; }
   .fancy .masthead nav { gap: 2.5rem; }
@@ -94,8 +92,8 @@
   .fancy .contact-link span { margin-left: 2rem; }
   .fancy .footer { margin: 0; padding-block: 1.5rem 6rem; font-size: .68rem; color: var(--muted); }
   .fancy .footer a { color: var(--muted); }
-  .fancy #mode-toggle { font-family: ui-monospace, monospace; font-size: .65rem; background: var(--ink); color: var(--paper); border-color: var(--ink); border-radius: 999px; padding: .7rem 1.1rem; box-shadow: 0 3px 16px #0002; }
-  .fancy .mode-spark { color: var(--accent); font-size: 1rem; vertical-align: middle; margin-right: .4rem; }
+  .fancy #mode-toggle { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .fancy .mode-spark { color: var(--accent); }
   .fancy[data-motion="on"] [data-reveal] { transition: opacity .75s, transform .75s cubic-bezier(.2,.75,.3,1); }
   .fancy[data-motion="on"] [data-reveal="waiting"] { opacity: 0; transform: translateY(35px); }
   .fancy[data-motion="off"] .project-art img { transition: none; }
@@ -111,7 +109,7 @@
     .fancy .project, .fancy .about { gap: 2rem; }
   }
   @media (max-width: 700px) {
-    .fancy .masthead { padding-block: 1.1rem; }
+    .fancy .masthead { padding: 1.1rem 0; }
     .fancy .masthead nav { gap: 1.15rem; font-size: .72rem; }
     .fancy .hero { min-height: 0; padding-top: 3rem; }
     .fancy .hero-copy { width: 100%; }

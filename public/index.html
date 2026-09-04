@@ -19,6 +19,11 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="mode-control" hidden>
+    <button id="mode-toggle" type="button" title="Switch to fancy mode">
+      <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Didn't this guy say he's a frontend dev?</span>
+    </button>
+  </div>
   <header class="masthead">
     <a class="wordmark" href="#top">feuer.dev<span class="fancy-only" aria-hidden="true"> ↗</span></a>
     <nav aria-label="Main navigation">
@@ -146,11 +151,6 @@
     <span>Jannik Feuerhahn</span>
     <div><a href="https://github.com/feuerdev">GitHub</a> · <a href="privacy-policy.html">Privacy</a> · <a href="#top">Back to top ↑</a></div>
   </footer>
-  <div class="mode-control" hidden>
-    <button id="mode-toggle" type="button" aria-label="Fancy mode" aria-pressed="false">
-      <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Fancy mode?</span>
-    </button>
-  </div>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>
 </body>
 </html>
