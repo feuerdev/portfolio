@@ -6,7 +6,9 @@
     {
       "label": "Typescript",
       "type": "shell",
-      "command": "tsc scrambler.ts -w",
+      "command": "npm run watch",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
       "runOptions": {
         "runOn": "folderOpen"
       }
