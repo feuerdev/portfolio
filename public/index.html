@@ -1,334 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Jannik Feuerhahn | Software Engineer</title>
-  <meta name="description" content="My Portfolio">
-
-  <!-- Facebook/LinkedIn Meta Tags -->
-  <meta property="og:url" content="https://feuer.dev/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171715" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Jannik Feuerhahn, software engineer and curious generalist. Web, mobile, and the occasional side project that gets out of hand.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Jannik Feuerhahn | Software engineer</title>
+  <link rel="canonical" href="https://feuer.dev/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Jannik Feuerhahn | Developer">
-  <meta property="og:description" content="My Portfolio">
-  <meta property="og:image" content="https://feuer.dev/assets/teaser.png">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="mask-icon" href="assets/favicon.svg" color="#14213D">
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177847474-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-177847474-1', {
-      'anonymize_ip': true
-    });
-  </script>
-
-  <link href="https://fonts.googleapis.com/css?family=Merriweather:300,700" rel="stylesheet">
+  <meta property="og:title" content="Jannik Feuerhahn | Software engineer">
+  <meta property="og:description" content="Web, mobile, and the occasional side project that gets out of hand.">
+  <meta property="og:url" content="https://feuer.dev/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
 </head>
-
 <body>
-  <div class="container" id="particle-container">
-    <div class="content">
-      <div class="introduction center-content">
-        <h1 data-target-resolver>Hey, I'm Jannik</h1>
-        <div class="introduction-container">
-          <img class="introduction-portrait" src="assets/portrait.jpg"></img>
-          <div class="introduction-text">
-            Passionate <span class="highlight">Software Engineer</span> with <span class="highlight">7+ years</span> of professional experience.
-            <br><br>
-            <span class="highlight">Generalist</span> with a <span class="highlight">focus</span> on <span class="highlight">web</span> and <span class="highlight">mobile</span> development.
-            <br><br>
-            Experienced in <span class="highlight">Fullstack Web</span> Technologies, <span class="highlight">CI/CD</span> and <span class="highlight">Automated Testing</span>.
-          </div>
-        </div>
-        <div class="links">
-          <a class="link" target="_blank" href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">My
-            Resume</a>
-          <a class="link" target="_blank" href="https://github.com/feuerdev">My Github</a>
-          <a class="link" target="_blank" href="mailto:jannik@feuer.dev">Contact Me</a>
-        </div>
-        <h2>Personal Projects</h2>
-      </div>
-      <div class="projects center-content">
-        <div class="project-container">
-          <img src="assets/screenshots_fish.png" alt="">
-          <div class="project-teaser">
-            <h3>Big Pond</h3>
-            <div class="light">Sole Developer</div>
-            <p>Have you ever wondered what exactly is roaming around at your favorite beach, surfing or diving spot?</p>
-            <p>Big Pond can help you satisfy your curiosity!</p>
-            <span class="arrow">></span><a href="javascript:showDetail(3)">Details</a>
-          </div>
-        </div>
-        <div class="project-container">
-          <img src="assets/screenshots_feuer.png" alt="">
-          <div class="project-teaser">
-            <h3>feuer.io</h3>
-            <div class="light">Sole Developer</div>
-            <p>A web based MMORTS-Game in medieval setting.</p>
-            <p>Notable features include Websocket Multiplayer using socket.io, a procedurally generated map and Firebase
-              Authentication.</p>
-            <span class="arrow">></span><a href="javascript:showDetail(1)">Details</a>
-          </div>
-        </div>
-        <div class="project-container">
-          <img src="assets/screenshots_others.png" alt="">
-          <div class="project-teaser">
-            <h3>Others</h3>
-            <div class="light">Sole Developer</div>
-            <p>I recently also built a Google Chrome Browser Extension, a trading calculator for the game "Escape From
-              Tarkov", this portfolio, an Instagram Filter, and got hired to develop Python scripts for a Tire Testing
-              Rig.</p>
-            <span class="arrow">></span><a href="javascript:showDetail(2)">Details</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <a class="privacy" href="privacy-policy.html">privacy policy</a>
-    <div class="louis">
-      <div class="hide-content">
-        I'm just here for the particles.
-        <div class="particle-count"></div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="detail code">
-    <div class="padding">
-      <a href="javascript:hideDetail()" class="closebtn">&times;</a>
-      <div class="detail-content" id="fish">
-        <p><span class="white">Project Name:</span> Big Pond</p>
-        <p><span class="white">Project Type:</span> Personal Project</p>
-        <p><span class="white">Description:</span>
-          <div class="indent">
-            Big Pond can help you satisfy your curiosity!<br>
-            <p>Growing up in central Germany meant that the ocean did not play a big part in my life.<br>
-              After arriving in Taiwan, "a tropical Island", I obviously wanted to explore the underwater world.<br>
-              Unfortunately I quickly encountered two problems:<br><br>
-              1. I'm naturally curious and would like to know what kind of animals are roaming around under the surface
-              nearby. But it was hard to find accurate information outside of popular diving spots.<br><br>
-              2. To be honest... I'm kind of scared of the ocean. The unknown and being out of your element makes me
-              anxious.<br>
-              After doing research on free and accessible data, I had an Idea that hopefully tackles both problems at
-              once.<br>
-              <br>
-              Introducing 'Big Pond'<br>
-              An iOS App that lets you discover marine life at your closest beach, your next vacation spot or 'anywhere'
-              else.<br>
-              Additionally each animal will be grouped in to one of three categories.<br>
-              Green: Wholesome and Harmless<br>
-              Yellow: Safe, but don't get too close<br>
-              Red: Warning, actually dangerous!<br>
-              <br>
-              Happy Exploring!<br>
-            </p>
-          </div>
-          <p><span class="white">What I used/learned:</span>
-            <div class="indent">
-              - VIPER Architecture<br>
-              - Firebase Analytics<br>
-              - Firebase Crashlytics<br>
-              - Grand Central Dispatch (DispatchQueue, DispatchGroup)<br>
-              - High Performance Table/CollectionViews using lazy loading, caching and skeleton views<br>
-              - Cocoa Pods<br>
-              - Mapkit<br>
-              - Backwards Compatability (iOS 10)<br>
-            </div>
-          </p>
-          <p><span class="white">Links:</span>
-            <div class="indent">
-              <a target="_blank" href="https://apps.apple.com/de/app/apple-store/id1546346139">App
-                Store (iOS)</a><br><br>
-            </div>
-          </p>
-      </div>
-      <div class="detail-content" id="wilo">
-        <p><span class="white">Project Name:</span> Wilo App Relaunch 2019</p>
-        <p><span class="white">Project Type:</span> Employee</p>
-        <p><span class="white">Client:</span> Wilo SE</p>
-        <p><span class="white">Description:</span>
-          <div class="indent">
-            The “Wilo Assistant” makes the entire world of high-efficiency pump technology available on smartphones and
-            tablets for sanitation, heating and air-conditioning specialists and specialist consultants of technical
-            building equipment.
-            <br>
-            The free “Wilo Assistant” app is an easy-to-use mobile application and offers support in designing, customer
-            consultation and installation.
-          </div>
-        </p>
-        <p><span class="white">Responsibilities:</span>
-          <div class="indent">
-            I led the development for the 2019 Relaunch of the Wilo Assistant app.
-            <br>
-            I mediated interests of shareholders, designers, and developers to ensure practicability of the project.
-            <br>
-            I coordinated individual efforts to complete set milestones for both the Android and iOS app under time
-            constraints.
-            <br>
-            Me and my team successfully delivered the product in time for the targeted industry trade fair.
-          </div>
-        </p>
-        </p>
-        <p><span class="white">What I learned:</span>
-          <div class="indent">
-            Having a clear definition of deliverables and a set milestones is key to execute a large project.
-            <br>
-            Learning to let go and delegating tasks to the right individual is an important management skill for team
-            leaders.
-            <br>
-            Use a natural break like this relaunch to evaluate the software architecture of a project and don't be
-            afraid to make deep changes to improve code quality and shorten development time in the long run.
-          </div>
-        </p>
-        <p><span class="white">Tech Stack:</span> Objective-C, Java, SQLite, Cordova</p>
-        <p><span class="white">Links:</span>
-          <div class="indent">
-            <a target="_blank" href="https://itunes.apple.com/de/app/wilo-assistant/id397747214?l=en&mt=8">App
-              Store (iOS)</a><br><br>
-            <a target="_blank" href="https://play.google.com/store/apps/details?id=wilo.droid&hl=en">Google Play
-              Store (Android)</a>
-          </div>
-        </p>
-      </div>
-      <div class="detail-content" id="feuer">
-        <p><span class="white">Project Name: </span>feuer.io</p>
-        <p><span class="white">Project Type: </span>Personal Project</p>
-        <p><span class="white">Project Status: </span>IN DEVELOPMENT</p>
-        <p><span class="white">Vision/Description: </span>A web based MMORTS game in medieval setting.
-          <div class="indent">
-            - Play on procedurally generated persistent Hex based map with high player number
-            <br>
-            - Gather resources
-            <br>
-            - Construct settlements, towns, cities
-            <br>
-            - Recruit and train soldiers and generals and engage in raiding, conquering
-            <br>
-            - Realtime tick based combat (think Hearts of Iron)
-            <br>
-            - Get involved in diplomacy/clans/factions wars and trading
-            <br>
-            - No or very limited PvE
-            <br>
-            - Visible and noticeable ranking system to spark competitiveness
-            <br>
-            - Limited focus on graphics until game is fun to play and balanced
-            <br>
-          </div>
-        </p>
-        <p><span class="white">What I learned:</span>
-          <div class="indent">
-            In this project I try to implement as much as possible from scratch.<br>
-            I learned how to implement:<br>
-            - Websocket Multiplayer using socket.io<br>
-            - Procedurally Generated Maps<br>
-            - Hexagonal Tile Systems<br>
-            - Firebase Authentication + Custom MySql Database<br>
-            - A* Pathfinding<br>
-            - Client/Server code sharing<br>
-            - Client Side Dependency Bundling using browserify<br>
-            - HTML5 Canvas graphics using pixi.js<br>
-            - Automated deployment using GitHub Actions<br>
-          </div>
-        </p>
-        <p><span class="white">Tech Stack:</span> Node.js, TypeScript, Firebase Auth, socket.io, MySQL, HTML5, CSS</p>
-        <p><span class="white">Links:</span>
-          <div class="indent">
-            <a target="_blank" href="https://feuer.io">Try the current state (Server is probably asleep,
-              give it 1min to boot up)</a><br><br>
-            <a target="_blank" href="https://github.com/feuerdev/feuer">Github Repository</a><br><br>
-          </div>
-        </p>
-      </div>
-      <div class="detail-content" id="others">
-        <div class="other-project">
-          <p><span class="white">Project Name: </span>Twitch Rerun Filter - Google Chrome Extension</p>
-          <p><span class="white">Description:</span>
-            <div class="indent">
-              I don't like to watch reruns. So I filtered them from the Twitch "Following"-Page using a chrome
-              extension.
-            </div>
-          </p>
-          <p><span class="white">Links:</span>
-            <div class="indent">
-              <a target="_blank"
-                href="https://chrome.google.com/webstore/detail/twitch-rerun-filter/ggjnccbdidpaainpegpepolnjjonijjm">Twitch
-                Rerun Filter in Chrome Webstore</a>
-            </div>
-          </p>
-        </div>
-        <div class="other-project">
-          <p><span class="white">Project Name: </span>Tarkov Trading Calculator</p>
-          <p><span class="white">Description:</span>
-            <div class="indent">
-              A tool to calculate profit margins for the flea market system of "Escape From
-              Tarkov"
-            </div>
-          </p>
-          <p><span class="white">Links:</span>
-            <div class="indent">
-              <a target="_blank" href="https://tarkov.feuer.dev">Tarkov Trading Calculator</a>
-            </div>
-          </p>
-        </div>
-        <div class="other-project">
-          <p><span class="white">Project Name: </span>Portfolio</p>
-          <p><span class="white">Description:</span>
-            <div class="indent">
-              The page you are looking at right now. Like in my other personal projects I like to do everything I
-              can myself without using external libraries. This webpage was developed using native HTML, CSS and
-              Javascript. I also host it myself on a private virtual server.
-            </div>
-          </p>
-          <p><span class="white">Links:</span>
-            <div class="indent">
-              <a target="_blank" href="https://feuer.dev">My Portfolio</a><br><br>
-              <a target="_blank" href="https://github.com/feuerdev/portfolio">GitHub Link</a>
-            </div>
-          </p>
-        </div>
-        <div class="other-project">
-          <p><span class="white">Project Name: </span>Who's watching - Instagram Filter</p>
-          <p><span class="white">Description:</span>
-            <div class="indent">
-              I had an Idea to create an Instagram Filter to make me look like the Netflix Default Profile Avatar.
-            </div>
-          </p>
-          <p><span class="white">Links:</span>
-            <div class="indent">
-              <a target="_blank" href="https://www.instagram.com/ar/325223118763548/">Link to the Filter</a><br><br>
-            </div>
-          </p>
-        </div>
-        <div class="other-project">
-          <p><span class="white">Project Name: </span>Tire Testing Rig - Python Scripts</p>
-          <p><span class="white">Description:</span>
-            <div class="indent">
-              I got contracted to complete the following tasks on a tire testing rig:<br><br>
-              Version Control: Integrate the project into a Version Control System<br><br>
-              Command queue: Implement a command queue system (ControlDesk -> dSPACE) to improve robustness<br><br>
-              Decoupling: Implement decoupling of UI and business logic to ensure maintanability<br><br>
-              Performance optimization: Improve python script performance to allow running of complex simulations<br>
-            </div>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead">
+    <a class="wordmark" href="#top">feuer.dev<span class="fancy-only" aria-hidden="true"> ↗</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact<span class="fancy-only" aria-hidden="true"> ↗</span></a>
+    </nav>
+  </header>
 
-  <script src="js/scramble.js"></script>
-  <script src="js/particles.min.js"></script>
-  <script src="js/app.js"></script>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="name">
+      <div class="hero-copy">
+        <p class="eyebrow">Software engineer &amp; curious generalist</p>
+        <h1 id="name">Jannik <span>Feuerhahn.</span></h1>
+        <p class="intro">I make software. Mostly for the web and mobile. Sometimes because someone needs it. Sometimes because I want to see if I can.</p>
+        <p class="hero-links"><a class="primary-link" href="#work">A few things I've built <span aria-hidden="true">↘</span></a> <a href="https://github.com/feuerdev">GitHub <span aria-hidden="true">↗</span></a></p>
+      </div>
+      <div class="hero-art fancy-only" aria-hidden="true">
+        <div class="art-cross cross-one">+</div><div class="art-cross cross-two">+</div>
+        <canvas id="curiosity" width="700" height="700"></canvas>
+        <div class="art-caption"><span>Fig. 01</span><span>Curiosity, in motion.</span></div>
+      </div>
+      <button class="motion-button fancy-only" type="button" hidden>Pause motion</button>
+      <p class="plain-note">This is the website. It has links and everything.</p>
+      <div class="hero-bottom fancy-only" aria-hidden="true"><span>Independent projects. Real curiosity.</span><span>Scroll to explore ↓</span></div>
+    </section>
+
+    <section class="work" id="work" aria-labelledby="work-title">
+      <header class="section-heading">
+        <p class="eyebrow fancy-only" aria-hidden="true">01 / Selected work</p>
+        <h2 id="work-title">A few things<br class="fancy-only"> I've built.</h2>
+        <p>Apps, experiments, and problems I couldn't leave alone.</p>
+      </header>
+      <article class="project" id="big-pond">
+        <figure class="project-art pond-art fancy-only" aria-hidden="true">
+          <span class="art-label">Big Pond / iOS</span>
+          <div class="pond-ripple"></div>
+          <img data-src="assets/screenshots_fish.png" width="590" height="473" alt="" loading="lazy" decoding="async">
+          <span class="art-bottom">A little less unknown.</span>
+        </figure>
+        <div class="project-copy">
+          <p class="project-index fancy-only" aria-hidden="true">001 / Explore</p>
+          <h3>Big Pond</h3>
+          <p class="project-type">Marine life discovery · iOS · Personal project</p>
+          <p>What's swimming around your favourite beach? I built an app to find out. Discover nearby marine life and get a better sense of what you might meet in the water.</p>
+          <details>
+            <summary>The story &amp; the technical bits</summary>
+            <p>Moving from central Germany to Taiwan made me curious about the ocean. Also a little nervous. Big Pond grew out of trying to understand the animals beneath the surface, even outside popular diving spots.</p>
+            <p>I built it with MapKit, VIPER architecture and Grand Central Dispatch, with lazy loading and caching to keep the map and species lists responsive.</p>
+          </details>
+          <a class="project-link" href="https://apps.apple.com/de/app/apple-store/id1546346139">View on the App Store <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      <article class="project" id="feuer-game">
+        <figure class="project-art game-art fancy-only" aria-hidden="true">
+          <span class="art-label">feuer.io / Browser game</span>
+          <div class="game-grid"></div>
+          <img data-src="assets/screenshots_feuer.png" width="800" height="600" alt="" loading="lazy" decoding="async">
+          <span class="art-bottom">Small tiles. Big ambitions.</span>
+        </figure>
+        <div class="project-copy">
+          <p class="project-index fancy-only" aria-hidden="true">002 / Experiment</p>
+          <h3>feuer.io</h3>
+          <p class="project-type">Multiplayer strategy · TypeScript · Personal project</p>
+          <p>A medieval strategy game in the browser. A persistent world, procedural maps, and the kind of multiplayer problems that make a side project interesting.</p>
+          <details>
+            <summary>The story &amp; the technical bits</summary>
+            <p>This was an excuse to build as much as possible myself: hexagonal maps, A* pathfinding, settlements and real-time multiplayer.</p>
+            <p>Node.js, TypeScript, socket.io, MySQL, Firebase Authentication and PixiJS. A lot of learning happened between the first tile and the first working game.</p>
+          </details>
+          <a class="project-link" href="https://github.com/feuerdev/feuer">Read the source <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      <article class="project" id="wilo">
+        <figure class="project-art wilo-art fancy-only" aria-hidden="true">
+          <span class="art-label">Wilo Assistant / iOS + Android</span>
+          <img data-src="assets/screenshots_wilo.png" width="800" height="600" alt="" loading="lazy" decoding="async">
+          <span class="art-bottom">Built for the workday.</span>
+        </figure>
+        <div class="project-copy">
+          <p class="project-index fancy-only" aria-hidden="true">003 / Deliver</p>
+          <h3>Wilo Assistant</h3>
+          <p class="project-type">Mobile development · Team lead · 2019 relaunch</p>
+          <p>I led the development of the Wilo Assistant relaunch: an iOS and Android tool for heating, plumbing and building-services professionals.</p>
+          <details>
+            <summary>The work behind it</summary>
+            <p>I coordinated developers, designers and stakeholders to deliver both apps in time for the target industry trade fair. The work included evaluating the architecture and balancing the scope against a fixed deadline.</p>
+            <p>Objective-C, Java, SQLite and Cordova.</p>
+          </details>
+          <a class="project-link" href="https://itunes.apple.com/de/app/wilo-assistant/id397747214?l=en&amp;mt=8">View on the App Store <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      <details class="more-work">
+        <summary>And a few smaller things</summary>
+        <ul>
+          <li><strong>Twitch Rerun Filter.</strong> A Chrome extension to hide reruns from the Following page.</li>
+          <li><strong>Tarkov trading calculator.</strong> Working out trades for Escape from Tarkov.</li>
+          <li><strong>A tire testing rig.</strong> Contract Python work on command queues, UI separation and simulation performance.</li>
+          <li><strong>This website.</strong> The <a href="https://github.com/feuerdev/portfolio">source is on GitHub</a>.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div>
+        <p class="eyebrow fancy-only" aria-hidden="true">02 / The person</p>
+        <h2 id="about-title">I like figuring<br class="fancy-only"> things out.</h2>
+      </div>
+      <div class="about-copy">
+        <p>I'm a generalist with a focus on web and mobile development. I enjoy following a problem through the whole stack, from the interface someone touches to the systems behind it.</p>
+        <p>My work spans frontend and backend development, mobile apps, automated testing and CI/CD. My side projects tend to start with a question and end with more questions. Usually some working software, too.</p>
+        <p><a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Read my résumé <span aria-hidden="true">↗</span></a></p>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <p class="eyebrow fancy-only" aria-hidden="true">03 / Say hello</p>
+      <h2 id="contact-title">Got something<br class="fancy-only"> interesting in mind?</h2>
+      <p>I'd like to hear about it.</p>
+      <a class="contact-link" href="mailto:jannik@feuer.dev">jannik@feuer.dev <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Jannik Feuerhahn</span>
+    <div><a href="https://github.com/feuerdev">GitHub</a> · <a href="privacy-policy.html">Privacy</a> · <a href="#top">Back to top ↑</a></div>
+  </footer>
+  <div class="mode-control" hidden>
+    <button id="mode-toggle" type="button" aria-label="Fancy mode" aria-pressed="false">
+      <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Fancy mode?</span>
+    </button>
+  </div>
+  <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>
 </body>
-
 </html>

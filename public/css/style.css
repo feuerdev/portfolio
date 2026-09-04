@@ -1,353 +1,62 @@
-body {
-  font-family: "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  margin: 0;
-  background-color: #14213D;
-  color: #E5E5E5;
+:root {
+  color-scheme: light dark;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.55;
+  background: #faf9f6;
+  color: #252522;
+  --paper: #faf9f6;
+  --ink: #252522;
+  --link: #174bc2;
+  --line: #d2d0c9;
 }
-
-/* Main */
-canvas {
-  top: 0;
-  position: fixed;
-  z-index: -1;
-}
-
-.container {
-  width: 100%;
-  height: 100%;
-  transition: margin-right .5s;
-}
-
-.content {
-  margin-bottom: 1rem;
-}
-
-.introduction {
-  max-width: 496px;
-  width: 100%;
-}
-
-.introduction-container {
-  display: flex;
-  margin-bottom: 16px;
-}
-
-.introduction-text {
-  font-size: 1em;
-  flex: 1;
-  text-align: center;
-}
-
-.introduction-portrait {
-  margin-right: 16px;
-  
-  align-self: start;
-  flex: 1.2;
-  height: 264px;
-  object-fit: cover;
-  object-position: 0 100%;
-  
-  border-style: dashed;
-  border-width: 1px;
-  border-color: #fca311;
-}
-
-.links {
-  display: flex;
-}
-
-.link {
-  flex: 1;
-  /* margin-right: 0.8rem; */
-  height: 2.5rem;
-  min-width: 8rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #fca311;
-  font-family: Merriweather, Georgia, serif;
-  font-size: 0.875rem;
-  letter-spacing: 0.6px;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.link:not(:last-child) {
-  margin-right: 0.8rem;
-}
-
-.projects {
-    max-width: 760px;
-    width: 100%;
-}
-
-.project-container:nth-child(2n) {
-  flex-direction: row-reverse;
-}
-
-.project-container {
-  display: flex;
-  margin-bottom: 32px;
-}
-
-.project-container > img {
-  align-self: center;
-  width: 60%;
-  margin-right: 16px;
-}
-
-.louis {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  top: -25px;
-  left: -25px;
-  border-radius: 25px;
-  background-color: #fca311;
-  color: transparent;
-  transition: 300ms;
-  cursor: pointer;
-  -webkit-user-select: none; /* Safari */        
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-
-.louis:hover {
-  width: 300px;
-  height: 300px;
-  top: -150px;
-  left: -150px;
-  border-radius: 150px;
-  color: white;
-}
-
-.hide-content {
-  position: absolute;
-  text-align: center;
-  right: -200px;
-  bottom: 0px;
-  max-width: 350px;
-  pointer-events:none; 
-}
-
-/* Detail */
-.detail {
-  background-color: #14213D;
-  transition: 0.6s;
-  position: fixed;
-  border-left: #fca311 dashed 1px;
-  color:  #fca311;
-  top: 0;
-  right: -50%;
-  height: 100%;
-  width: 50%;
-}
-
-.detail.show-detail {
-  right: 0;
-}
-
-.detail-content {
-  overflow-y: scroll;
-  height: 100vh;
-  transition: visibility 0s, opacity 0.5s linear;
-}
-
-.detail-content::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
-}
-
-.images {
-  text-align: center;
-}
-
-.images > a > img {
-  padding: 8px;
-  width: 40%;
-}
-
-.detail .closebtn {
-  float: right;
-  font-size: 36px;  
-  border: none;
-}
-
-.other-project:not(:last-child) {
-  border-bottom: #fca311 1px dashed;
-}
-
-/* Global */
-.center-content {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.left-content {
-  margin-left: 32px;
-}
-
-a {
-  color: #fca311;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border-bottom-width: 1px;
-  border-bottom-style: dotted;
-  padding-bottom: 3px;
-}
-
-a:hover {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  padding-bottom: 3px;
-}
-
-.indent {
-  margin-left: 20px;
-}
-
-.light {
-  color: #ffffff93;
-}
-
-h1 {
-  font-family: Merriweather, Georgia, serif;
-  font-weight: 700;
-  font-size: 2rem;
-  min-height: 3rem;
-  margin-block-end: 8px;
-}
-
-h2 {
-  font-family: Merriweather, Georgia, serif;
-  font-weight: 700;
-  font-size: 2rem;
-  min-height: 3rem;
-  margin-block-start: 32px;
-  margin-block-end: 16px;
-}
-
-h3 {
-  margin-block-end: 1em;
-}
-
-.highlight {
-  color:  #fca311;
-}
-
-.padding {
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.white {
-  color: #fff;
-}
-
-.arrow {
-  margin-right: 0.8rem;
-  color: #9A9A9A;
-  opacity: 0.5;
-}
-
-.content.show-detail {
-  -ms-transform: translate(-20%, 0%);
-  transform: translate(-20%, 0%);
-  margin-left: 30px;
-}
-
-.code {
-  font-family: "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-weight: 300;
-  font-size: 0.875rem;
-  color: #fca311;
-}
-
-.privacy {
-  position: relative;
-  float: right;
-}
-
-@media (max-width: 780px) {
-
-  h1, h2 {
-    padding: 0 20px;
-    text-align: center;
+@media (prefers-color-scheme: dark) {
+  :root {
+    background: #171715;
+    color: #e7e5df;
+    --paper: #171715;
+    --ink: #e7e5df;
+    --link: #a9c7ff;
+    --line: #44443e;
   }
-  
-  .introduction-container {
-    flex-direction: column;
-    padding: 0 20px;
-  }
-
-  .introduction-portrait {
-    margin-right: 0px;
-    margin-bottom: 20px;
-    flex: none;
-    align-self: center;
-
-    object-position: 0 38%;
-    width: 100%;
-  }
-
-  .link {
-    margin-bottom: 0.8rem;
-    width: 75%;
-    flex: none;
-  }
-
-  .links {
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .link:not(:last-child) {
-    margin-right: 0
-  }
-
-  .project-container {
-    flex-direction: column !important;
-  }
-
-  .project-container > img {
-    align-self: center;
-    width: 60%;
-    margin-right: 16px;
-  }
-
-  .project-teaser {
-    padding: 0 20px;
-    text-align: center;
-  }
-
-  .detail {
-    width: 100%;
-    right: -100%;
-  }
-  
-  .detail.show-detail {
-    width: 100%;
-  }
-
-  a {
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
-    padding-bottom: 2px;
-  }
-
-  .louis {
-    position: fixed;
-    top: auto;
-    bottom: -25px;
-  }
-
-  .louis:hover {
-    top: auto;
-    bottom: -150px;
-  }
-  
-  .hide-content {
-    top: 0px;
-  }
-
+}
+* { box-sizing: border-box; }
+body { max-width: 72ch; margin: 2.5rem auto; padding: 0 1.25rem 3rem; }
+a { color: var(--link); text-underline-offset: .16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 5px; }
+h1, h2, h3 { line-height: 1.15; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.45rem; margin-top: 2.25rem; }
+h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+section { scroll-margin-top: 1.5rem; }
+.masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.masthead nav { display: flex; gap: 1rem; }
+.hero { margin-top: 2.5rem; }
+.eyebrow, .project-type, .plain-note, .footer { font-size: .85rem; }
+.hero-links a + a { margin-left: 1rem; }
+.project { margin: 2rem 0; }
+.project-type { margin-top: 0; }
+details { margin: 1rem 0; }
+summary { cursor: pointer; width: fit-content; padding-block: .35rem; }
+details[open] summary { margin-bottom: .5rem; }
+li { margin: .5rem 0; }
+.footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+.fancy-only, [hidden] { display: none !important; }
+.mode-control { position: fixed; z-index: 20; bottom: max(1rem, env(safe-area-inset-bottom)); right: max(1rem, env(safe-area-inset-right)); }
+#mode-toggle { min-height: 44px; font: inherit; font-size: .8rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: .5rem .85rem; cursor: pointer; }
+#mode-toggle:hover { border-color: currentColor; }
+.mode-spark { display: inline-block; margin-right: .2rem; }
+.sr-only, .skip-link:not(:focus) { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip-link:focus { position: fixed; z-index: 100; top: 1rem; left: 1rem; padding: .75rem; background: var(--paper); }
+@media (max-width: 480px) {
+  body { margin-top: 1.25rem; padding-inline: 1rem; }
+  .masthead { font-size: .9rem; }
+  .masthead nav { gap: .75rem; }
+}
+@media print {
+  .mode-control, .masthead, .fancy-only, .motion-button { display: none !important; }
+  :root { color: black; background: white; }
+  body { max-width: none; margin: 0; padding: 0; }
+  a { color: inherit; }
 }

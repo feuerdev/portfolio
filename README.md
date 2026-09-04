@@ -1,12 +1,11 @@
 # feuer.dev
 
-Personal website built with HTML, CSS and JavaScript. TypeScript compiles the
-animated heading into JavaScript; the deployed website has no application backend.
+Jannik Feuerhahn's website. Plain HTML first, with an optional fancy mode.
+Both views share one document and follow the device's light/dark preference.
 
 ## Run locally
 
-Use Node **24.15.0** from `.nvmrc`. The verified npm version is **11.12.1**.
-With nvm installed:
+Use Node **24.15.0** from `.nvmrc`, with tested npm **11.12.1**:
 
 ```sh
 nvm install
@@ -15,93 +14,60 @@ npm ci
 npm run dev
 ```
 
-Open [http://127.0.0.1:5000](http://127.0.0.1:5000). The development server binds
-only to loopback and builds TypeScript before serving. It uses the exact `http-server`
-version in `package.json` and the committed dependency lockfile.
+Open [localhost:5000](http://127.0.0.1:5000). If the port is occupied, run
+`PORT=5001 npm run dev`. The preview binds only to loopback and never switches ports
+silently. No Docker or production credentials are needed.
 
-macOS may reserve port 5000 for AirPlay Receiver. Use another port without
-changing system settings:
+For TypeScript changes, run `npm run watch` in a second terminal and refresh the page.
+HTML and CSS changes only need a refresh. `npm start` is an alias for `npm run dev`.
+The VS Code task also runs the TypeScript watcher.
+
+## Two presentations
+
+The default is a readable document with native links and expandable project notes.
+It works without JavaScript and fetches no project artwork, external fonts or analytics.
+
+The corner button loads the fancy stylesheet and animation module. It adds large
+typography, project artwork, scroll reveals and an interactive particle sculpture.
+Use **Back to plain HTML** to return. `?mode=fancy` opens the fancy view directly.
+The choice is in the URL, with no cookie or browser-storage preference.
+
+Reduced-motion users get a static presentation. The motion button pauses/resumes
+animation. Rendering also pauses when the artwork is offscreen or the tab is hidden.
+View Transitions enhance the switch where supported, with an immediate fallback.
+
+## Editing and checking
+
+Edit content in `public/index.html`, base styles in `public/css/style.css`, fancy
+styles in `public/css/fancy.css`, and behavior in `src/app.ts` / `src/fancy.ts`.
+TypeScript compiles to ignored files in `public/js/`. Don't edit generated JavaScript.
 
 ```sh
-PORT=5001 npm run dev
+npm run build
+npm test
+git diff --check
 ```
 
-Then open [http://127.0.0.1:5001](http://127.0.0.1:5001). The server fails if the
-chosen port is busy instead of silently selecting a different address. The port
-override uses POSIX shell syntax, supported on macOS and Linux.
+The tests check hosting paths, existing policy URLs, native navigation and first-load
+resource rules. Check interactions and layout in a browser too. See `AGENTS.md` for
+the focused browser checklist. All five existing policy/terms URLs remain intact.
 
-When editing TypeScript, leave this running in a second terminal:
-
-```sh
-npm run watch
-```
-
-Refresh the browser to see changes. HTML, CSS and plain JavaScript are served
-directly, so they need no compilation. Stop either command with Ctrl+C.
-
-No Docker, production `.env`, SSH key or cloud account is needed for local work.
-Installation needs access to npm. Existing Google Fonts and analytics scripts
-make external requests in the browser; their markup is unchanged in this phase.
-
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm ci` | Install the committed dependency versions, including local tools. |
-| `npm run build` | Compile TypeScript into `public/js/scramble.js`. |
-| `npm run dev` | Build and serve locally, default port 5000. |
-| `PORT=5001 npm run dev` | Use an alternate local port. |
-| `npm run watch` | Recompile TypeScript when it changes. |
-| `npm start` | Alias for local development. |
-| `npm test` | Check internal links at both hosting paths and preserve policy URLs. |
-
-The VS Code TypeScript task runs `npm run watch` using the project compiler.
-The editor may ask whether to allow the existing automatic folder-open task.
-
-## Editing and checking changes
-
-The homepage is `public/index.html`; styles are in `public/css/style.css`.
-`public/js/app.js` controls project details and particles. Edit `scramble.ts`,
-not the ignored generated `scramble.js`.
-
-Before handing off a change, run `npm run build`, `npm test` and `git diff --check`.
-After dependency changes, also verify a fresh `npm ci`. Check the page in a
-browser, including the animated heading, particles, each project Details link,
-its close button and browser Back. Preserve these direct links:
-
-- `/privacy-policy.html`
-- `/bigpond-privacy.html`
-- `/bigpond-tos.html`
-- `/impfalarm-privacy.html`
-- `/impfalarm-tos.html`
+The current redesign is a branch for review. Copy uses existing project information.
+Before publishing, review project status/links and update the website privacy policy,
+which still describes the previous analytics and external-font setup.
 
 ## Deployment
 
-The `Website` GitHub Actions workflow installs the locked dependencies, compiles
-TypeScript and runs the static-site checks. Pull requests run the build/check job.
-Successful pushes to `master` also upload `public/` and deploy it to GitHub Pages.
-Actions are pinned to commit SHAs, and only the deployment job has Pages write access.
-
-The production address is [feuer.dev](https://feuer.dev), with HTTPS managed by
-GitHub Pages. Cloudflare remains the DNS provider. Its other subdomains and services
-are independent of this repository. Private cutover details live in the infrastructure
-repository. The old Jenkins, Docker and semantic-release deployment files have been
-removed. There is no dedicated branch-preview deployment.
-
-Keep internal links relative so temporary hosting at `/portfolio/` works too.
-All five policy URLs remain available at the production domain. To roll back a
-content change, revert it on a branch, check the PR and merge the revert to `master`.
-The workflow can also be run manually on `master` to redeploy the current revision.
-
-Update dependencies in bounded changes and commit `package-lock.json` with them.
-No global compiler or release tool is required.
+GitHub Actions builds and checks PRs. Successful pushes to `master` publish `public/`
+to GitHub Pages at [feuer.dev](https://feuer.dev), with HTTPS managed by GitHub.
+Use relative internal URLs so temporary hosting under `/portfolio/` also works.
+A checked revert on `master` rolls back a release. There is no dedicated PR deployment.
 
 ## Troubleshooting
 
-- Missing `http-server` or `tsc`: run `npm ci` without `--omit=dev`; do not install global tools.
-- Missing `js/scramble.js`: run `npm run build`, or start with `npm run dev`.
-- TypeScript edits do not appear: start `npm run watch` and refresh the browser.
-- Wrong Node version: initialize nvm in the current shell, then run `nvm use` here.
-- Port busy: use the documented `PORT` override. Do not stop unrelated processes.
-- Dependency audit warnings: investigate and record them. Do not apply breaking
-  `npm audit fix --force` updates as a routine setup step.
+- Missing scripts or compiler: run `npm ci`, then `npm run build`.
+- TypeScript changes not showing: run the watcher and refresh.
+- Port busy: use the `PORT` override instead of stopping unrelated services.
+- Fancy assets failed to load: the plain page remains available. Check the network
+  connection and try again. Local preview must run through HTTP, not `file://`.
+- Wrong Node version: initialize nvm, then run `nvm use`.

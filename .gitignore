@@ -1,4 +1,4 @@
-scramble.js
 .DS_Store
-node_modules
+node_modules/
 .env
+public/js/*.js

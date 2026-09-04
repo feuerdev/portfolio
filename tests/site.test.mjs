@@ -28,3 +28,20 @@ test('all existing policy and terms URLs have published HTML files', async () =>
     assert.ok(/<(?:html|h[1-6]|p)[\s>]/i.test(html), `${name} must remain an HTML page`);
   }
 });
+
+test('the homepage works as a document without JavaScript', async () => {
+  const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
+  assert.doesNotMatch(html, /href="javascript:|\sonclick=/i, 'Navigation must work without JavaScript');
+  assert.match(html, /<main[\s>]/i, 'The primary content needs a main landmark');
+  assert.match(html, /href="mailto:jannik@feuer.dev"/, 'Contact remains a native email link');
+  for (const fragment of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1])) {
+    assert.ok(html.includes(`id="${fragment}"`), `Missing anchor target: ${fragment}`);
+  }
+});
+
+test('plain mode does not request third-party resources or decorative media', async () => {
+  const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
+  assert.doesNotMatch(html, /<(?:script|img|iframe)[^>]+src="https?:/i);
+  assert.doesNotMatch(html, /<link[^>]+href="https?:[^>]+rel="stylesheet"|<link[^>]+rel="stylesheet"[^>]+href="https?:/i);
+  assert.doesNotMatch(html, /<img[^>]+\ssrc=/i, 'Project artwork is fetched only after opting into fancy mode');
+});
