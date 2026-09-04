@@ -1,7 +1,8 @@
 # feuer.dev
 
 Jannik Feuerhahn's website. Plain HTML first, with an optional fancy mode.
-Both views share one document and follow the device's light/dark preference.
+Both views share one document. Plain mode uses browser defaults and stays light.
+Fancy mode follows the device's light/dark preference.
 
 ## Run locally
 
@@ -24,7 +25,8 @@ The VS Code task also runs the TypeScript watcher.
 
 ## Two presentations
 
-The default is a readable document with native links and expandable project notes.
+The default is an unstyled document with native links and expandable project notes.
+It uses the browser's default margins, fonts and spacing, with no centred column.
 It works without JavaScript and fetches no project artwork, external fonts or analytics.
 
 The corner button loads the fancy stylesheet and animation module. It adds large
