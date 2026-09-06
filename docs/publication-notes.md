@@ -1,6 +1,7 @@
 # Publication notes
 
-Reviewed 6 September 2026. This branch is for review and has not been deployed.
+Reviewed 6 September 2026. Production publication of the updated design was
+authorised on 6 September 2026. The contact and privacy details below remain open.
 
 ## Remaining decision
 

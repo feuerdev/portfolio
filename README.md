@@ -73,8 +73,8 @@ mobile placement, offline recovery, mode transitions, keyboard focus, Back navig
 and lazy artwork. It uses port 5001 by
 default. Set `PREVIEW_URL` for a different preview URL.
 
-The current redesign is a branch for review. The privacy page now describes the
-static site and GitHub Pages. An Impressum address is still unresolved. See
+The privacy page describes the static site and GitHub Pages. An Impressum address
+is still unresolved. See
 [publication notes](docs/publication-notes.md) before publishing.
 
 ## Deployment

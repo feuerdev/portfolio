@@ -87,7 +87,7 @@ Do not weaken it to add a widget. Plain mode has no analytics or external fonts.
 
 Check the branch and preserve unrelated changes before editing. Use a descriptive
 `feat/`, `fix/` or `chore/` branch from `master`. Personal work needs no Jira ticket.
-The redesign branch is for review; do not merge or deploy it without authorization.
+Merging and production deployment require user authorization.
 
 For presentation changes, check desktop and narrow mobile layouts in light/dark,
 keyboard navigation, project links, toggling both ways, direct fancy links,
