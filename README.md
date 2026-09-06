@@ -23,14 +23,22 @@ For TypeScript changes, run `npm run watch` in a second terminal and refresh the
 HTML and CSS changes only need a refresh. `npm start` is an alias for `npm run dev`.
 The VS Code task also runs the TypeScript watcher.
 
+## Content
+
+The introduction combines the name, short bio, AI sentence, email, GitHub and résumé.
+Projects follow directly, with no separate wordmark or repeated about/contact sections.
+The selected projects and image sources are documented in [content sources](docs/content-sources.md).
+
 ## Two presentations
 
-The default is an unstyled document with native links and expandable project notes.
+The default is an unstyled document with inline project links and visible descriptions.
+There are no expandable sections, role eyebrows or repeated project tag lines.
+There is no section navigation. A keyboard-only skip link leads to the main content.
 It uses the browser's default margins, fonts and spacing, with no centred column.
 It works without JavaScript and fetches no project artwork, external fonts or analytics.
 
 The top-right “Didn't this guy say he's a frontend dev?” button loads the fancy
-stylesheet and animation module. On small screens it sits above the content. It adds large
+stylesheet and animation module. On small screens a compact button stays at the bottom right. It adds large
 typography, project artwork, scroll reveals and an interactive particle sculpture.
 Use **Back to plain HTML** to return. `?mode=fancy` opens the fancy view directly.
 The choice is in the URL, with no cookie or browser-storage preference.
@@ -51,13 +59,17 @@ npm test
 git diff --check
 ```
 
-The tests check hosting paths, existing policy URLs, native navigation and first-load
+The tests check hosting paths, existing policy URLs, native links and first-load
 resource rules. Check interactions and layout in a browser too. See `AGENTS.md` for
 the focused browser checklist. All five existing policy/terms URLs remain intact.
 
-The current redesign is a branch for review. Copy uses existing project information.
-Before publishing, review project status/links and update the website privacy policy,
-which still describes the previous analytics and external-font setup.
+With agent-browser installed and a preview running, `npm run test:browser` checks
+mobile placement, offline recovery and the mode transition. It uses port 5001 by
+default. Set `PREVIEW_URL` for a different preview URL.
+
+The current redesign is a branch for review. The privacy page now describes the
+static site and GitHub Pages. An Impressum address is still unresolved. See
+[publication notes](docs/publication-notes.md) before publishing.
 
 ## Deployment
 
@@ -71,6 +83,7 @@ A checked revert on `master` rolls back a release. There is no dedicated PR depl
 - Missing scripts or compiler: run `npm ci`, then `npm run build`.
 - TypeScript changes not showing: run the watcher and refresh.
 - Port busy: use the `PORT` override instead of stopping unrelated services.
-- Fancy assets failed to load: the plain page remains available. Check the network
-  connection and try again. Local preview must run through HTTP, not `file://`.
+- Fancy assets failed to load: the plain page remains available. Reconnect and use
+  the reload button to try fancy mode in a fresh page. Browsers retain failed module
+  imports until reload. Local preview must run through HTTP, not `file://`.
 - Wrong Node version: initialize nvm, then run `nvm use`.

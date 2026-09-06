@@ -23,7 +23,7 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 
 ## Structure and design rules
 
-- `public/index.html`: the shared content, navigation, native project details and metadata.
+- `public/index.html`: the shared content, external links, project descriptions and metadata.
 - `public/css/style.css`: only hides decorative/accessibility elements, styles the top-right mode switch and keeps plain mode light.
 - `public/css/fancy.css`: optional presentation, loaded on demand. Scope rules to `.fancy`.
 - `src/app.ts`: mode switching, lazy loading, URL state and the optional View Transition.
@@ -35,12 +35,13 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 The default is always plain unless the URL explicitly contains `?mode=fancy`.
 The switch updates that parameter without losing other query parameters or fragments.
 Do not add cookies or storage just to remember the presentation. Switching must keep
-content, native details state, keyboard focus and reading position usable.
+content, keyboard focus and reading position usable.
 
 Plain mode uses browser-default layout, fonts, spacing and colours in light mode.
 Do not centre it, constrain its width or introduce a visual theme. The mode switch
-is the deliberate exception: a prominent fancy pill at the top right, above the
-content on narrow screens. Fancy mode alone
+is the deliberate exception: a prominent fancy pill at the top right, fixed at the
+bottom right with a shorter label on narrow screens. Leave enough bottom space to
+reach the footer without the button covering it. Fancy mode alone
 follows `prefers-color-scheme`. Respect `prefers-reduced-motion`
 in CSS and JavaScript. Provide a motion pause control and stop rendering when the
 canvas is offscreen, the tab is hidden or fancy mode is disabled. Always show content
@@ -48,8 +49,26 @@ if decorative loading or browser features fail. Do not add animation dependencie
 for effects that native browser APIs can handle.
 
 Keep the main document semantic and usable without JavaScript. Use native links,
-buttons and details, visible keyboard focus and a skip link. Keep first-load resources
-local. The homepage CSP allows same-origin assets and blocks inline script/style.
+buttons, visible keyboard focus and a skip link. Omit section navigation
+and decorative link arrows. Keep copy factual and concise. The introduction combines
+the name, about text, AI sentence and contact links. Do not add a separate masthead
+wordmark or repeat about/contact sections below the projects. Start with the name,
+without a role eyebrow or punctuation after the surname. Use ordinary paragraphs
+with linked project names and short descriptions. All project text stays visible
+in both modes. Do not add expandables, repeated technology tag lines or generic
+"Read the source" links. Native horizontal rules separate the plain document's
+intro, projects and footer. Fancy mode restyles this same content.
+
+Selected projects are keep-mcp, feuer.io, the sponsor detector, split keyboards,
+the Swift raytracer and Big Pond. Keep human-api and Vorsorge off the page for now.
+Wilo, Twitch Rerun Filter, the Tarkov calculator and the website itself are retired
+from the project list. The sponsor detector is a prototype with private source,
+so describe it without a broken public repository link. The Scylla photos show
+Jannik's own assembly and finished keyboard. Keep their WebP exports small and
+free of metadata. Plain mode links to the photos without loading them. See
+`docs/content-sources.md` for history references and artwork provenance.
+
+Keep first-load resources local. The homepage CSP allows same-origin assets and blocks inline script/style.
 Do not weaken it to add a widget. Plain mode has no analytics or external fonts.
 
 ## Verification and publishing
@@ -59,7 +78,7 @@ Check the branch and preserve unrelated changes before editing. Use a descriptiv
 The redesign branch is for review; do not merge or deploy it without authorization.
 
 For presentation changes, check desktop and narrow mobile layouts in light/dark,
-keyboard navigation, native project details, toggling both ways, direct fancy links,
+keyboard navigation, project links, toggling both ways, direct fancy links,
 reduced motion, pause/resume, and JavaScript/decorative-download failure. Check the
 browser console and network, not just screenshots. Automated accessibility checks
 supplement manual inspection. Do not add tests that merely restate CSS properties.
@@ -70,9 +89,16 @@ Run the TypeScript build before tests. Internal links must work both at the doma
 root and under `/portfolio/`. Roll back by reverting and redeploying `master`.
 
 Before publishing this redesign, review the draft copy and legacy project links.
-The existing website privacy policy still describes the old analytics/fonts setup
-and needs updating for the new homepage and GitHub hosting. App policy pages are
-separate and must not be casually rewritten.
+The website privacy policy describes the static site and GitHub Pages hosting.
+The Impressum still needs a genuine address authorised for this use. Do not invent
+an address or copy one from another source. See `docs/publication-notes.md` for
+the legal sources and unresolved publication details. App policy pages are separate
+and must not be casually rewritten.
+
+Use `npm run test:browser` with agent-browser installed and a preview running.
+It defaults to port 5001. Set `PREVIEW_URL` to use another preview. The check covers
+mobile placement, offline recovery and mode transitions. Failed fancy downloads
+offer an explicit page reload because browsers retain failed module imports.
 
 Update this file and the README when commands or behavior change. Private server
 operations are out of scope and belong in `feuerdev/server-setup`. Never commit secrets.

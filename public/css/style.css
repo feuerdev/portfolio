@@ -5,8 +5,13 @@
 #mode-toggle:hover { box-shadow: 0 6px 24px #0003; border-color: #c04421; }
 #mode-toggle:focus-visible { outline: 2px solid #c04421; outline-offset: 4px; }
 .mode-spark { flex: none; color: #ff875c; font-size: 18px; line-height: 1; }
+#mode-label-mobile { display: none; }
 @media (max-width: 700px) {
-  .mode-control { position: relative; top: auto; right: auto; width: fit-content; max-width: 100%; margin: .75rem 0 1rem auto; }
+  .mode-control { position: fixed; top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); right: max(1rem, env(safe-area-inset-right)); }
+  #mode-toggle { padding: .65rem .9rem; }
+  #mode-label { display: none; }
+  #mode-label-mobile { display: inline; }
+  :root body:has(.mode-control:not([hidden])) { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
 }
 .sr-only, .skip-link:not(:focus) { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media print { .mode-control { display: none !important; } }

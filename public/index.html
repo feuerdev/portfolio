@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="Jannik Feuerhahn, software engineer and curious generalist. Web, mobile, and the occasional side project that gets out of hand.">
+  <meta name="description" content="Jannik Feuerhahn, software engineer. Web, mobile, and open-source projects.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Jannik Feuerhahn | Software engineer</title>
   <link rel="canonical" href="https://feuer.dev/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Jannik Feuerhahn | Software engineer">
-  <meta property="og:description" content="Web, mobile, and the occasional side project that gets out of hand.">
+  <meta property="og:description" content="Web, mobile, and open-source projects.">
   <meta property="og:url" content="https://feuer.dev/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
@@ -22,134 +22,103 @@
   <div class="mode-control" hidden>
     <button id="mode-toggle" type="button" title="Switch to fancy mode">
       <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Didn't this guy say he's a frontend dev?</span>
+      <span id="mode-label-mobile">Fancy mode</span>
     </button>
   </div>
-  <header class="masthead">
-    <a class="wordmark" href="#top">feuer.dev<span class="fancy-only" aria-hidden="true"> ↗</span></a>
-    <nav aria-label="Main navigation">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact<span class="fancy-only" aria-hidden="true"> ↗</span></a>
-    </nav>
-  </header>
-
   <main id="main">
     <section class="hero" id="top" aria-labelledby="name">
       <div class="hero-copy">
-        <p class="eyebrow">Software engineer &amp; curious generalist</p>
-        <h1 id="name">Jannik <span>Feuerhahn.</span></h1>
-        <p class="intro">I make software. Mostly for the web and mobile. Sometimes because someone needs it. Sometimes because I want to see if I can.</p>
-        <p class="hero-links"><a class="primary-link" href="#work">A few things I've built <span aria-hidden="true">↘</span></a> <a href="https://github.com/feuerdev">GitHub <span aria-hidden="true">↗</span></a></p>
+        <h1 id="name">Jannik <span>Feuerhahn</span></h1>
+        <p class="intro" id="about">I'm a software engineer building regulated medical software at Ada Health.</p>
+        <p class="intro">I learned software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
+        <p class="hero-links" id="contact">
+          <a href="mailto:jannik@feuer.dev">jannik@feuer.dev</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://github.com/feuerdev">GitHub</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Résumé</a>
+        </p>
       </div>
       <div class="hero-art fancy-only" aria-hidden="true">
         <div class="art-cross cross-one">+</div><div class="art-cross cross-two">+</div>
         <canvas id="curiosity" width="700" height="700"></canvas>
-        <div class="art-caption"><span>Fig. 01</span><span>Curiosity, in motion.</span></div>
       </div>
       <button class="motion-button fancy-only" type="button" hidden>Pause motion</button>
-      <p class="plain-note">This is the website. It has links and everything.</p>
-      <div class="hero-bottom fancy-only" aria-hidden="true"><span>Independent projects. Real curiosity.</span><span>Scroll to explore ↓</span></div>
     </section>
+
+    <hr class="document-rule">
 
     <section class="work" id="work" aria-labelledby="work-title">
       <header class="section-heading">
-        <p class="eyebrow fancy-only" aria-hidden="true">01 / Selected work</p>
-        <h2 id="work-title">A few things<br class="fancy-only"> I've built.</h2>
-        <p>Apps, experiments, and problems I couldn't leave alone.</p>
+        <h2 id="work-title">Projects</h2>
       </header>
-      <article class="project" id="big-pond">
+      <article class="project" id="keep-mcp" aria-labelledby="keep-mcp-title">
+        <figure class="project-art keep-art fancy-only" aria-hidden="true">
+          <span class="art-label">keep-mcp / Google Keep</span>
+          <img data-src="assets/keep-mcp.svg" width="700" height="560" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><a class="project-name" id="keep-mcp-title" href="https://github.com/feuerdev/keep-mcp">keep-mcp</a><span class="project-separator">: </span>A Python MCP server that lets AI agents search, read and edit Google Keep notes and checklists. It connects through gkeepapi and limits edits to notes labelled keep-mcp by default.</p>
+        </div>
+      </article>
+
+      <article class="project" id="feuer-game" aria-labelledby="feuer-game-title">
+        <figure class="project-art game-art fancy-only" aria-hidden="true">
+          <span class="art-label">feuer.io / Since 2018</span>
+          <img data-src="assets/feuer-map.png" width="912" height="476" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><a class="project-name" id="feuer-game-title" href="https://github.com/feuerdev/feuer/tree/dev">feuer.io</a><span class="project-separator">: </span>My eternal pet project since 2018. A multiplayer browser strategy game with procedural hex maps and A* pathfinding.</p>
+          <p>It has followed me from plain browser code to React, through Next.js and back to Vite, and from a VPS with Docker and Jenkins to Vercel and Render. I've used it to try shared-code monorepos, different authentication systems and state management approaches. It's still a work in progress.</p>
+        </div>
+      </article>
+
+      <article class="project" id="sponsor-detector" aria-labelledby="sponsor-detector-title">
+        <figure class="project-art sponsor-art fancy-only" aria-hidden="true">
+          <span class="art-label">YouTube / Local classification</span>
+          <img data-src="assets/sponsor-detector.svg" width="700" height="560" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><span class="project-name" id="sponsor-detector-title">YouTube sponsor detector</span><span class="project-separator">: </span>A browser extension that finds sponsored segments in captions using MobileBERT and Transformers.js, then skips them. Classification runs locally. It's a prototype: segment boundaries and caption handling still need work.</p>
+        </div>
+      </article>
+
+      <article class="project" id="keyboards" aria-labelledby="keyboards-title">
+        <figure class="project-art keyboard-art fancy-only" aria-hidden="true">
+          <span class="art-label">Scylla / My build</span>
+          <img class="scylla-finished" data-src="assets/scylla-built.webp" width="904" height="1200" alt="" loading="lazy" decoding="async">
+          <img class="scylla-progress" data-src="assets/scylla-build.webp" width="1200" height="904" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><span class="project-name" id="keyboards-title">Split keyboards</span><span class="project-separator">: </span>Ergonomic keyboards for tinkerers. I assembled a Scylla from Bastard Keyboards and learned the Colemak-DH layout. I customise its <a href="https://github.com/feuerdev/qmk_userspace/tree/main/keyboards/bastardkb/scylla/keymaps/feuerdev">QMK keymap</a> with home-row modifiers, layers and combos, and maintain a <a href="https://github.com/feuerdev/zmk-config-totem">ZMK config for my Totem</a>. Photos of the <a href="assets/scylla-build.webp">assembly</a> and <a href="assets/scylla-built.webp">finished keyboard</a>.</p>
+        </div>
+      </article>
+
+      <article class="project" id="raytracer" aria-labelledby="raytracer-title">
+        <figure class="project-art ray-art fancy-only" aria-hidden="true">
+          <span class="art-label">Raytracer / Swift</span>
+          <img data-src="assets/raytracer.png" width="190" height="338" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><a class="project-name" id="raytracer-title" href="https://github.com/feuerdev/Raytracer">Swift raytracer</a><span class="project-separator">: </span>A raytracer I wrote in 2021, drawing directly into a pixel buffer. It handles sphere intersections, lighting, shadows and recursive reflections. The iOS app lets you edit the scene. The repository has demos.</p>
+        </div>
+      </article>
+
+      <article class="project" id="big-pond" aria-labelledby="big-pond-title">
         <figure class="project-art pond-art fancy-only" aria-hidden="true">
           <span class="art-label">Big Pond / iOS</span>
           <div class="pond-ripple"></div>
-          <img data-src="assets/screenshots_fish.png" width="590" height="473" alt="" loading="lazy" decoding="async">
-          <span class="art-bottom">A little less unknown.</span>
+          <img data-src="assets/screenshots_fish.png" width="600" height="478" alt="" loading="lazy" decoding="async">
         </figure>
         <div class="project-copy">
-          <p class="project-index fancy-only" aria-hidden="true">001 / Explore</p>
-          <h3>Big Pond</h3>
-          <p class="project-type">Marine life discovery · iOS · Personal project</p>
-          <p>What's swimming around your favourite beach? I built an app to find out. Discover nearby marine life and get a better sense of what you might meet in the water.</p>
-          <details>
-            <summary>The story &amp; the technical bits</summary>
-            <p>Moving from central Germany to Taiwan made me curious about the ocean. Also a little nervous. Big Pond grew out of trying to understand the animals beneath the surface, even outside popular diving spots.</p>
-            <p>I built it with MapKit, VIPER architecture and Grand Central Dispatch, with lazy loading and caching to keep the map and species lists responsive.</p>
-          </details>
-          <a class="project-link" href="https://apps.apple.com/de/app/apple-store/id1546346139">View on the App Store <span aria-hidden="true">↗</span></a>
+          <p><a class="project-name" id="big-pond-title" href="https://github.com/feuerdev/fish">Big Pond</a><span class="project-separator">: </span>An iOS app for discovering marine life in a given area. I built it after moving to Taiwan and wondering what was in the water. Written with MapKit, VIPER and Grand Central Dispatch.</p>
         </div>
       </article>
-      <article class="project" id="feuer-game">
-        <figure class="project-art game-art fancy-only" aria-hidden="true">
-          <span class="art-label">feuer.io / Browser game</span>
-          <div class="game-grid"></div>
-          <img data-src="assets/screenshots_feuer.png" width="800" height="600" alt="" loading="lazy" decoding="async">
-          <span class="art-bottom">Small tiles. Big ambitions.</span>
-        </figure>
-        <div class="project-copy">
-          <p class="project-index fancy-only" aria-hidden="true">002 / Experiment</p>
-          <h3>feuer.io</h3>
-          <p class="project-type">Multiplayer strategy · TypeScript · Personal project</p>
-          <p>A medieval strategy game in the browser. A persistent world, procedural maps, and the kind of multiplayer problems that make a side project interesting.</p>
-          <details>
-            <summary>The story &amp; the technical bits</summary>
-            <p>This was an excuse to build as much as possible myself: hexagonal maps, A* pathfinding, settlements and real-time multiplayer.</p>
-            <p>Node.js, TypeScript, socket.io, MySQL, Firebase Authentication and PixiJS. A lot of learning happened between the first tile and the first working game.</p>
-          </details>
-          <a class="project-link" href="https://github.com/feuerdev/feuer">Read the source <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-      <article class="project" id="wilo">
-        <figure class="project-art wilo-art fancy-only" aria-hidden="true">
-          <span class="art-label">Wilo Assistant / iOS + Android</span>
-          <img data-src="assets/screenshots_wilo.png" width="800" height="600" alt="" loading="lazy" decoding="async">
-          <span class="art-bottom">Built for the workday.</span>
-        </figure>
-        <div class="project-copy">
-          <p class="project-index fancy-only" aria-hidden="true">003 / Deliver</p>
-          <h3>Wilo Assistant</h3>
-          <p class="project-type">Mobile development · Team lead · 2019 relaunch</p>
-          <p>I led the development of the Wilo Assistant relaunch: an iOS and Android tool for heating, plumbing and building-services professionals.</p>
-          <details>
-            <summary>The work behind it</summary>
-            <p>I coordinated developers, designers and stakeholders to deliver both apps in time for the target industry trade fair. The work included evaluating the architecture and balancing the scope against a fixed deadline.</p>
-            <p>Objective-C, Java, SQLite and Cordova.</p>
-          </details>
-          <a class="project-link" href="https://itunes.apple.com/de/app/wilo-assistant/id397747214?l=en&amp;mt=8">View on the App Store <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-      <details class="more-work">
-        <summary>And a few smaller things</summary>
-        <ul>
-          <li><strong>Twitch Rerun Filter.</strong> A Chrome extension to hide reruns from the Following page.</li>
-          <li><strong>Tarkov trading calculator.</strong> Working out trades for Escape from Tarkov.</li>
-          <li><strong>A tire testing rig.</strong> Contract Python work on command queues, UI separation and simulation performance.</li>
-          <li><strong>This website.</strong> The <a href="https://github.com/feuerdev/portfolio">source is on GitHub</a>.</li>
-        </ul>
-      </details>
-    </section>
-
-    <section class="about" id="about" aria-labelledby="about-title">
-      <div>
-        <p class="eyebrow fancy-only" aria-hidden="true">02 / The person</p>
-        <h2 id="about-title">I like figuring<br class="fancy-only"> things out.</h2>
-      </div>
-      <div class="about-copy">
-        <p>I'm a generalist with a focus on web and mobile development. I enjoy following a problem through the whole stack, from the interface someone touches to the systems behind it.</p>
-        <p>My work spans frontend and backend development, mobile apps, automated testing and CI/CD. My side projects tend to start with a question and end with more questions. Usually some working software, too.</p>
-        <p><a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Read my résumé <span aria-hidden="true">↗</span></a></p>
-      </div>
-    </section>
-
-    <section class="contact" id="contact" aria-labelledby="contact-title">
-      <p class="eyebrow fancy-only" aria-hidden="true">03 / Say hello</p>
-      <h2 id="contact-title">Got something<br class="fancy-only"> interesting in mind?</h2>
-      <p>I'd like to hear about it.</p>
-      <a class="contact-link" href="mailto:jannik@feuer.dev">jannik@feuer.dev <span aria-hidden="true">↗</span></a>
+      <p class="more-work">Earlier contract work includes Python development for a tire testing rig: command queues, UI separation and simulation performance.</p>
     </section>
   </main>
 
+  <hr class="document-rule">
   <footer class="footer">
-    <span>Jannik Feuerhahn</span>
-    <div><a href="https://github.com/feuerdev">GitHub</a> · <a href="privacy-policy.html">Privacy</a> · <a href="#top">Back to top ↑</a></div>
+    <a href="privacy-policy.html">Privacy</a>
   </footer>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>
 </body>
