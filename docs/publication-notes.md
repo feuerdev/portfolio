@@ -38,7 +38,7 @@ that the site meets every applicable legal requirement.
 - The mobile switch is fixed at the bottom right and does not push the introduction down.
 - The transition starts at the actual button centre.
 - Fancy-mode failure was reproduced with a real browser's offline setting. After connectivity returns, Chromium retains the failed import in the same document. The control now explicitly reloads the page with `mode=fancy`, preserving other query parameters and the fragment. There is no automatic retry loop or cache-busting library.
-- The website privacy notice was rewritten for the current implementation. The four app policy/terms pages remain unchanged.
+- The website privacy notice was rewritten for the current implementation. The four app policy/terms pages retain their legal wording, with accessible headings, language declarations and a shared stylesheet.
 
 Run `npm run build`, `npm test`, `npm run test:browser` and `git diff --check`
 before handing off. Browser checks require agent-browser and a running preview.

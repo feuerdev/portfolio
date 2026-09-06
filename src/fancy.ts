@@ -8,10 +8,10 @@ export function start(): () => void {
   const dark = matchMedia('(prefers-color-scheme: dark)');
   let paused = false, visible = true, frame = 0, previous = 0, phase = 0, width = 0;
   let pointerX = 0, pointerY = 0, rotationX = 0, rotationY = 0;
-  document.querySelectorAll<HTMLImageElement>('img[data-src]').forEach(image => {
-    if (!image.getAttribute('src')) image.src = image.dataset.src!;
+  document.querySelectorAll<HTMLTemplateElement>('.project-art template').forEach(template => {
+    template.replaceWith(template.content.cloneNode(true));
   });
-  const revealTargets = [...document.querySelectorAll<HTMLElement>('.project, .about, .contact')];
+  const revealTargets = [...document.querySelectorAll<HTMLElement>('.project')];
   const reveal = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {

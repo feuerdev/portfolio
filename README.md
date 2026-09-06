@@ -33,7 +33,7 @@ The selected projects and image sources are documented in [content sources](docs
 
 ## Two presentations
 
-The default is an unstyled document with inline project links and visible descriptions.
+The default is a plain document with inline project headings and visible descriptions.
 There are no expandable sections, role eyebrows or repeated project tag lines.
 There is no section navigation. A keyboard-only skip link leads to the main content.
 It uses the browser's default margins, fonts and spacing, with no centred column.
@@ -64,9 +64,11 @@ git diff --check
 The tests check hosting paths, existing policy URLs, native links and first-load
 resource rules. Check interactions and layout in a browser too. See `AGENTS.md` for
 the focused browser checklist. All five existing policy/terms URLs remain intact.
+The [September code review](docs/code-review-2026-09-06.md) records findings and verification limits.
 
 With agent-browser installed and a preview running, `npm run test:browser` checks
-mobile placement, offline recovery and the mode transition. It uses port 5001 by
+mobile placement, offline recovery, mode transitions, keyboard focus, Back navigation
+and lazy artwork. It uses port 5001 by
 default. Set `PREVIEW_URL` for a different preview URL.
 
 The current redesign is a branch for review. The privacy page now describes the

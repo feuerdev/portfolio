@@ -11,11 +11,19 @@ function browser(...args) {
   return result.data;
 }
 const evaluate = code => browser('eval', code).result;
+// Hold the transition callback to reproduce interaction races deterministically.
+const holdTransition = () => evaluate('document.startViewTransition = update => { window.finishSwitch = update; return { ready: new Promise(resolve => window.readySwitch = resolve), finished: new Promise(resolve => window.endSwitch = resolve) }; }');
+const finishTransition = () => {
+  evaluate('window.finishSwitch(); window.readySwitch(); window.endSwitch()');
+  browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
+};
 try {
   const entry = new URL(base);
   entry.searchParams.set('check', 'preserve');
   entry.hash = 'top';
   browser('open', entry.href);
+  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 6, 'Projects must support heading navigation');
+  assert.equal(evaluate('performance.getEntriesByType("resource").filter(r => /\\.(png|webp|svg)$/.test(r.name) && !r.name.endsWith("/favicon.svg")).length'), 0, 'Plain mode must not fetch project artwork');
   browser('set', 'viewport', '390', '844');
   const headingTop = evaluate('document.querySelector("h1").getBoundingClientRect().top');
   const withoutControl = evaluate('document.querySelector(".mode-control").hidden = true; document.querySelector("h1").getBoundingClientRect().top');
@@ -55,10 +63,33 @@ try {
   browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
   assert.equal(evaluate('document.documentElement.dataset.motion'), 'off');
   assert.equal(evaluate('document.querySelector(".motion-button").hidden'), true);
+  assert.equal(evaluate('document.querySelectorAll(".project-art img").length'), 7, 'Repeated toggles must not duplicate artwork');
+
+  browser('open', base);
+  browser('set', 'media', 'light', 'no-preference');
+  holdTransition();
+  browser('click', '#mode-toggle');
+  browser('wait', '--fn', 'typeof window.finishSwitch === "function"');
+  browser('focus', '#contact a');
+  finishTransition();
+  assert.equal(evaluate('document.activeElement.getAttribute("href")'), 'mailto:jannik@feuer.dev', 'Finishing a switch must preserve a newly focused link');
+
+  browser('open', base);
+  browser('focus', '.skip-link');
+  browser('press', 'Enter');
+  holdTransition();
+  browser('click', '#mode-toggle');
+  browser('wait', '--fn', 'typeof window.finishSwitch === "function"');
+  browser('back');
+  browser('wait', '--fn', 'location.hash === ""');
+  finishTransition();
+  assert.equal(evaluate('new URL(location.href).searchParams.has("mode")'), false, 'A pending switch must not overwrite Back navigation');
+  assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), false);
+
   browser('open', new URL('privacy-policy.html', base).href);
   assert.equal(evaluate('document.title'), 'Privacy | Jannik Feuerhahn');
   assert.equal(evaluate('document.querySelectorAll("script, iframe").length'), 0);
-  console.log('Browser checks passed: mobile placement, offline recovery, URL state, transition origin, reduced motion and privacy page.');
+  console.log('Browser checks passed: mobile placement, offline recovery, URL state, transition origin, focus, Back navigation, headings, lazy artwork, reduced motion and privacy page.');
 } finally {
   browser('set', 'offline', 'off');
   browser('close');

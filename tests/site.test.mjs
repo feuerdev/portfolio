@@ -26,6 +26,9 @@ test('all existing policy and terms URLs have published HTML files', async () =>
   for (const name of ['privacy-policy.html', 'bigpond-privacy.html', 'bigpond-tos.html', 'impfalarm-privacy.html', 'impfalarm-tos.html']) {
     const html = await readFile(new URL(name, publicDirectory), 'utf8');
     assert.ok(/<(?:html|h[1-6]|p)[\s>]/i.test(html), `${name} must remain an HTML page`);
+    assert.match(html, /<html lang="en">/, `${name} must declare its language`);
+    assert.match(html, /<main[\s>]/, `${name} needs a main landmark`);
+    assert.equal([...html.matchAll(/<h1[\s>]/g)].length, 1, `${name} needs one page heading`);
   }
 });
 
@@ -43,5 +46,6 @@ test('plain mode does not request third-party resources or decorative media', as
   const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
   assert.doesNotMatch(html, /<(?:script|img|iframe)[^>]+src="https?:/i);
   assert.doesNotMatch(html, /<link[^>]+href="https?:[^>]+rel="stylesheet"|<link[^>]+rel="stylesheet"[^>]+href="https?:/i);
-  assert.doesNotMatch(html, /<img[^>]+\ssrc=/i, 'Project artwork is fetched only after opting into fancy mode');
+  const activeHtml = html.replace(/<template>[\s\S]*?<\/template>/g, '');
+  assert.doesNotMatch(activeHtml, /<img[^>]+\ssrc=/i, 'Project artwork stays inert until opting into fancy mode');
 });

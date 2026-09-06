@@ -12,6 +12,7 @@ let styleReady: Promise<void> | undefined;
 let cleanup: (() => void) | undefined;
 let busy = false;
 let needsReload = false;
+let pendingMode: boolean | undefined;
 
 function loadStyles(): Promise<void> {
   if (!styleReady) {
@@ -32,7 +33,8 @@ function loadStyles(): Promise<void> {
 }
 
 async function setMode(fancy: boolean, updateURL = true, animate = true): Promise<void> {
-  if (busy || !toggle || !label || !status) return;
+  if (!toggle || !label || !status) return;
+  if (busy) { pendingMode = fancy; return; }
   busy = true;
   toggle.disabled = true;
   try {
@@ -46,6 +48,8 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
       .reverse().find(section => section.getBoundingClientRect().top <= 24);
     const atTop = scrollY < 100 && !linkedAnchor;
     const update = () => {
+      // A browser navigation takes precedence over the switch that was loading.
+      if (pendingMode !== undefined) return;
       cleanup?.();
       cleanup = undefined;
       root.classList.toggle('fancy', fancy);
@@ -89,7 +93,13 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
   } finally {
     busy = false;
     toggle.disabled = false;
-    if (animate) toggle.focus({ preventScroll: true });
+    if (pendingMode !== undefined) {
+      const nextMode = pendingMode;
+      pendingMode = undefined;
+      void setMode(nextMode, false, false);
+    } else if (animate && document.activeElement === document.body) {
+      toggle.focus({ preventScroll: true });
+    }
   }
 }
 
@@ -105,7 +115,7 @@ if (control && toggle) {
   });
   addEventListener('popstate', () => {
     const fancy = new URL(location.href).searchParams.get('mode') === 'fancy';
-    if (fancy !== root.classList.contains('fancy')) void setMode(fancy, false, false);
+    if (busy || fancy !== root.classList.contains('fancy')) void setMode(fancy, false, false);
   });
   if (new URL(location.href).searchParams.get('mode') === 'fancy') void setMode(true, false, false);
 }
