@@ -1,14 +1,14 @@
 # Content sources
 
-Reviewed 5 September 2026. This records evidence for the portfolio copy and the origins of its decorative artwork.
+Reviewed 6 September 2026. This records evidence for the portfolio copy and the origins of its decorative artwork.
 
 ## Project selection
 
-Keep-mcp, feuer.io, the YouTube sponsor detector, split keyboards and the Swift raytracer were selected by Jannik. Big Pond and the tire testing contract entry remain as earlier work. Human-api and Vorsorge are deferred. Wilo, Twitch Rerun Filter, the Tarkov calculator and the website itself were removed from the list.
+The project order is keep-mcp, split keyboards, the YouTube sponsor detector, feuer.io, the Swift raytracer and Big Pond. Each entry has one short paragraph. Human-api and Vorsorge are deferred. Wilo, Twitch Rerun Filter, the Tarkov calculator, the website itself and the tire testing contract entry were removed from the list.
 
 The introduction combines the name, about text, AI sentence and contact links. Keep the wording concise and factual. Jannik supplied the Scylla build photos and confirmed that he assembled it and learned Colemak-DH. Do not imply that he designed the upstream hardware or firmware.
 
-On 6 September 2026, Jannik chose to mention his current work at Ada Health in one sentence: "I'm a software engineer building regulated medical software at Ada Health." No separate Ada achievements or project entry are planned.
+On 6 September 2026, Jannik chose to mention his current work at Ada Health in one sentence: "I'm a software engineer currently building regulated medical software at Ada Health." No separate Ada achievements or project entry are planned. He supplied the LinkedIn profile link and chose "I became proficient at software engineering before LLMs" for the AI sentence.
 
 ## feuer.io history
 
@@ -30,8 +30,8 @@ The README describes the hosting move from a VPS to Vercel and Render. This is a
 
 ## Other copy
 
-- [keep-mcp](https://github.com/feuerdev/keep-mcp): README and `src/server/keep_api.py`. `can_modify_note` requires the keep-mcp label unless unsafe mode is enabled. Avoid hardcoding changing star counts in the homepage.
-- Sponsor detector: private README and classifier implementation reviewed. Local MobileBERT classification through Transformers.js, with remote model loading disabled. The README records unfinished segment boundaries and caption handling. Do not advertise production reliability or link to a private repository from the homepage.
+- [keep-mcp](https://github.com/feuerdev/keep-mcp): README and `src/server/keep_api.py`. On 6 September 2026, GitHub API searches for `"google keep" mcp in:name,description,readme` and `keep mcp in:name,description`, sorted by stars, found this to be the highest-starred dedicated Google Keep MCP server, with 94 stars. The next dedicated result, [davenicoll/google-keep-mcp](https://github.com/davenicoll/google-keep-mcp), had 10. Larger results were directories or unrelated products. The homepage qualifies popularity by GitHub stars, not downloads or users. Recheck this claim when updating the page.
+- [Sponsor detector](https://github.com/feuerdev/yt-sponsor-detect): README and classifier implementation reviewed. Local MobileBERT classification through Transformers.js, with remote model loading disabled. The README records unfinished segment boundaries and caption handling. Describe it as a prototype. Jannik made the repository public on 6 September 2026. GitHub's API reported public visibility and an anonymous HTTP request returned 200.
 - [Scylla keymap](https://github.com/feuerdev/qmk_userspace/blob/main/keyboards/bastardkb/scylla/keymaps/feuerdev/keymap.c) and [Totem configuration](https://github.com/feuerdev/zmk-config-totem): personal configuration on top of upstream QMK and ZMK.
 - [Raytracer](https://github.com/feuerdev/Raytracer) and [renderer code](https://github.com/feuerdev/feuerlib/tree/main/feuerlib/Raytracer): Swift pixel-buffer rendering, sphere intersections, shadows and recursive reflections, plus an iOS scene editor.
 - [Big Pond](https://github.com/feuerdev/fish): existing source and portfolio material. Its former German App Store URL returned 404 during review, so the page links to source.
@@ -52,4 +52,4 @@ The September 2026 review looked at [Fabrice Bellard](https://bellard.org/), [Br
 
 Bellard's inline project links and short descriptions are the closest match. Tatham shows how native lists and direct descriptions can carry a substantial homepage. Knuth and Kernighan use horizontal rules to separate document sections. These references informed the content structure, not a copied visual theme.
 
-The homepage now starts with the name, a short bio and contact links. Each project is a visible paragraph with links in context. The expandable notes, role eyebrow, repeated technology lines, numbered labels and generic source-link labels were removed. The feuer.io history remains visible as a second paragraph. Fancy mode presents the same text with its existing artwork.
+The homepage now starts with the name, a short bio and contact links. Each project is a visible paragraph with links in context. The expandable notes, role eyebrow, repeated technology lines, numbered labels and generic source-link labels were removed. The detailed feuer.io history above is background evidence, with only a short summary on the homepage. Fancy mode presents the same text with its existing artwork. The footer date is maintained manually.

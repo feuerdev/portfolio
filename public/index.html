@@ -22,18 +22,19 @@
   <div class="mode-control" hidden>
     <button id="mode-toggle" type="button" title="Switch to fancy mode">
       <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Didn't this guy say he's a frontend dev?</span>
-      <span id="mode-label-mobile">Fancy mode</span>
+      <span id="mode-label-mobile">Didn't you say frontend dev?</span>
     </button>
   </div>
   <main id="main">
     <section class="hero" id="top" aria-labelledby="name">
       <div class="hero-copy">
         <h1 id="name">Jannik <span>Feuerhahn</span></h1>
-        <p class="intro" id="about">I'm a software engineer building regulated medical software at Ada Health.</p>
-        <p class="intro">I learned software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
+        <p class="intro" id="about">I'm a software engineer currently building regulated medical software at Ada Health.</p>
+        <p class="intro">I became proficient at software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
         <p class="hero-links" id="contact">
           <a href="mailto:jannik@feuer.dev">jannik@feuer.dev</a> <span class="link-separator" aria-hidden="true">·</span>
           <a href="https://github.com/feuerdev">GitHub</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://www.linkedin.com/in/jannik-feuerhahn/">LinkedIn</a> <span class="link-separator" aria-hidden="true">·</span>
           <a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Résumé</a>
         </p>
       </div>
@@ -56,28 +57,7 @@
           <img data-src="assets/keep-mcp.svg" width="700" height="560" alt="" loading="lazy" decoding="async">
         </figure>
         <div class="project-copy">
-          <p><a class="project-name" id="keep-mcp-title" href="https://github.com/feuerdev/keep-mcp">keep-mcp</a><span class="project-separator">: </span>A Python MCP server that lets AI agents search, read and edit Google Keep notes and checklists. It connects through gkeepapi and limits edits to notes labelled keep-mcp by default.</p>
-        </div>
-      </article>
-
-      <article class="project" id="feuer-game" aria-labelledby="feuer-game-title">
-        <figure class="project-art game-art fancy-only" aria-hidden="true">
-          <span class="art-label">feuer.io / Since 2018</span>
-          <img data-src="assets/feuer-map.png" width="912" height="476" alt="" loading="lazy" decoding="async">
-        </figure>
-        <div class="project-copy">
-          <p><a class="project-name" id="feuer-game-title" href="https://github.com/feuerdev/feuer/tree/dev">feuer.io</a><span class="project-separator">: </span>My eternal pet project since 2018. A multiplayer browser strategy game with procedural hex maps and A* pathfinding.</p>
-          <p>It has followed me from plain browser code to React, through Next.js and back to Vite, and from a VPS with Docker and Jenkins to Vercel and Render. I've used it to try shared-code monorepos, different authentication systems and state management approaches. It's still a work in progress.</p>
-        </div>
-      </article>
-
-      <article class="project" id="sponsor-detector" aria-labelledby="sponsor-detector-title">
-        <figure class="project-art sponsor-art fancy-only" aria-hidden="true">
-          <span class="art-label">YouTube / Local classification</span>
-          <img data-src="assets/sponsor-detector.svg" width="700" height="560" alt="" loading="lazy" decoding="async">
-        </figure>
-        <div class="project-copy">
-          <p><span class="project-name" id="sponsor-detector-title">YouTube sponsor detector</span><span class="project-separator">: </span>A browser extension that finds sponsored segments in captions using MobileBERT and Transformers.js, then skips them. Classification runs locally. It's a prototype: segment boundaries and caption handling still need work.</p>
+          <p><a class="project-name" id="keep-mcp-title" href="https://github.com/feuerdev/keep-mcp">keep-mcp</a><span class="project-separator">: </span>The most popular open-source Google Keep MCP server by GitHub stars. AI agents can search, read and edit notes and checklists.</p>
         </div>
       </article>
 
@@ -88,7 +68,27 @@
           <img class="scylla-progress" data-src="assets/scylla-build.webp" width="1200" height="904" alt="" loading="lazy" decoding="async">
         </figure>
         <div class="project-copy">
-          <p><span class="project-name" id="keyboards-title">Split keyboards</span><span class="project-separator">: </span>Ergonomic keyboards for tinkerers. I assembled a Scylla from Bastard Keyboards and learned the Colemak-DH layout. I customise its <a href="https://github.com/feuerdev/qmk_userspace/tree/main/keyboards/bastardkb/scylla/keymaps/feuerdev">QMK keymap</a> with home-row modifiers, layers and combos, and maintain a <a href="https://github.com/feuerdev/zmk-config-totem">ZMK config for my Totem</a>. Photos of the <a href="assets/scylla-build.webp">assembly</a> and <a href="assets/scylla-built.webp">finished keyboard</a>.</p>
+          <p><span class="project-name" id="keyboards-title">Split keyboards</span><span class="project-separator">: </span>Ergonomic keyboards for tinkerers. I <a href="assets/scylla-build.webp">assembled</a> a <a href="assets/scylla-built.webp">Scylla</a>, learned Colemak-DH and customise my <a href="https://github.com/feuerdev/qmk_userspace/tree/main/keyboards/bastardkb/scylla/keymaps/feuerdev">QMK</a> and <a href="https://github.com/feuerdev/zmk-config-totem">ZMK</a> layouts.</p>
+        </div>
+      </article>
+
+      <article class="project" id="sponsor-detector" aria-labelledby="sponsor-detector-title">
+        <figure class="project-art sponsor-art fancy-only" aria-hidden="true">
+          <span class="art-label">YouTube / Local classification</span>
+          <img data-src="assets/sponsor-detector.svg" width="700" height="560" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><a class="project-name" id="sponsor-detector-title" href="https://github.com/feuerdev/yt-sponsor-detect">YouTube sponsor detector</a><span class="project-separator">: </span>How much AI can you fit into a Chrome extension? A prototype that runs a language model locally to detect and skip sponsored segments on YouTube.</p>
+        </div>
+      </article>
+
+      <article class="project" id="feuer-game" aria-labelledby="feuer-game-title">
+        <figure class="project-art game-art fancy-only" aria-hidden="true">
+          <span class="art-label">feuer.io / Since 2018</span>
+          <img data-src="assets/feuer-map.png" width="912" height="476" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="project-copy">
+          <p><a class="project-name" id="feuer-game-title" href="https://github.com/feuerdev/feuer/tree/dev">feuer.io</a><span class="project-separator">: </span>A multiplayer browser strategy game and my eternal pet project since 2018. I've used it to try different architectures, frameworks and hosting setups.</p>
         </div>
       </article>
 
@@ -98,7 +98,7 @@
           <img data-src="assets/raytracer.png" width="190" height="338" alt="" loading="lazy" decoding="async">
         </figure>
         <div class="project-copy">
-          <p><a class="project-name" id="raytracer-title" href="https://github.com/feuerdev/Raytracer">Swift raytracer</a><span class="project-separator">: </span>A raytracer I wrote in 2021, drawing directly into a pixel buffer. It handles sphere intersections, lighting, shadows and recursive reflections. The iOS app lets you edit the scene. The repository has demos.</p>
+          <p><a class="project-name" id="raytracer-title" href="https://github.com/feuerdev/Raytracer">Swift raytracer</a><span class="project-separator">: </span>A raytracer I wrote in 2021, with an iOS scene editor.</p>
         </div>
       </article>
 
@@ -109,15 +109,15 @@
           <img data-src="assets/screenshots_fish.png" width="600" height="478" alt="" loading="lazy" decoding="async">
         </figure>
         <div class="project-copy">
-          <p><a class="project-name" id="big-pond-title" href="https://github.com/feuerdev/fish">Big Pond</a><span class="project-separator">: </span>An iOS app for discovering marine life in a given area. I built it after moving to Taiwan and wondering what was in the water. Written with MapKit, VIPER and Grand Central Dispatch.</p>
+          <p><a class="project-name" id="big-pond-title" href="https://github.com/feuerdev/fish">Big Pond</a><span class="project-separator">: </span>An iOS app for discovering local marine life, built after moving to Taiwan and wondering what was in the water.</p>
         </div>
       </article>
-      <p class="more-work">Earlier contract work includes Python development for a tire testing rig: command queues, UI separation and simulation performance.</p>
     </section>
   </main>
 
   <hr class="document-rule">
   <footer class="footer">
+    <span>Last updated <time datetime="2026-09-06">6 September 2026</time></span>
     <a href="privacy-policy.html">Privacy</a>
   </footer>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>

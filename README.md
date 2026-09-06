@@ -25,8 +25,10 @@ The VS Code task also runs the TypeScript watcher.
 
 ## Content
 
-The introduction combines the name, short bio, AI sentence, email, GitHub and résumé.
+The introduction combines the name, short bio, AI sentence, email, GitHub, LinkedIn and résumé.
 Projects follow directly, with no separate wordmark or repeated about/contact sections.
+Each project has one short paragraph. Maintain the footer's last-updated date
+manually in `public/index.html`, including the `<time datetime>` value.
 The selected projects and image sources are documented in [content sources](docs/content-sources.md).
 
 ## Two presentations

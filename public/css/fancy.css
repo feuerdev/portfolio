@@ -63,7 +63,6 @@
   .fancy .project-copy a { text-decoration: underline; text-underline-offset: .2em; }
   .fancy .project-copy a.project-name { text-decoration-thickness: 1px; }
   .fancy .project-separator, .fancy .document-rule { display: none; }
-  .fancy .more-work { margin: 0; padding-block: 1.5rem; color: var(--muted); font-size: .8rem; }
   .fancy .footer { margin: 0; padding-block: 1.5rem 6rem; font-size: .68rem; color: var(--muted); }
   .fancy .footer a { color: var(--muted); }
   .fancy #mode-toggle { background: var(--ink); color: var(--paper); border-color: var(--ink); }

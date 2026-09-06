@@ -54,19 +54,23 @@ and decorative link arrows. Keep copy factual and concise. The introduction comb
 the name, about text, AI sentence and contact links. Do not add a separate masthead
 wordmark or repeat about/contact sections below the projects. Start with the name,
 without a role eyebrow or punctuation after the surname. Use ordinary paragraphs
-with linked project names and short descriptions. All project text stays visible
+with linked project names and one short paragraph per project. All project text stays visible
 in both modes. Do not add expandables, repeated technology tag lines or generic
 "Read the source" links. Native horizontal rules separate the plain document's
 intro, projects and footer. Fancy mode restyles this same content.
 
-Selected projects are keep-mcp, feuer.io, the sponsor detector, split keyboards,
+Project order is keep-mcp, split keyboards, the sponsor detector, feuer.io,
 the Swift raytracer and Big Pond. Keep human-api and Vorsorge off the page for now.
 Wilo, Twitch Rerun Filter, the Tarkov calculator and the website itself are retired
-from the project list. The sponsor detector is a prototype with private source,
-so describe it without a broken public repository link. The Scylla photos show
+from the project list. The earlier Python contract-work paragraph is also removed.
+The sponsor detector is a prototype with a public repository. The Scylla photos show
 Jannik's own assembly and finished keyboard. Keep their WebP exports small and
 free of metadata. Plain mode links to the photos without loading them. See
 `docs/content-sources.md` for history references and artwork provenance.
+
+Maintain the footer's "Last updated" date manually in `public/index.html`. Update
+both the visible date and the `<time datetime>` value when content changes.
+The keep-mcp popularity claim refers to GitHub stars. Recheck it when updating copy.
 
 Keep first-load resources local. The homepage CSP allows same-origin assets and blocks inline script/style.
 Do not weaken it to add a widget. Plain mode has no analytics or external fonts.

@@ -51,7 +51,7 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
       root.classList.toggle('fancy', fancy);
       toggle!.title = fancy ? 'Switch to plain HTML' : 'Switch to fancy mode';
       label!.textContent = fancy ? 'Back to plain HTML' : "Didn't this guy say he's a frontend dev?";
-      if (mobileLabel) mobileLabel.textContent = fancy ? 'Plain HTML' : 'Fancy mode';
+      if (mobileLabel) mobileLabel.textContent = fancy ? 'Back to plain HTML' : "Didn't you say frontend dev?";
       if (fancy && enhancement) cleanup = enhancement.start();
       if (updateURL) {
         const url = new URL(location.href);
