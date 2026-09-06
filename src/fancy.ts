@@ -11,21 +11,6 @@ export function start(): () => void {
   document.querySelectorAll<HTMLTemplateElement>('.project-art template').forEach(template => {
     template.replaceWith(template.content.cloneNode(true));
   });
-  const revealTargets = [...document.querySelectorAll<HTMLElement>('.project')];
-  const reveal = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        (entry.target as HTMLElement).dataset.reveal = 'visible';
-        reveal!.unobserve(entry.target);
-      }
-    });
-  }, { threshold: .08 }) : undefined;
-  revealTargets.forEach(element => {
-    if (reveal) {
-      element.dataset.reveal = element.getBoundingClientRect().top < innerHeight ? 'visible' : 'waiting';
-      reveal.observe(element);
-    }
-  });
   const points: [number, number, number][] = [];
   for (let u = 0; u < 76; u++) {
     for (let v = 0; v < 32; v++) {
@@ -105,12 +90,11 @@ export function start(): () => void {
   sync();
   return () => {
     cancelAnimationFrame(frame);
-    reveal?.disconnect(); inView?.disconnect(); dimensions?.disconnect();
+    inView?.disconnect(); dimensions?.disconnect();
     removeEventListener('resize', resize); removeEventListener('pointermove', pointer);
     document.removeEventListener('visibilitychange', sync);
     motion.removeEventListener('change', sync); dark.removeEventListener('change', draw);
     button?.removeEventListener('click', toggleMotion);
-    revealTargets.forEach(element => delete element.dataset.reveal);
     delete root.dataset.motion;
     if (button) button.hidden = true;
   };

@@ -46,6 +46,11 @@ The README describes the hosting move from a VPS to Vercel and Render. This is a
 
 All project images are decorative, local and loaded only in fancy mode. Plain mode provides the same project descriptions and links without fetching artwork.
 
+Fancy typography uses [IBM Plex Sans](https://github.com/IBM/plex/tree/master/packages/plex-sans),
+regular and medium Latin-1 WOFF2 subsets. The two files total 42,944 bytes and are
+served locally only when needed in fancy mode. Their SIL Open Font License is
+retained in `public/assets/fonts/LICENSE.txt`.
+
 ## Plain-document review
 
 The September 2026 review looked at [Fabrice Bellard](https://bellard.org/), [Brian Kernighan](https://www.cs.princeton.edu/~bwk/), [Simon Tatham](https://www.chiark.greenend.org.uk/~sgtatham/), [Donald Knuth](https://www-cs-faculty.stanford.edu/~knuth/), [Ron Rivest](https://people.csail.mit.edu/rivest/) and [Peter Norvig](https://www.norvig.com/).

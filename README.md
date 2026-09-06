@@ -41,7 +41,9 @@ It works without JavaScript and fetches no project artwork, external fonts or an
 
 The top-right “Didn't this guy say he's a frontend dev?” button loads the fancy
 stylesheet and animation module. On small screens a compact button stays at the bottom right. It adds large
-typography, project artwork, scroll reveals and an interactive particle sculpture.
+typography, project artwork and an interactive particle sculpture. Fancy mode uses
+locally hosted IBM Plex Sans, blue links and a consistent text column beside the
+artwork. On mobile, project text comes first. Project content stays visible while scrolling.
 Use **Back to plain HTML** to return. `?mode=fancy` opens the fancy view directly.
 The choice is in the URL, with no cookie or browser-storage preference.
 
