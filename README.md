@@ -50,6 +50,9 @@ The choice is in the URL, with no cookie or browser-storage preference.
 Reduced-motion users get a static presentation. The motion button pauses/resumes
 animation. Rendering also pauses when the artwork is offscreen or the tab is hidden.
 View Transitions enhance the switch where supported, with an immediate fallback.
+The switch waits for both font weights before the reveal, using sans-serif if a font
+download fails. The sculpture stays still during the reveal and starts moving afterward.
+Skipped or failed transitions log a warning in the browser console.
 
 ## Editing and checking
 
@@ -69,7 +72,8 @@ the focused browser checklist. All five existing policy/terms URLs remain intact
 The [September code review](docs/code-review-2026-09-06.md) records findings and verification limits.
 
 With agent-browser installed and a preview running, `npm run test:browser` checks
-mobile placement, offline recovery, mode transitions, keyboard focus, Back navigation
+font readiness and failure, deferred canvas motion, skipped transitions,
+mobile placement, offline recovery, keyboard focus, Back navigation
 and lazy artwork. It uses port 5001 by
 default. Set `PREVIEW_URL` for a different preview URL.
 

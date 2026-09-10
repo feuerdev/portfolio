@@ -39,9 +39,13 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
   toggle.disabled = true;
   try {
     let enhancement: typeof import('./fancy.js') | undefined;
+    let artwork: ReturnType<typeof import('./fancy.js').start> | undefined;
     if (fancy) {
       const loaded = await Promise.all([loadStyles(), import('./fancy.js')]);
       enhancement = loaded[1];
+      // Request both faces before capturing the new view, avoiding a mid-reveal font swap.
+      // A failed font download can still use the stylesheet's sans-serif fallback.
+      await Promise.allSettled([400, 500].map(weight => document.fonts.load(`${weight} 18px "Plex Sans"`)));
     }
     const linkedAnchor = !updateURL && location.hash ? document.getElementById(location.hash.slice(1)) : null;
     const anchor = linkedAnchor ?? [...document.querySelectorAll<HTMLElement>('main section[id], main article[id]')]
@@ -56,7 +60,10 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
       toggle!.title = fancy ? 'Switch to plain HTML' : 'Switch to fancy mode';
       label!.textContent = fancy ? 'Back to plain HTML' : "Didn't this guy say he's a frontend dev?";
       if (mobileLabel) mobileLabel.textContent = fancy ? 'Back to plain HTML' : "Didn't you say frontend dev?";
-      if (fancy && enhancement) cleanup = enhancement.start();
+      if (fancy && enhancement) {
+        artwork = enhancement.start();
+        cleanup = artwork.cleanup;
+      }
       if (updateURL) {
         const url = new URL(location.href);
         if (fancy) url.searchParams.set('mode', 'fancy');
@@ -78,9 +85,11 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
           { clipPath: `circle(0px at ${x}px ${y}px)` },
           { clipPath: `circle(${radius}px at ${x}px ${y}px)` }
         ], { duration: 850, easing: 'cubic-bezier(.65,0,.25,1)', pseudoElement: '::view-transition-new(root)' });
-      }).catch(() => undefined);
-      await transition.finished.catch(() => undefined);
+      }).catch(error => console.warn('Portfolio reveal animation was skipped.', error));
+      await transition.finished.catch(error => console.warn('Portfolio view transition did not finish normally.', error));
     } else update();
+    // Keep the captured artwork still until the browser has removed the transition overlay.
+    if (pendingMode === undefined) artwork?.resumeMotion();
     status.textContent = fancy ? 'Fancy mode on.' : 'Plain HTML mode on.';
   } catch {
     // Failed decorative downloads must not prevent reading the document.

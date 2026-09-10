@@ -1,5 +1,5 @@
 // Fetched only after the visitor opts into fancy mode.
-export function start(): () => void {
+export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const root = document.documentElement;
   const canvas = document.querySelector<HTMLCanvasElement>('#curiosity');
   const button = document.querySelector<HTMLButtonElement>('.motion-button');
@@ -7,6 +7,7 @@ export function start(): () => void {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const dark = matchMedia('(prefers-color-scheme: dark)');
   let paused = false, visible = true, frame = 0, previous = 0, phase = 0, width = 0;
+  let ready = false, disposed = false;
   let pointerX = 0, pointerY = 0, rotationX = 0, rotationY = 0;
   document.querySelectorAll<HTMLTemplateElement>('.project-art template').forEach(template => {
     template.replaceWith(template.content.cloneNode(true));
@@ -40,7 +41,7 @@ export function start(): () => void {
       context.fill();
     }
   }
-  function running(): boolean { return Boolean(context) && !paused && !motion.matches && visible && !document.hidden; }
+  function running(): boolean { return ready && !disposed && Boolean(context) && !paused && !motion.matches && visible && !document.hidden; }
   function tick(time: number): void {
     if (!running()) { frame = 0; return; }
     if (time - previous >= 32) {
@@ -88,7 +89,8 @@ export function start(): () => void {
   button?.addEventListener('click', toggleMotion);
   resize();
   sync();
-  return () => {
+  function cleanup(): void {
+    disposed = true;
     cancelAnimationFrame(frame);
     inView?.disconnect(); dimensions?.disconnect();
     removeEventListener('resize', resize); removeEventListener('pointermove', pointer);
@@ -97,5 +99,9 @@ export function start(): () => void {
     button?.removeEventListener('click', toggleMotion);
     delete root.dataset.motion;
     if (button) button.hidden = true;
+  }
+  return {
+    resumeMotion: () => { if (!disposed) { ready = true; sync(); } },
+    cleanup
   };
 }

@@ -18,6 +18,57 @@ const finishTransition = () => {
   browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
 };
 try {
+  browser('open', base);
+  browser('set', 'viewport', '1440', '1000');
+  browser('set', 'media', 'light', 'no-preference');
+  // Delay font completion without depending on network/cache speed.
+  evaluate(`window.releaseFonts = [];
+    const load = document.fonts.load.bind(document.fonts);
+    document.fonts.load = (...args) => new Promise(resolve => window.releaseFonts.push(() => resolve(load(...args))));`);
+  holdTransition();
+  browser('click', '#mode-toggle');
+  browser('wait', '--fn', 'document.styleSheets.length === 2');
+  evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
+  assert.equal(evaluate('typeof window.finishSwitch'), 'undefined', 'The reveal must wait for font loading');
+  evaluate('window.releaseFonts.forEach(release => release())');
+  browser('wait', '--fn', 'typeof window.finishSwitch === "function"');
+  assert.ok(evaluate('[...document.fonts].every(font => font.status === "loaded")'), 'Both font weights must be ready before the reveal');
+  evaluate('window.finishSwitch(); window.readySwitch()');
+  // Let initial resize/intersection observations settle, then compare rendered pixels.
+  evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
+  const stillFrame = evaluate('document.querySelector("#curiosity").toDataURL()');
+  evaluate('new Promise(resolve => setTimeout(resolve, 200))');
+  assert.ok(evaluate('document.querySelector("#curiosity").toDataURL()') === stillFrame, 'The artwork must stay still during the reveal');
+  evaluate('window.endSwitch()');
+  browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
+  evaluate('window.stillFrame = document.querySelector("#curiosity").toDataURL()');
+  browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.stillFrame');
+
+  browser('open', base);
+  browser('network', 'route', '**/*.woff2', '--abort');
+  evaluate('document.startViewTransition = undefined');
+  browser('click', '#mode-toggle');
+  browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
+  assert.ok(evaluate('[...document.fonts].some(font => font.status === "error")'), 'Exercise a real failed font download');
+  assert.equal(browser('get', 'text', '#mode-status').text, 'Fancy mode on.', 'Failed fonts must still allow fancy mode without View Transitions');
+  evaluate('window.stillFrame = document.querySelector("#curiosity").toDataURL()');
+  browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.stillFrame');
+  browser('network', 'unroute', '**/*.woff2');
+
+  browser('open', base);
+  evaluate(`window.transitionWarnings = [];
+    console.warn = (...args) => window.transitionWarnings.push(args[0]);
+    document.startViewTransition = update => {
+      update();
+      return { ready: Promise.reject(new Error('Skipped for testing')), finished: Promise.resolve() };
+    };`);
+  browser('click', '#mode-toggle');
+  browser('wait', '--fn', '!document.querySelector("#mode-toggle").disabled');
+  assert.equal(evaluate('window.transitionWarnings.length'), 1, 'A skipped reveal must leave a diagnostic warning');
+  assert.equal(browser('get', 'text', '#mode-status').text, 'Fancy mode on.', 'A skipped reveal must still complete the mode switch');
+  evaluate('window.stillFrame = document.querySelector("#curiosity").toDataURL()');
+  browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.stillFrame');
+
   const entry = new URL(base);
   entry.searchParams.set('check', 'preserve');
   entry.hash = 'top';
@@ -89,7 +140,7 @@ try {
   browser('open', new URL('privacy-policy.html', base).href);
   assert.equal(evaluate('document.title'), 'Privacy | Jannik Feuerhahn');
   assert.equal(evaluate('document.querySelectorAll("script, iframe").length'), 0);
-  console.log('Browser checks passed: mobile placement, offline recovery, URL state, transition origin, focus, Back navigation, headings, lazy artwork, reduced motion and privacy page.');
+  console.log('Browser checks passed: font readiness/failure, deferred motion, skipped transitions, mobile placement, offline recovery, URL state, transition origin, focus, Back navigation, headings, lazy artwork, reduced motion and privacy page.');
 } finally {
   browser('set', 'offline', 'off');
   browser('close');
