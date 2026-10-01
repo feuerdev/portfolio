@@ -20,6 +20,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="mode-control" hidden>
+    <button class="motion-button" type="button" title="Pause motion" aria-label="Pause motion" aria-pressed="false" hidden></button>
     <button id="mode-toggle" type="button" title="Switch to fancy mode">
       <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Didn't this guy say he's a frontend dev?</span>
       <span id="mode-label-mobile">Didn't you say frontend dev?</span>
@@ -28,7 +29,7 @@
   <main id="main">
     <section class="hero" id="top" aria-labelledby="name">
       <div class="hero-copy">
-        <h1 id="name">Jannik <span>Feuerhahn</span></h1>
+        <h1 id="name"><span>Jannik</span> <span>Feuerhahn</span></h1>
         <p class="intro" id="about">I'm a software engineer currently building regulated medical software at Ada Health.</p>
         <p class="intro">I became proficient at software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
         <p class="hero-links" id="contact">
@@ -38,10 +39,19 @@
           <a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Résumé</a>
         </p>
       </div>
+      <nav class="contents fancy-only" aria-label="Projects">
+        <ol>
+          <li><a href="#keep-mcp"><span class="n">(01)</span><span class="dots"></span>keep-mcp</a></li>
+          <li><a href="#keyboards"><span class="n">(02)</span><span class="dots"></span>Split keyboards</a></li>
+          <li><a href="#sponsor-detector"><span class="n">(03)</span><span class="dots"></span>yt-sponsor-detect</a></li>
+          <li><a href="#feuer-game"><span class="n">(04)</span><span class="dots"></span>feuer.io</a></li>
+          <li><a href="#raytracer"><span class="n">(05)</span><span class="dots"></span>Swift raytracer</a></li>
+          <li><a href="#big-pond"><span class="n">(06)</span><span class="dots"></span>Big Pond</a></li>
+        </ol>
+      </nav>
       <div class="hero-art fancy-only" aria-hidden="true">
         <canvas id="curiosity" width="700" height="700"></canvas>
       </div>
-      <button class="motion-button fancy-only" type="button" hidden>Pause motion</button>
     </section>
 
     <hr class="document-rule">
@@ -109,7 +119,7 @@
 
   <hr class="document-rule">
   <footer class="footer">
-    <span>Last updated <time datetime="2026-09-07">7 September 2026</time></span>
+    <span>Last updated <time datetime="2026-10-01">1 October 2026</time></span>
     <a href="privacy-policy.html">Privacy</a>
   </footer>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>
