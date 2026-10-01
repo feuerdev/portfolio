@@ -1,51 +1,55 @@
 # Fancy design review
 
-6 September 2026. Starting checkpoint: `29ab3f5`, committed before this pass.
-Applied the requested [frontend-design skill](https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md).
+1 October 2026. Fancy mode borrows the launch-page style of recent model
+announcements, in particular the glowing sun and particle stream on OpenAI's
+[GPT-6.1 Sol](https://openai.com/index/introducing-gpt-6-1-sol/) page, and Anthropic's
+[Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5) page for its full-screen
+opening and numbered contents. Plain mode is unaffected.
 
 ## Direction
 
-Keep the personality of a programmer's homepage, with clearer typography and room
-for the actual work. The existing particle sculpture carries the decorative part.
-Blue links connect fancy mode to the plain page's academic-homepage references.
-The project copy, order, links and plain presentation remain intact.
+One cinematic scene carries the decoration, and the content stays calm and readable.
+The opening fills the screen with the large name, the introduction, contact links and a
+numbered contents list over the scene. The scene stays behind the whole page, so the
+projects read as stops on a journey through it rather than a separate section.
 
-The old presentation used the same large pastel frame for every project. Alternating
-text columns made the short descriptions harder to scan, and repeated fade-ins
-added movement to content that was already simple. Those were the main things to change.
+## Scene
 
-## Changes
+- A soft pale sun with an orange glow sits inside a tilted, clumpy particle stream of
+  white, blue and amber particles. A few particles carry a soft glow.
+- Each of the six projects is a bright knot in the stream. Hovering or focusing a
+  contents entry circles its knot.
+- Particles swirl in from all around and form the stream after the mode transition.
+  The camera follows the pointer.
+- Scrolling the introduction away tilts and zooms the camera and splits the name
+  apart. The camera then flies along the stream from knot to knot as each project
+  card is centred. Nearby particles become soft out-of-focus glows.
+- The camera interpolates distance geometrically, so zooming feels steady.
 
-- Locally hosted IBM Plex Sans, regular and medium, replaces Helvetica in fancy mode.
-  The two Latin-1 subsets total 42,944 bytes. Their license and provenance are retained.
-- The base palette is cool white `#f5f7fa`, ink `#233442`, slate `#526475` and link
-  blue `#2057bf`. Dark mode uses deep blue `#152532` and pale ink `#eef4fa`.
-  The original orange sculpture and colours within the project images remain.
-- Project descriptions share one left column. Artwork keeps proportions suited to
-  its source, including the complete game screenshot and the small raytracer output.
-  Mobile places the description before its image.
-- The Scylla photos use a larger main photograph with the assembly photo overlapping
-  its lower edge. Removed the surrounding coloured panels, redundant artwork labels,
-  crosses and decorative pond rings.
-- Removed scroll reveals and image-hover transforms. Content is visible immediately.
-  The mode transition, interactive sculpture, motion controls and reduced-motion
-  support remain. This also removes one observer and its cleanup code.
-- The introduction and project section use less vertical space. At the captured
-  1440px desktop width, the page is 4,194px tall, down from 5,053px.
+## Layout and accessibility
 
-## Comparison and verification
+- Fancy mode is always dark. A glowing particle field does not work on a light page.
+- Projects are glass cards with the number, linked title, description and artwork.
+- Text colours meet WCAG AAA (7:1) on the background and on cards. Link blue is
+  10:1, and 6.5:1 in the worst case of a card over pure white.
+- Text outside cards has a dark halo, and the sun scrolls away with the name, so
+  text does not sit on the bright disc.
+- A compact pause icon beside the mode switch satisfies WCAG 2.2.2. It is a toggle
+  button named "Pause motion" with `aria-pressed`. Reduced motion shows a static
+  stream without scroll effects.
 
-The local comparison contains a frozen copy of the committed checkpoint and a copy
-of this revision, both runnable. It offers desktop/mobile widths, light/dark themes
-and matching project navigation. The comparison lives outside the deployment folder.
+## Performance
 
-Build, four static tests and browser regressions passed. Chromium accessibility
-scans at 320, 390, 701 and 1440px reported zero violations in both colour schemes.
-Inspected desktop and mobile screenshots, checked the comparison controls, native
-links, switching, pause/resume and reduced motion on page load. Normal page loading
-produced no console errors or page exceptions.
+- Particles use additive blending, so there is no per-frame depth sort. Colours are
+  pre-sorted into batches, and a few hundred glow sprites are pre-rendered.
+- The particle count scales with viewport area, down to 45% on small screens.
+- There is no texture generation or animation dependency. Rendering stops when
+  motion is paused, the tab is hidden or fancy mode is disabled.
 
-A fresh plain page downloads no font. Blocking both font requests leaves fancy mode
-and all six projects usable with the fallback font. The first-load content and
-existing interaction regressions are preserved. These checks cover Chromium,
-not a full cross-browser or screen-reader audit.
+## Verification
+
+Chromium checks on 1 October 2026 at 1440×900 and 390×844: no long tasks during the
+switch and a 95th-percentile frame time of 16.8 ms in both viewports. The build,
+static tests and browser regressions passed. No horizontal scrolling, console
+messages or page errors. The pause icon works with Enter and Space. These checks
+ran headless on a desktop machine, not on a phone or in other browsers.
