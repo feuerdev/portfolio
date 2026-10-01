@@ -41,8 +41,9 @@ The README describes the hosting move from a VPS to Vercel and Render. This is a
 - `keep-mcp.svg` and `sponsor-detector.svg` are explanatory diagrams authored for this page. They are not application screenshots or measured model outputs.
 - `scylla-built.webp` and `scylla-build.webp` are Jannik's photos of his finished Scylla and its assembly. Exported from the March 2025 originals at 904 by 1200 and 1200 by 904 pixels using cwebp quality 80 with metadata disabled. Their sizes are 50,922 and 97,738 bytes. The full-resolution JPEGs are not included. These replace the previous keymap diagram.
 - `raytracer.png` is a static frame at 3 seconds from [Jannik's raytracer demo](https://i.imgur.com/vWO23AJ.gif), linked from his repository README. The original recording is 190 by 338 pixels. It is kept static so it respects motion preferences without adding a second animation system. The source link leads to the original demos.
-- `feuer-map.png` is the [May 2025 screenshot](https://github.com/user-attachments/assets/66ce532e-ec91-425a-bf6c-6ebaa3705e92) from the feuer.io README. CSS crops it to the project panel.
-- `screenshots_fish.png` is an existing portfolio asset.
+- `feuer-map.webp` is the [May 2025 screenshot](https://github.com/user-attachments/assets/66ce532e-ec91-425a-bf6c-6ebaa3705e92) from the feuer.io README. CSS crops it to the project panel.
+- `screenshots_fish.webp` is an existing portfolio asset.
+- Both are exported from PNG at their original dimensions using cwebp quality 80 with metadata disabled. Their sizes are 20,290 and 51,560 bytes.
 
 All project images are decorative, local and loaded only in fancy mode. Plain mode provides the same project descriptions and links without fetching artwork.
 
