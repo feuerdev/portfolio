@@ -30,31 +30,3 @@ the recipient category of email providers rather than guessing the account contr
 
 These notes document the implementation assessment, not a legal opinion or a claim
 that the site meets every applicable legal requirement.
-
-## Follow-ups handled in this branch
-
-- The Ada mention is one sentence, with no separate achievements entry.
-- Project selection, feuer.io history and the plain-document layout were reviewed.
-- Both keyboard photos were compressed and stripped of metadata. Copy now mentions ergonomic keyboards and Colemak-DH.
-- The mobile switch is fixed at the bottom right and does not push the introduction down.
-- The transition starts at the actual button centre.
-- Fancy-mode failure was reproduced with a real browser's offline setting. After connectivity returns, Chromium retains the failed import in the same document. The control now explicitly reloads the page with `mode=fancy`, preserving other query parameters and the fragment. There is no automatic retry loop or cache-busting library.
-- The website privacy notice was rewritten for the current implementation. The four app policy/terms pages retain their legal wording, with accessible headings, language declarations and a shared stylesheet.
-
-Run `npm run build`, `npm test`, `npm run test:browser` and `git diff --check`
-before handing off. Browser checks require agent-browser and a running preview.
-
-## Verification on 6 September 2026
-
-The TypeScript build, four static tests and browser regression script passed.
-Chromium checks covered 320px and 390px mobile layouts, a 701px viewport and a
-1440px desktop viewport, plus light/dark fancy mode. Keyboard switching works
-without View Transition support. Blocked JavaScript leaves all six projects visible.
-Blocked fancy CSS preserves plain content and the reload control recovers after
-unblocking. A fresh plain load requests only the local base stylesheet, app module
-and favicon, with no cookies or local/session storage entries.
-
-Both WebP files decode at their declared dimensions and contain no EXIF/XMP chunks.
-Automated accessibility scans reported no violations for plain mode, the privacy
-page and both fancy colour schemes. Contrast checks involving artwork needed
-manual visual inspection. This is not a cross-browser accessibility certification.

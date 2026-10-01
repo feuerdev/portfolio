@@ -116,5 +116,5 @@ font readiness and failure, deferred canvas motion, skipped transitions, mobile 
 offline recovery, focus, Back navigation and lazy artwork. Failed fancy downloads
 offer an explicit page reload because browsers retain failed module imports.
 
-Update this file and the README when commands or behavior change. Private server
+Update this file when commands or behavior change, and the README when commands change. Private server
 operations are out of scope and belong in `feuerdev/server-setup`. Never commit secrets.
