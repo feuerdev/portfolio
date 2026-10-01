@@ -74,14 +74,12 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     pointerY = (event.clientY / innerHeight - .5) * .5;
   }
   function toggleMotion(): void { paused = !paused; sync(); }
-  const inView = canvas && 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+  const inView = new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting;
     sync();
-  }) : undefined;
-  if (canvas) inView?.observe(canvas);
-  const dimensions = canvas && 'ResizeObserver' in window ? new ResizeObserver(resize) : undefined;
-  if (canvas) dimensions?.observe(canvas);
-  addEventListener('resize', resize);
+  });
+  const dimensions = new ResizeObserver(resize);
+  if (canvas) { inView.observe(canvas); dimensions.observe(canvas); }
   addEventListener('pointermove', pointer, { passive: true });
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', sync);
@@ -92,8 +90,8 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   function cleanup(): void {
     disposed = true;
     cancelAnimationFrame(frame);
-    inView?.disconnect(); dimensions?.disconnect();
-    removeEventListener('resize', resize); removeEventListener('pointermove', pointer);
+    inView.disconnect(); dimensions.disconnect();
+    removeEventListener('pointermove', pointer);
     document.removeEventListener('visibilitychange', sync);
     motion.removeEventListener('change', sync); dark.removeEventListener('change', draw);
     button?.removeEventListener('click', toggleMotion);
