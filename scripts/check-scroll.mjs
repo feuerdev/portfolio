@@ -11,7 +11,9 @@ function browser(...args) {
 const evaluate = code => browser('eval', code).result;
 const settle = () => evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
 const centre = id => {
-  evaluate(`document.getElementById(${JSON.stringify(id)}).scrollIntoView({ block: 'center', behavior: 'instant' })`);
+  // scrollIntoView includes scroll-margin, which offsets the apparent centre.
+  evaluate(`{ const box = document.getElementById(${JSON.stringify(id)}).getBoundingClientRect();
+    scrollTo({ top: scrollY + box.top + box.height / 2 - innerHeight / 2, behavior: 'instant' }); }`);
   settle();
   return evaluate('window.scene.sun');
 };

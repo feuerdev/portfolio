@@ -48,6 +48,11 @@ projects share a steady backdrop while reading.
 
 - Fancy mode is always dark. A glowing particle field does not work on a light page.
 - Projects are glass cards with the number, linked title, description and artwork.
+- Static, authentic screenshots replace the Keep and sponsor placeholder diagrams.
+  Keep pairs a real checklist with its recorded MCP call summary; sponsor shows the
+  actual extension settings. All projects share a media area up to 400 pixels tall,
+  reduced to 220 pixels on narrow screens. Screenshot proportions are preserved,
+  the keyboard keeps two overlapping photos, and the raytracer is not enlarged.
 - Text colours meet WCAG AAA (7:1) on the background and on cards. Link blue is
   10:1, and 6.5:1 in the worst case of a card over pure white.
 - Text outside cards has a dark halo. The desktop reading view keeps the sun's bright
@@ -91,6 +96,14 @@ edge, foreground visibility and the dim mobile sun.
 Framing was checked at widths 1440, 1100, 700, 390 and 320 pixels. Desktop and mobile
 screenshots were reviewed; no console messages or page errors appeared, and Pause
 worked with Enter and Space. No new real-phone or cross-browser measurements.
+
+2 October 2026: authentic project imagery checked at widths 1440, 700, 390 and
+320 pixels. The build, static tests and full browser suite passed. Media areas are
+consistent, images stay inside their cards, and the raytracer remains at or below
+its original size. Desktop and mobile screenshots were reviewed, including dark
+reduced-motion mode, with no console messages or page errors. Axe reported no
+violations and one incomplete contrast rule requiring manual review. These checks
+used desktop Chromium; no new real-phone or cross-browser measurements.
 
 2 October 2026, orbital wake: pointer movement changes orbital momentum and leaves
 particles in new spacing. The user approved this interaction for publication.

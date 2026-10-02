@@ -1,6 +1,6 @@
 # Content sources
 
-Reviewed 6 September 2026. This records evidence for the portfolio copy and the origins of its decorative artwork.
+Reviewed 6 September 2026, with artwork updated 2 October 2026. This records evidence for the portfolio copy and the origins of its decorative artwork.
 
 ## Project selection
 
@@ -38,14 +38,18 @@ The README describes the hosting move from a VPS to Vercel and Render. This is a
 
 ## Artwork
 
-- `keep-mcp.svg` and `sponsor-detector.svg` are explanatory diagrams authored for this page. They are not application screenshots or measured model outputs.
+- `keep-checklist.webp` is the real Google Keep checklist capture from [keep-mcp PR #19](https://github.com/feuerdev/keep-mcp/pull/19), originally `checklist-title-before.png`. It shows the disposable fixture created by an actual MCP `create_list` call: Buy milk unchecked and Pack bag checked. The short tool-call summary below it repeats those recorded items and states, not the full JSON transcript. CSS crops the image to the open note, excluding account chrome and navigation. The original pixels and long evidence-run title are retained. Lossless WebP, 1280 by 720 pixels, 42,834 bytes, with metadata disabled. No new notes were created for this portfolio update.
+- `sponsor-popup.webp` shows the actual extension popup at [commit 80a6fe0](https://github.com/feuerdev/yt-sponsor-detect/tree/80a6fe03fdb579c30cef45a1966a05f88806bb40/src). Captured from the unpacked extension in an isolated Chromium profile at 520 by 310 pixels, using its default categories and thresholds. Lossless WebP, 7,026 bytes, with metadata disabled. This is the implemented settings interface, not a claim about measured classifier accuracy or completed video skipping. The former placeholder SVG diagrams were removed.
 - `scylla-built.webp` and `scylla-build.webp` are Jannik's photos of his finished Scylla and its assembly. Exported from the March 2025 originals at 904 by 1200 and 1200 by 904 pixels using cwebp quality 80 with metadata disabled. Their sizes are 50,922 and 97,738 bytes. The full-resolution JPEGs are not included. These replace the previous keymap diagram.
 - `raytracer.png` is a static frame at 3 seconds from [Jannik's raytracer demo](https://i.imgur.com/vWO23AJ.gif), linked from his repository README. The original recording is 190 by 338 pixels. It is kept static so it respects motion preferences without adding a second animation system. The source link leads to the original demos.
-- `feuer-map.webp` is the [May 2025 screenshot](https://github.com/user-attachments/assets/66ce532e-ec91-425a-bf6c-6ebaa3705e92) from the feuer.io README. CSS crops it to the project panel.
+- `feuer-map.webp` is the [May 2025 screenshot](https://github.com/user-attachments/assets/66ce532e-ec91-425a-bf6c-6ebaa3705e92) from the feuer.io README. It fits within the project media area without cropping.
 - `screenshots_fish.webp` is an existing portfolio asset.
-- Both are exported from PNG at their original dimensions using cwebp quality 80 with metadata disabled. Their sizes are 20,290 and 51,560 bytes.
+- The game and Fish images are exported from PNG at their original dimensions using cwebp quality 80 with metadata disabled. Their sizes are 20,290 and 51,560 bytes.
 
 All project images are decorative, local and loaded only in fancy mode. Plain mode provides the same project descriptions and links without fetching artwork.
+Artwork shares a bounded media area, up to 400 pixels tall on desktop and 220 pixels
+on narrow screens. Screenshots retain their aspect ratios. The small raytracer capture
+is never enlarged, and the two keyboard photos retain their overlapping composition.
 
 Fancy typography uses [IBM Plex Sans](https://github.com/IBM/plex/tree/master/packages/plex-sans),
 regular and medium Latin-1 WOFF2 subsets. The two files total 42,944 bytes and are

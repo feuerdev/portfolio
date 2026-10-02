@@ -9,7 +9,7 @@
     "dev": "npm run build && http-server public -a 127.0.0.1 -p ${PORT:-5000} -c-1",
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "node --test",
-    "test:browser": "node scripts/check-browser.mjs && node scripts/check-scroll.mjs && node scripts/check-occlusion.mjs && node scripts/check-pointer.mjs"
+    "test:browser": "node scripts/check-browser.mjs && node scripts/check-scroll.mjs && node scripts/check-occlusion.mjs && node scripts/check-images.mjs && node scripts/check-pointer.mjs"
   },
   "repository": {
     "type": "git",

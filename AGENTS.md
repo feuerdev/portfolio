@@ -98,6 +98,10 @@ The sponsor detector is a prototype with a public repository. The Scylla photos 
 Jannik's own assembly and finished keyboard. Keep their WebP exports small and
 free of metadata. Plain mode links to the photos without loading them. See
 `docs/content-sources.md` for history references and artwork provenance.
+Use authentic captures for project artwork. Keep's checklist and tool-call summary
+come from recorded MCP evidence; the sponsor image is its actual settings popup.
+Keep media areas consistent and bounded, preserve screenshot aspect ratios, and
+do not enlarge the old raytracer capture. Images stay static and load only in fancy mode.
 
 Maintain the footer's "Last updated" date manually in `public/index.html`. Update
 both the visible date and the `<time datetime>` value when content changes.
@@ -137,7 +141,9 @@ offline recovery, focus, Back navigation and lazy artwork. It also runs
 `scripts/check-scroll.mjs` for steady sun framing, the stronger zoom and orbit,
 continuous and scroll rotation, Pause, reverse zoom and narrow/reduced-motion views.
 `scripts/check-occlusion.mjs` checks rear-particle occlusion, glow at the sun's edge,
-foreground visibility and the dim sun. Failed fancy downloads
+foreground visibility and the dim sun.
+`scripts/check-images.mjs` checks consistent media areas, image containment, mobile
+sizing, the captured assets and the raytracer's original size. Failed fancy downloads
 offer an explicit page reload because browsers retain failed module imports.
 
 `scripts/check-pointer.mjs` checks orbital momentum, lasting spacing, speed settling,

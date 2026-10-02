@@ -27,10 +27,11 @@ git diff --check
 
 With agent-browser installed and a preview running, `npm run test:browser` checks
 the mode switch and calm scroll behavior, including steady sun framing, Pause and
-sun occlusion of rear particles and pointer interaction. Fine mouse pointers sweep
-a dust wake through the scene, including behind content. Swipes change orbital
-speed and spacing; scattered particles settle into the band at their new positions.
-A stationary pointer exerts no force.
+sun occlusion of rear particles, pointer interaction and project imagery on
+desktop/mobile. Fine mouse pointers sweep a dust wake through the scene,
+including behind content. Swipes change orbital speed and spacing; scattered
+particles settle into the band at their new positions. A stationary pointer
+exerts no force.
 It uses port 5001 unless `PREVIEW_URL` is set.
 
 Run `node scripts/measure-pointer.mjs` separately for paired active/inactive renderer
