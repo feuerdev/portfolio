@@ -1,7 +1,7 @@
 export type Vector = [number, number, number];
 export type Shot = { position: Vector; target: Vector; x: number; y: number };
 
-const TAU = Math.PI * 2, UP: Vector = [0, 1, 0], SUN = .2, BAND = 1, INCLINE = .24, SPIN = .03, KNOTS = 6;
+const TAU = Math.PI * 2, UP: Vector = [0, 1, 0], SUN = .2, BAND = 1, INCLINE = .24, KNOTS = 6;
 const COLOURS = ['255, 255, 255', '214, 228, 255', '130, 172, 255', '255, 172, 88', '255, 216, 164'];
 const LEVELS = [.35, .55, .75, 1];
 const sub = (a: Vector, b: Vector): Vector => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -10,7 +10,6 @@ const times = (a: Vector, s: number): Vector => [a[0] * s, a[1] * s, a[2] * s];
 const dot = (a: Vector, b: Vector) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const cross = (a: Vector, b: Vector): Vector => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 const unit = (a: Vector): Vector => times(a, 1 / (Math.hypot(a[0], a[1], a[2]) || 1));
-const mix = (a: Vector, b: Vector, t: number): Vector => plus(a, times(sub(b, a), t));
 export const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const gaussian = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(TAU * Math.random());
 const pick = (weights: number[]) => { let r = Math.random() * weights.reduce((a, b) => a + b), i = 0; while ((r -= weights[i]) > 0) i++; return i; };
@@ -20,13 +19,6 @@ function bandPoint(angle: number, radius: number, height: number): Vector {
   return [radius * Math.cos(angle), height * Math.cos(INCLINE) - z * Math.sin(INCLINE), height * Math.sin(INCLINE) + z * Math.cos(INCLINE)];
 }
 const knotAngle = (index: number) => index / KNOTS * TAU + .6;
-
-export function blend(a: Shot, b: Shot, t: number): Shot {
-  const from = sub(a.position, a.target), to = sub(b.position, b.target);
-  const near = Math.hypot(...from), far = Math.hypot(...to), target = mix(a.target, b.target, t);
-  const direction = unit(mix(times(from, 1 / near), times(to, 1 / far), t));
-  return { position: plus(target, times(direction, near * (far / near) ** t)), target, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
-}
 
 export function createSpace(amount: number) {
   type Seed = { a: number; b: number; c: number; knot: number; size: number; colour: number; level: number; glow: boolean };
@@ -76,16 +68,11 @@ export function createSpace(amount: number) {
   const stars = Array.from({ length: Math.round(700 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: pick([5, 3, 1.5, .6]) }))
     .sort((p, q) => p.level - q.level);
 
-  function positions(phase: number): Vector[] {
-    return Array.from({ length: KNOTS }, (_, index) => bandPoint(knotAngle(index) + phase * SPIN, BAND, 0));
+  function positions(turn: number): Vector[] {
+    return Array.from({ length: KNOTS }, (_, index) => bandPoint(knotAngle(index) + turn, BAND, 0));
   }
-  function overview(exit: number, yaw: number, x: number, y: number): Shot {
-    const pitch = .3 + exit * .72, distance = 3.1 - exit * 1.15;
+  function overview(distance: number, yaw: number, x: number, y: number, pitch = .3): Shot {
     return { position: times([Math.cos(pitch) * Math.sin(yaw), Math.sin(pitch), Math.cos(pitch) * Math.cos(yaw)], distance), target: [0, 0, 0], x, y };
-  }
-  function visit(index: number, places: Vector[], x: number, y: number): Shot {
-    const target = places[index], outward = unit(target), along = unit(cross(UP, outward));
-    return { position: plus(target, plus(plus(times(outward, .3), times(UP, .12)), times(along, -.26))), target, x, y };
   }
   function nudge(shot: Shot, x: number, y: number): Shot {
     const forward = unit(sub(shot.target, shot.position)), right = unit(cross(forward, UP)), up = cross(right, forward);
@@ -93,7 +80,7 @@ export function createSpace(amount: number) {
     return { ...shot, position: plus(shot.position, plus(times(right, x * reach), times(up, -y * reach))) };
   }
 
-  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, shot: Shot, highlight: number, formation: number): void {
+  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, turn: number, shot: Shot, highlight: number, formation: number, sunOpacity = 1): void {
     const focal = Math.min(width, height) * 1.15, cx = width * shot.x, cy = height * shot.y;
     const forward = unit(sub(shot.target, shot.position)), right = unit(cross(forward, UP)), up = cross(right, forward);
     const [px, py, pz] = shot.position;
@@ -110,8 +97,15 @@ export function createSpace(amount: number) {
     }
 
     const sun = sub([0, 0, 0], shot.position), sunZ = dot(sun, forward);
+    const sunX = cx + dot(sun, right) / sunZ * focal, sunY = cy - dot(sun, up) / sunZ * focal;
+    const sunRadius = SUN * focal / sunZ;
+    const outsideSun = new Path2D();
     if (sunZ > SUN) {
-      const x = cx + dot(sun, right) / sunZ * focal, y = cy - dot(sun, up) / sunZ * focal, radius = SUN * focal / sunZ;
+      const x = sunX, y = sunY, radius = sunRadius;
+      outsideSun.rect(0, 0, width, height);
+      outsideSun.moveTo(x + radius, y);
+      outsideSun.arc(x, y, radius, 0, TAU);
+      context.globalAlpha = sunOpacity;
       context.globalCompositeOperation = 'lighter';
       for (const [reach, colour] of [[7, 'rgba(255, 150, 60, .1)'], [2.3, 'rgba(255, 190, 100, .42)']] as const) {
         const glow = context.createRadialGradient(x, y, radius * .8, x, y, radius * reach);
@@ -130,11 +124,12 @@ export function createSpace(amount: number) {
       context.beginPath();
       context.arc(x, y, radius, 0, TAU);
       context.fill();
+      context.globalAlpha = 1;
     }
 
     context.globalCompositeOperation = 'lighter';
-    const turn = phase * SPIN, cosI = Math.cos(INCLINE), sinI = Math.sin(INCLINE);
-    const centres = positions(phase), forming = formation < 1;
+    const cosI = Math.cos(INCLINE), sinI = Math.sin(INCLINE);
+    const centres = positions(turn), forming = formation < 1;
     const [fx, fy, fz] = forward, [rx, ry, rz] = right, [ux, uy, uz] = up;
     style = -1;
     for (let i = 0; i < count; i++) {
@@ -159,6 +154,19 @@ export function createSpace(amount: number) {
       const lit = knot >= 0 && knot === highlight ? 1.6 : 1;
       const size = Math.min(60, sizes[i] * focal / depth * (.8 + .2 * Math.sin(phase * 2.2 + twinkles[i])) * lit);
       if (sx < -size * 4 || sy < -size * 4 || sx > width + size * 4 || sy > height + size * 4) continue;
+      let clipped = false;
+      if (sunZ > SUN && depth > sunZ) {
+        // Cull fully hidden sprites; only clip the few that cross the limb.
+        // Include the entire glow, not just the particle's centre.
+        const reach = (size > 7 ? size : glows[i] ? Math.max(size * 4, 6) : Math.max(size, .9)) * Math.SQRT2;
+        const distanceSquared = (sx - sunX) ** 2 + (sy - sunY) ** 2;
+        if (sunRadius > reach && distanceSquared < (sunRadius - reach) ** 2) continue;
+        if (distanceSquared < (sunRadius + reach) ** 2) {
+          context.save();
+          context.clip(outsideSun, 'evenodd');
+          clipped = true;
+        }
+      }
       if (size > 7) {
         context.drawImage(bokehSprites[Math.floor(styles[i] / LEVELS.length)], sx - size, sy - size, size * 2, size * 2);
       } else if (glows[i]) {
@@ -171,6 +179,7 @@ export function createSpace(amount: number) {
         const dotSize = Math.max(.9, size);
         context.fillRect(sx - dotSize / 2, sy - dotSize / 2, dotSize, dotSize);
       }
+      if (clipped) { context.restore(); style = -1; }
     }
     context.globalCompositeOperation = 'source-over';
 
@@ -186,5 +195,5 @@ export function createSpace(amount: number) {
     }
   }
 
-  return { positions, overview, visit, nudge, render };
+  return { overview, nudge, render };
 }
