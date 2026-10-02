@@ -1,5 +1,6 @@
 export type Vector = [number, number, number];
 export type Shot = { position: Vector; target: Vector; x: number; y: number };
+export type PointerWake = { x: number; y: number; fromX: number; fromY: number; radius: number };
 
 const TAU = Math.PI * 2, UP: Vector = [0, 1, 0], SUN = .2, BAND = 1, INCLINE = .24, KNOTS = 6;
 const COLOURS = ['255, 255, 255', '214, 228, 255', '130, 172, 255', '255, 172, 88', '255, 216, 164'];
@@ -43,6 +44,8 @@ export function createSpace(amount: number) {
   const base = new Float32Array(count * 3), origin = new Float32Array(count * 3);
   const knots = new Int8Array(count), sizes = new Float32Array(count), styles = new Uint8Array(count), glows = new Uint8Array(count);
   const delays = new Float32Array(count), twinkles = new Float32Array(count);
+  // Per particle: orbital phase, radial displacement and height, plus their velocities.
+  const offsets = new Float32Array(count * 3), velocities = new Float32Array(count * 3), awake = new Uint8Array(count);
   seeds.forEach((seed, i) => {
     base.set([seed.a, seed.b, seed.c], i * 3);
     origin.set(times(unit([gaussian(), gaussian(), gaussian()]), 1.6 + Math.random() * 2.6), i * 3);
@@ -80,7 +83,7 @@ export function createSpace(amount: number) {
     return { ...shot, position: plus(shot.position, plus(times(right, x * reach), times(up, -y * reach))) };
   }
 
-  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, turn: number, shot: Shot, highlight: number, formation: number, sunOpacity = 1): void {
+  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, turn: number, shot: Shot, highlight: number, formation: number, sunOpacity = 1, pointer?: PointerWake, elapsed = 0): void {
     const focal = Math.min(width, height) * 1.15, cx = width * shot.x, cy = height * shot.y;
     const forward = unit(sub(shot.target, shot.position)), right = unit(cross(forward, UP)), up = cross(right, forward);
     const [px, py, pz] = shot.position;
@@ -131,26 +134,92 @@ export function createSpace(amount: number) {
     const cosI = Math.cos(INCLINE), sinI = Math.sin(INCLINE);
     const centres = positions(turn), forming = formation < 1;
     const [fx, fy, fz] = forward, [rx, ry, rz] = right, [ux, uy, uz] = up;
+    const dt = clamp(elapsed, 0, .064);
+    const flowDecay = Math.exp(-.65 * dt), knotDecay = Math.exp(-1.1 * dt);
+    const spring = 1.8, damping = .85, frequency = Math.sqrt(spring * spring - damping * damping);
+    const decay = Math.exp(-damping * dt), oscillation = Math.cos(frequency * dt), sway = Math.sin(frequency * dt) / frequency;
+    let highlightX = 0, highlightY = 0, highlightZ = 0, highlightCount = 0;
+    const stepX = pointer ? pointer.x - pointer.fromX : 0, stepY = pointer ? pointer.y - pointer.fromY : 0;
+    const pathSquared = stepX * stepX + stepY * stepY;
+    const wake = !forming && dt > 0 && pointer && pathSquared > .01 ? pointer : undefined;
+    const radiusSquared = wake ? wake.radius * wake.radius : 1;
+    const inversePath = wake ? 1 / Math.sqrt(pathSquared) : 0;
     style = -1;
     for (let i = 0; i < count; i++) {
       const o = i * 3, knot = knots[i];
-      let x: number, y: number, z: number;
+      if (awake[i] && dt > 0) {
+        // Drag settles orbital speed but retains the new phase/spacing. Only
+        // radial/vertical scatter returns toward the stream's overall shape.
+        const drag = knot < 0 ? .65 : 1.1, orbitDecay = knot < 0 ? flowDecay : knotDecay;
+        const phase = offsets[o] + velocities[o] * (1 - orbitDecay) / drag;
+        offsets[o] = knot < 0 ? phase % TAU : clamp(phase, -.24, .24);
+        velocities[o] *= orbitDecay;
+        let energy = velocities[o] * velocities[o];
+        for (let axis = 1; axis < 3; axis++) {
+          const j = o + axis, offset = offsets[j], velocity = velocities[j];
+          offsets[j] = (offset * oscillation + (velocity + damping * offset) * sway) * decay;
+          velocities[j] = (velocity * oscillation - (damping * velocity + spring * spring * offset) * sway) * decay;
+          const limit = axis === 1 ? .35 : .22;
+          if (Math.abs(offsets[j]) > limit) { offsets[j] = clamp(offsets[j], -limit, limit); velocities[j] *= .5; }
+          energy += offsets[j] * offsets[j] + velocities[j] * velocities[j];
+        }
+        if (energy < .000001) {
+          awake[i] = 0;
+          velocities[o] = velocities[o + 1] = velocities[o + 2] = 0;
+          offsets[o + 1] = offsets[o + 2] = 0;
+        }
+      }
+      let x: number, y: number, z: number, cosA: number, sinA: number, radius: number;
       if (knot < 0) {
-        const angle = base[o] + turn, radius = base[o + 1], flat = radius * Math.sin(angle);
-        x = radius * Math.cos(angle);
-        y = base[o + 2] * cosI - flat * sinI;
-        z = base[o + 2] * sinI + flat * cosI;
+        const angle = base[o] + turn + offsets[o], height = base[o + 2] + offsets[o + 2];
+        radius = base[o + 1] + offsets[o + 1];
+        cosA = Math.cos(angle); sinA = Math.sin(angle);
+        const flat = radius * sinA;
+        x = radius * cosA;
+        y = height * cosI - flat * sinI;
+        z = height * sinI + flat * cosI;
       } else {
         const centre = centres[knot];
-        x = centre[0] + base[o]; y = centre[1] + base[o + 1]; z = centre[2] + base[o + 2];
+        cosA = centre[0] / BAND;
+        sinA = (centre[2] * cosI - centre[1] * sinI) / BAND;
+        if (offsets[o] !== 0) {
+          const c = Math.cos(offsets[o]), s = Math.sin(offsets[o]), originalCos = cosA;
+          cosA = originalCos * c - sinA * s; sinA = sinA * c + originalCos * s;
+        }
+        radius = BAND + offsets[o + 1];
+        x = radius * cosA + base[o];
+        y = offsets[o + 2] * cosI - radius * sinA * sinI + base[o + 1];
+        z = offsets[o + 2] * sinI + radius * sinA * cosI + base[o + 2];
       }
       if (forming) {
         const t = clamp((formation - delays[i]) / .6), eased = t * t * (3 - 2 * t);
         x = origin[o] + (x - origin[o]) * eased; y = origin[o + 1] + (y - origin[o + 1]) * eased; z = origin[o + 2] + (z - origin[o + 2]) * eased;
       }
+      if (highlight >= 0 && knot === highlight) { highlightX += x; highlightY += y; highlightZ += z; highlightCount++; }
       const dx = x - px, dy = y - py, dz = z - pz, depth = dx * fx + dy * fy + dz * fz;
       if (depth < .04) continue;
       const sx = cx + (dx * rx + dy * ry + dz * rz) / depth * focal, sy = cy - (dx * ux + dy * uy + dz * uz) / depth * focal;
+      if (wake) {
+        // A swept brush transfers movement into velocity, including behind text.
+        // Stopping/leaving the pointer supplies no further force.
+        const along = clamp(((sx - wake.fromX) * stepX + (sy - wake.fromY) * stepY) / pathSquared);
+        const ox = sx - wake.fromX - along * stepX, oy = sy - wake.fromY - along * stepY;
+        const distanceSquared = ox * ox + oy * oy;
+        if (distanceSquared < radiusSquared) {
+          const falloff = 1 - distanceSquared / radiusSquared;
+          const side = (oy * stepX - ox * stepY) * inversePath / wake.radius;
+          const carryX = stepX - stepY * side * .65, carryY = stepY + stepX * side * .65;
+          const impulse = 2.4 * falloff * falloff * clamp(sunZ / depth, .35, 1) * depth / focal;
+          const pushX = (rx * carryX - ux * carryY) * impulse;
+          const pushY = (ry * carryX - uy * carryY) * impulse;
+          const pushZ = (rz * carryX - uz * carryY) * impulse;
+          const flatPush = pushZ * cosI - pushY * sinI;
+          velocities[o] = clamp(velocities[o] + (-pushX * sinA + flatPush * cosA) / Math.max(radius, .5), -.7, .7);
+          velocities[o + 1] = clamp(velocities[o + 1] + pushX * cosA + flatPush * sinA, -.65, .65);
+          velocities[o + 2] = clamp(velocities[o + 2] + pushY * cosI + pushZ * sinI, -.4, .4);
+          awake[i] = 1;
+        }
+      }
       const lit = knot >= 0 && knot === highlight ? 1.6 : 1;
       const size = Math.min(60, sizes[i] * focal / depth * (.8 + .2 * Math.sin(phase * 2.2 + twinkles[i])) * lit);
       if (sx < -size * 4 || sy < -size * 4 || sx > width + size * 4 || sy > height + size * 4) continue;
@@ -184,7 +253,8 @@ export function createSpace(amount: number) {
     context.globalCompositeOperation = 'source-over';
 
     if (highlight >= 0 && !forming) {
-      const d = sub(centres[highlight], shot.position), z = dot(d, forward);
+      const centre: Vector = highlightCount ? [highlightX / highlightCount, highlightY / highlightCount, highlightZ / highlightCount] : centres[highlight];
+      const d = sub(centre, shot.position), z = dot(d, forward);
       if (z > .1) {
         context.strokeStyle = '#a9c8ff';
         context.lineWidth = 1.5;
@@ -195,5 +265,6 @@ export function createSpace(amount: number) {
     }
   }
 
-  return { overview, nudge, render };
+  function resetWake(): void { offsets.fill(0); velocities.fill(0); awake.fill(0); }
+  return { overview, nudge, render, resetWake };
 }

@@ -64,8 +64,15 @@ Returning to the introduction reverses
 the zoom and orbit. Keep the opening's formation, drift and name splitting. On narrow screens,
 crop a dimmer sun at the right edge instead of narrowing the cards. Pause freezes
 rotation, angle drift and twinkling, including scroll rotation, but the single zoom still follows
-reading position. Reduced motion keeps a static overview. Pointer behavior is retained
-for a later design pass. Projects are glass cards with the text above the artwork. Keep text
+reading position. Reduced motion keeps a static overview. Fine, hover-capable mouse
+pointers retain the camera tilt and sweep a dust wake through the scene, including
+behind content. Movement changes nearby particles' orbital speed and spacing, with
+radial/vertical scatter. Drag settles speed but keeps the new orbital phase; only
+scatter returns to the band. Project knots have bounded phase shifts and their
+highlight follows the disturbed cluster. Stationary pointers exert no force; there is no
+hover brightness boost or content mask. Pause freezes the wake; reduced motion
+clears it and touch does not activate it. No particle-to-particle physics or new draws.
+Projects are glass cards with the text above the artwork. Keep text
 at WCAG AAA contrast and give text outside cards a dark halo. Draw particles with
 additive blending in pre-sorted batches and scale the particle count with the viewport.
 The sun occludes rear particles, including their glow. Cull hidden sprites and clip
@@ -138,6 +145,13 @@ foreground visibility and the dim sun.
 `scripts/check-images.mjs` checks consistent media areas, image containment, mobile
 sizing, the captured assets and the raytracer's original size. Failed fancy downloads
 offer an explicit page reload because browsers retain failed module imports.
+
+`scripts/check-pointer.mjs` checks orbital momentum, lasting spacing, speed settling,
+stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
+Run `node scripts/measure-pointer.mjs` separately for paired seeded active/inactive
+renderer measurements at 1440×900 and 2560×1440 with a 1.5× backing scale. It reports
+CPU render time separately from frame intervals and sun-edge clipping counts;
+do not run other browser checks concurrently with the measurements.
 
 Update this file when commands or behavior change, and the README when commands change. Private server
 operations are out of scope and belong in `feuerdev/server-setup`. Never commit secrets.

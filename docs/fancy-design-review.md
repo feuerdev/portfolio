@@ -33,7 +33,16 @@ projects share a steady backdrop while reading.
   keeps rotating.
 - If there is insufficient space beside the cards, the sun is dimmed and partially
   cropped at the right edge. Card widths and content layout are unchanged.
-- Pointer movement is unchanged in this iteration and will be reviewed separately.
+- Fine, hover-capable mouse pointers retain camera tilt and sweep a dust wake
+  through particles, including behind text and cards. Movement transfers momentum
+  into orbital, radial and vertical velocities. Drag settles orbital speed while
+  retaining new spacing; radial/vertical scatter sways back into the band rather
+  than restoring each particle's original position. A stationary pointer exerts no force.
+- The swept brush reaches up to 110 CSS pixels around the pointer path. Velocity
+  and displacement are bounded. Particle offsets persist as the camera moves;
+  leaving the pointer stops input while existing momentum settles naturally.
+  Particle brightness and twinkle retain their ordinary behavior.
+- Pause freezes the wake. Reduced motion clears it; touch does not activate it.
 
 ## Layout and accessibility
 
@@ -62,6 +71,12 @@ projects share a steady backdrop while reading.
 - The particle count scales with viewport area, down to 45% on small screens.
 - There is no texture generation or animation dependency. Continuous rendering
   stops when motion is paused, the tab is hidden or fancy mode is disabled.
+- Wake contact uses a squared-distance rejection against the swept pointer path
+  within the existing particle loop. Only disturbed particles integrate their
+  orbital phase/velocities, with orbital drag, damped radial/vertical sway and a
+  sleep threshold. Project knot phase shifts are bounded and highlights follow
+  the disturbed cluster.
+  There is no particle-to-particle physics, new drawing pass or depth sorting.
 
 ## Verification
 
@@ -89,3 +104,18 @@ its original size. Desktop and mobile screenshots were reviewed, including dark
 reduced-motion mode, with no console messages or page errors. Axe reported no
 violations and one incomplete contrast rule requiring manual review. These checks
 used desktop Chromium; no new real-phone or cross-browser measurements.
+
+2 October 2026, orbital wake: pointer movement changes orbital momentum and leaves
+particles in new spacing. The user approved this interaction for publication.
+Build, static tests and the full browser checks passed, including scrolling, sun
+occlusion, orbital momentum, lasting spacing, speed settling, stationary pointers,
+Pause/resume, reduced motion, touch and cleanup.
+
+Final paired headless Chromium measurements used seeded particles, three
+180-frame samples per active/inactive case, opening and reading views at 1440×900
+and 2560×1440, and a 1.5× canvas backing scale. Inactive p95 CPU render time was
+1.1–1.6 ms and active was 1.2–1.6 ms, with at most .3 ms added in a paired case.
+P95 frame intervals stayed at 16.7–16.8 ms. CPU timing covers Canvas command
+submission, not GPU completion or the live page's glass-card compositing. These
+are development-machine Chromium measurements, not real-phone or cross-browser
+results. The reproducible check is `node scripts/measure-pointer.mjs`.
