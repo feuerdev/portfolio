@@ -27,7 +27,7 @@ git diff --check
 
 With agent-browser installed and a preview running, `npm run test:browser` checks
 the mode switch and calm scroll behavior, including steady sun framing, Pause and
-sun occlusion of rear particles.
+sun occlusion of rear particles and project imagery on desktop/mobile.
 It uses port 5001 unless `PREVIEW_URL` is set.
 
 See [AGENTS.md](AGENTS.md) for structure, design rules, the browser checklist and deployment.
