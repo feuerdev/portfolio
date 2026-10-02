@@ -26,6 +26,8 @@ git diff --check
 ```
 
 With agent-browser installed and a preview running, `npm run test:browser` checks
-the fancy-mode interactions. It uses port 5001 unless `PREVIEW_URL` is set.
+the mode switch and calm scroll behavior, including steady sun framing, Pause and
+sun occlusion of rear particles.
+It uses port 5001 unless `PREVIEW_URL` is set.
 
 See [AGENTS.md](AGENTS.md) for structure, design rules, the browser checklist and deployment.
