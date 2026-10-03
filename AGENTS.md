@@ -60,6 +60,10 @@ angle and a sideways camera orbit, placing the sun beside the cards by the time 
 first card is centred. Keep the reading angle low enough to show the particle stream.
 The stream always rotates slowly; further scrolling adds rotation and a few degrees
 of smooth camera angle drift while the sun's position and size stay steady.
+The existing star pass includes a sparse, dim sky around the stream: 5400 additional
+directions at full density, with tiny dots and rotation at 12% of the stream's rate.
+Keep this backdrop cheap: no glow sprites, twinkle or wake physics. Cull offscreen
+stars and stars overlapping the sun, including the dim narrow-screen disc.
 Returning to the introduction reverses
 the zoom and orbit. Keep the opening's formation, drift and name splitting. On narrow screens,
 crop a dimmer sun at the right edge instead of narrowing the cards. Pause freezes
@@ -158,6 +162,13 @@ stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
 desktop Safari identification. It checks intermediate name/zoom frames, native
 scroll position, settling, reversal, Pause, reduced-motion entry and cleanup, plus
 unchanged Chromium/iPad response. It does not replace a real Safari wheel check.
+`scripts/check-universe.mjs` checks wide sky coverage, faded dots, viewport culling,
+sun occlusion and rotation. For paired before/after timings, serve a copy of the
+approved `public/js/space.js` under a separate local URL at `/js/space.js`, then run
+`BASELINE_URL=http://127.0.0.1:5003/ node scripts/measure-universe.mjs` with
+`PREVIEW_URL` pointing at the new preview. It alternates seeded renderer samples
+at two desktop sizes and a narrow viewport, including moving pointer input on
+desktop. Run measurements separately from other browser checks.
 Run `node scripts/measure-pointer.mjs` separately for paired seeded active/inactive
 renderer measurements at 1440×900 and 2560×1440 with a 1.5× backing scale. It reports
 CPU render time separately from frame intervals and sun-edge clipping counts;

@@ -14,7 +14,7 @@ try {
   const results = browser('eval', `(async () => {
     const { createSpace } = await import('/js/space.js');
     const empty = createSpace(0);
-    // A single glowing band particle, with no knots or stars, at the back/front
+    // A single glowing band particle, with no on-screen knots or stars, at the back/front
     // of the sun depending on the camera. Exercise the actual canvas renderer.
     const random = Math.random;
     const values = [.25, 0, .5, .25, .5, .25, 1, 0, .99, 0];

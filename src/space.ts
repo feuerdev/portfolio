@@ -69,7 +69,10 @@ export function createSpace(amount: number) {
   const dotSprites = COLOURS.flatMap(colour => LEVELS.map(level => sprite([[0, `rgba(${colour}, ${level})`], [.7, `rgba(${colour}, ${level})`], [1, `rgba(${colour}, 0)`]])));
   const bokehSprites = COLOURS.map(colour => sprite([[0, `rgba(${colour}, .28)`], [.75, `rgba(${colour}, .2)`], [1, `rgba(${colour}, 0)`]]));
   const stars = Array.from({ length: Math.round(700 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: pick([5, 3, 1.5, .6]) }))
+    // A wider, dimmer sky shares the star pass, without glow sprites or wake physics.
+    .concat(Array.from({ length: Math.round(5400 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: 4 + pick([5.5, 3, 1.5]) })))
     .sort((p, q) => p.level - q.level);
+  const starFills = [.12, .22, .32, .42, .3, .44, .59].map(alpha => `rgba(214, 226, 255, ${alpha})`);
 
   function positions(turn: number): Vector[] {
     return Array.from({ length: KNOTS }, (_, index) => bandPoint(knotAngle(index) + turn, BAND, 0));
@@ -90,18 +93,30 @@ export function createSpace(amount: number) {
     context.clearRect(0, 0, width, height);
     context.globalCompositeOperation = 'source-over';
 
-    let style = -1;
-    for (const star of stars) {
-      const z = dot(star.direction, forward);
-      if (z < .05) continue;
-      const next = Math.round(star.level);
-      if (next !== style) { context.fillStyle = `rgba(214, 226, 255, ${.12 + next * .1})`; style = next; }
-      context.fillRect(cx + dot(star.direction, right) / z * focal, cy - dot(star.direction, up) / z * focal, 1.2, 1.2);
-    }
-
     const sun = sub([0, 0, 0], shot.position), sunZ = dot(sun, forward);
     const sunX = cx + dot(sun, right) / sunZ * focal, sunY = cy - dot(sun, up) / sunZ * focal;
     const sunRadius = SUN * focal / sunZ;
+    const hiddenSkyRadiusSquared = (sunRadius + 4) ** 2;
+    const skyCos = Math.cos(turn * .12), skySin = Math.sin(turn * .12);
+
+    let style = -1;
+    for (const star of stars) {
+      const background = star.level >= 4;
+      const [a, b, c] = star.direction;
+      const x = background ? a * skyCos + c * skySin : a;
+      const y = b, depthAxis = background ? c * skyCos - a * skySin : c;
+      const z = x * forward[0] + y * forward[1] + depthAxis * forward[2];
+      if (z < .05) continue;
+      const sx = cx + (x * right[0] + y * right[1] + depthAxis * right[2]) / z * focal;
+      const sy = cy - (x * up[0] + y * up[1] + depthAxis * up[2]) / z * focal;
+      if (sx < 0 || sy < 0 || sx >= width || sy >= height) continue;
+      const size = background ? (star.level === 6 ? 2.2 : star.level === 5 ? 1.6 : 1.15) : 1.2;
+      // Four pixels include the entire dot, even at the dim sun's edge.
+      if (sunZ > SUN && (sx - sunX) ** 2 + (sy - sunY) ** 2 <= hiddenSkyRadiusSquared) continue;
+      if (star.level !== style) { context.fillStyle = starFills[star.level]; style = star.level; }
+      context.fillRect(sx, sy, size, size);
+    }
+
     const outsideSun = new Path2D();
     if (sunZ > SUN) {
       const x = sunX, y = sunY, radius = sunRadius;
