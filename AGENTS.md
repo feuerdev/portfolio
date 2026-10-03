@@ -82,6 +82,9 @@ Name splitting, zoom/orbit and scroll rotation use the same visual position.
 Pause, hidden tabs and initial framing snap to the current position instead of
 keeping a smoothing tail. Reduced motion disables these effects. Exclude mobile
 Safari and iPads with desktop user agents. Other browsers retain direct response.
+Active animation reads the native scroll position before drawing each frame;
+do not queue a separate scroll frame behind the scene. Paused views still schedule
+one redraw per scroll frame. Touch scrolling remains native and passive.
 Projects are glass cards with the text above the artwork. Keep text
 at WCAG AAA contrast and give text outside cards a dark halo. Draw particles with
 additive blending in pre-sorted batches and scale the particle count with the viewport.
@@ -166,6 +169,9 @@ stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
 desktop Safari identification. It checks intermediate name/zoom frames, native
 scroll position, settling, reversal, Pause, reduced-motion entry and cleanup, plus
 unchanged Chromium/iPad response. It does not replace a real Safari wheel check.
+`scripts/check-scroll-timing.mjs` checks that an Android-identified Chromium scene
+uses the current native position for the title and camera in the same frame. It
+does not replace physical Android testing.
 `scripts/check-universe.mjs` checks wide sky coverage, faded dots, viewport culling,
 sun occlusion and rotation. `scripts/check-anchors.mjs` checks smooth project
 navigation, hashes and Back, immediate direct URLs and reduced-motion jumps on

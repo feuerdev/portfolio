@@ -98,6 +98,12 @@ projects share a steady backdrop while reading.
 
 ## Verification
 
+3 October 2026, scroll timing: an Android-identified Chromium check reproduced
+stale scroll state at canvas draw time. The scene now samples native scroll before
+each active frame, removing the older one-frame camera delay. Desktop Safari still
+damps that position and paused views still redraw on scroll. Physical Android
+touch-scroll feel remains for manual review.
+
 3 October 2026, smooth project anchors: build, static tests and the full browser
 suite passed. Desktop and narrow Chromium checks cover intermediate scrolling
 positions, destination margins, URL hashes and Back, immediate direct project
