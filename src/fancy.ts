@@ -15,10 +15,15 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const context = canvas?.getContext('2d');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  // Desktop Safari can deliver mouse-wheel scrolling in discrete steps.
+  const smoothScroll = navigator.vendor === 'Apple Computer, Inc.' &&
+    /Macintosh/.test(navigator.userAgent) && /Version\/[\d.]+.*Safari\//.test(navigator.userAgent) &&
+    !/Mobile\//.test(navigator.userAgent) && navigator.maxTouchPoints < 2;
   const space = createSpace(clamp(innerWidth * innerHeight / (1440 * 900), .45, 1));
   let paused = false, frame = 0, scrollFrame = 0, previous = 0, phase = 0;
   let width = 0, height = 0, overviewX = .5, overviewY = .5, readingX = .5, readingY = .5, readingSunOpacity = 1;
   let exit = 0, zoom = 0, settleAt = 1, lastScroll = scrollY, turn = 0, yaw = 0, drift = 0, highlighted = -1;
+  let targetScroll = scrollY, visualScroll = scrollY, heroExitAt = 1;
   let ready = false, disposed = false, intro = motion.matches ? INTRO : 0;
   let pointerX = 0, pointerY = 0, rotationX = 0, rotationY = 0;
   let pointerInside = false, pointerMoved = false;
@@ -48,6 +53,12 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   function tick(time: number): void {
     if (!running()) { frame = 0; return; }
     const elapsed = Math.min(time - previous, 64) / 1000;
+    if (smoothScroll && visualScroll !== targetScroll) {
+      // Time-based damping: most of a step settles within 120 ms, at any frame rate.
+      visualScroll += (targetScroll - visualScroll) * (1 - Math.exp(-elapsed / .04));
+      if (Math.abs(targetScroll - visualScroll) < .1) visualScroll = targetScroll;
+      applyScroll(visualScroll);
+    }
     phase += elapsed;
     // The stream always rotates; the reading camera only drifts while scrolling.
     turn += elapsed * .03;
@@ -61,25 +72,34 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     pointerMoved = false;
     frame = requestAnimationFrame(tick);
   }
-  function scrolled(): void {
-    scrollFrame = 0;
-    if (motion.matches || !hero) { lastScroll = scrollY; return; }
-    exit = clamp(scrollY / (hero.offsetHeight * .85));
-    zoom = clamp(scrollY / settleAt);
+  function applyScroll(position: number): void {
+    const nextExit = clamp(position / heroExitAt);
+    if (nextExit !== exit) root.style.setProperty('--hero-exit', nextExit.toFixed(3));
+    exit = nextExit;
+    zoom = clamp(position / settleAt);
     if (ready && !paused) {
-      const delta = Math.max(0, scrollY - settleAt) - Math.max(0, lastScroll - settleAt);
+      const delta = Math.max(0, position - settleAt) - Math.max(0, lastScroll - settleAt);
       turn += delta * .0002;
       drift += delta / height * .7;
     }
-    lastScroll = scrollY;
-    root.style.setProperty('--hero-exit', exit.toFixed(3));
+    lastScroll = position;
+  }
+  function scrolled(): void {
+    scrollFrame = 0;
+    targetScroll = Math.max(0, scrollY);
+    if (motion.matches || !hero) { visualScroll = lastScroll = targetScroll; return; }
+    if (!smoothScroll || !running()) {
+      visualScroll = targetScroll;
+      applyScroll(visualScroll);
+    }
     if (!running()) draw();
   }
   function onScroll(): void { if (!scrollFrame) scrollFrame = requestAnimationFrame(scrolled); }
   function sync(): void {
     if (paused || motion.matches || document.hidden) leavePointer();
     if (motion.matches) space.resetWake();
-    if (motion.matches) { intro = INTRO; exit = zoom = 0; lastScroll = scrollY; root.style.removeProperty('--hero-exit'); } else scrolled();
+    if (motion.matches) { intro = INTRO; exit = zoom = 0; lastScroll = scrollY; root.style.removeProperty('--hero-exit'); }
+    else { scrolled(); visualScroll = targetScroll; applyScroll(visualScroll); }
     root.dataset.motion = !paused && !motion.matches ? 'on' : 'off';
     if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-pressed', String(paused)); }
     if (!running()) { cancelAnimationFrame(frame); frame = 0; draw(); }
@@ -94,6 +114,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     const read = (name: string, fallback: number) => parseFloat(style.getPropertyValue(name)) || fallback;
     overviewX = read('--orb-x', .5); overviewY = read('--orb-y', .5);
     const card = firstProject?.getBoundingClientRect();
+    heroExitAt = Math.max(1, (hero?.offsetHeight ?? height) * .85);
     settleAt = Math.max(1, scrollY + (card?.top ?? height) + (card?.height ?? 0) / 2 - height / 2);
     const sunRadius = .2 * Math.min(width, height) * 1.15 / READING_DISTANCE;
     const beside = width - (card?.right ?? width) > sunRadius * 2 + 64;
@@ -104,7 +125,9 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     canvas.width = Math.round(width * density);
     canvas.height = Math.round(height * density);
     context.setTransform(density, 0, 0, density, 0, 0);
+    visualScroll = Math.max(0, scrollY);
     scrolled();
+    if (!motion.matches) applyScroll(visualScroll);
     draw();
   }
   function pointer(event: PointerEvent): void {

@@ -72,6 +72,12 @@ scatter returns to the band. Project knots have bounded phase shifts and their
 highlight follows the disturbed cluster. Stationary pointers exert no force; there is no
 hover brightness boost or content mask. Pause freezes the wake; reduced motion
 clears it and touch does not activate it. No particle-to-particle physics or new draws.
+Desktop Safari smooths visual scroll steps in the existing animation loop with
+time-based damping (40 ms time constant). Native page scrolling is untouched.
+Name splitting, zoom/orbit and scroll rotation use the same visual position.
+Pause, hidden tabs and initial framing snap to the current position instead of
+keeping a smoothing tail. Reduced motion disables these effects. Exclude mobile
+Safari and iPads with desktop user agents. Other browsers retain direct response.
 Projects are glass cards with the text above the artwork. Keep text
 at WCAG AAA contrast and give text outside cards a dark halo. Draw particles with
 additive blending in pre-sorted batches and scale the particle count with the viewport.
@@ -148,6 +154,10 @@ offer an explicit page reload because browsers retain failed module imports.
 
 `scripts/check-pointer.mjs` checks orbital momentum, lasting spacing, speed settling,
 stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
+`scripts/check-safari-scroll.mjs` simulates stepped scrolling in Chromium with
+desktop Safari identification. It checks intermediate name/zoom frames, native
+scroll position, settling, reversal, Pause, reduced-motion entry and cleanup, plus
+unchanged Chromium/iPad response. It does not replace a real Safari wheel check.
 Run `node scripts/measure-pointer.mjs` separately for paired seeded active/inactive
 renderer measurements at 1440×900 and 2560×1440 with a 1.5× backing scale. It reports
 CPU render time separately from frame intervals and sun-edge clipping counts;
