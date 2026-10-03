@@ -17,6 +17,8 @@ projects share a steady backdrop while reading.
 
 - A soft pale sun with an orange glow sits inside a tilted, clumpy particle stream of
   white, blue and amber particles. A few particles carry a soft glow.
+- A sparse, faded star field fills the wider sky around the stream. Tiny dots
+  rotate at 12% of the stream's rate, keeping the background quiet while reading.
 - Each of the six projects is a bright knot in the stream. Hovering or focusing a
   contents entry circles its knot.
 - Particles swirl in from all around and form the stream after the mode transition.
@@ -74,6 +76,11 @@ projects share a steady backdrop while reading.
 - The sun hides rear particles. Fully hidden sprites are skipped; sprites crossing
   the sun's edge are clipped, including their glow. Foreground particles remain visible.
 - The particle count scales with viewport area, down to 45% on small screens.
+- The wider backdrop adds 1800 directions at full density to the existing star
+  pass. Its .8–1.4 pixel dots use three cached, dim fill colours, without glow,
+  twinkle or pointer physics. Offscreen stars and stars over the sun are culled
+  before drawing, including over the dim narrow-screen disc. Directions are
+  generated once; rotation uses one sine/cosine pair per frame.
 - There is no texture generation or animation dependency. Continuous rendering
   stops when motion is paused, the tab is hidden or fancy mode is disabled.
 - Safari scroll damping runs in the existing frame loop only while the visual
@@ -87,6 +94,30 @@ projects share a steady backdrop while reading.
   There is no particle-to-particle physics, new drawing pass or depth sorting.
 
 ## Verification
+
+3 October 2026, wider universe backdrop: paired seeded measurements compared the
+approved renderer at `5405533` with the new star field. Each case alternated three
+120-frame samples per renderer, with a 1.5× backing scale and pointer sweeps on
+desktop. Small screens used the normal 45% particle density.
+The build, static tests and full browser suite passed. Background checks cover
+wide coverage, faded dots, offscreen culling, complete-dot sun occlusion and
+gentle rotation. Desktop and narrow screenshots were reviewed with no console
+messages or page errors.
+
+| Viewport and framing | Median CPU, before → after | P95 CPU, before → after | P95 frame interval, after |
+| --- | --- | --- | --- |
+| 1440×900, opening | 1.1 → 1.1 ms | 1.2 → 1.5 ms | 16.8 ms |
+| 1440×900, reading | 1.5 → 1.5 ms | 1.6 → 1.7 ms | 16.8 ms |
+| 2560×1440, opening | 1.5 → 1.5 ms | 1.6 → 1.6 ms | 16.7 ms |
+| 2560×1440, reading | 1.6 → 1.6 ms | 1.8 → 1.7 ms | 16.7 ms |
+| 390×844, opening | .8 → .8 ms | 1.1 → 1.0 ms | 16.7 ms |
+| 390×844, reading | .8 → .8 ms | 1.0 → 1.0 ms | 16.8 ms |
+
+There were no frame intervals over 25 ms in either renderer. CPU timings cover
+Canvas command submission, not GPU completion or glass-card compositing. These
+are headless Chromium results on the development machine, not phone or Safari
+measurements. Reproduce with `scripts/measure-universe.mjs` and a locally served
+copy of the approved renderer, as described in the README.
 
 3 October 2026: the Safari scroll-smoothing trial passed the build, static tests
 and full browser suite. Discrete-input checks use Chromium with desktop Safari
