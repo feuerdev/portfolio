@@ -31,6 +31,11 @@ projects share a steady backdrop while reading.
   its reading angle by about 1.4 degrees vertically and 2.9 degrees horizontally.
   The sun remains anchored; stopping to read stops angle drift while the stream
   keeps rotating.
+- Desktop Safari uses a short visual smoothing layer for discrete mouse-wheel
+  input, matching the behavior described in [WebKit's wheel-scrolling report](https://bugs.webkit.org/show_bug.cgi?id=70198).
+  Name splitting, camera framing and scroll-driven rotation share the eased
+  position. Native scrolling is preserved. Other browsers and mobile Safari keep
+  direct response. Pause bypasses smoothing and reduced motion disables the effects.
 - If there is insufficient space beside the cards, the sun is dimmed and partially
   cropped at the right edge. Card widths and content layout are unchanged.
 - Fine, hover-capable mouse pointers retain camera tilt and sweep a dust wake
@@ -71,6 +76,9 @@ projects share a steady backdrop while reading.
 - The particle count scales with viewport area, down to 45% on small screens.
 - There is no texture generation or animation dependency. Continuous rendering
   stops when motion is paused, the tab is hidden or fancy mode is disabled.
+- Safari scroll damping runs in the existing frame loop only while the visual
+  position differs from the target, with a 40 ms time constant. Hero dimensions
+  are cached on resize so interpolation does not read layout on every frame.
 - Wake contact uses a squared-distance rejection against the swept pointer path
   within the existing particle loop. Only disturbed particles integrate their
   orbital phase/velocities, with orbital drag, damped radial/vertical sway and a
@@ -79,6 +87,14 @@ projects share a steady backdrop while reading.
   There is no particle-to-particle physics, new drawing pass or depth sorting.
 
 ## Verification
+
+3 October 2026: the Safari scroll-smoothing trial passed the build, static tests
+and full browser suite. Discrete-input checks use Chromium with desktop Safari
+identification and cover interpolation, native scroll position, settling, reversal,
+Pause, reduced-motion entry, motion resume, cleanup and mobile exclusion. Safari
+remote automation is disabled, so judging the actual mouse-wheel feel requires
+a manual Safari preview check. The title's horizontal split and fade are smoothed;
+its vertical movement with native page scrolling is preserved.
 
 Chromium checks on 1 October 2026 at 1440×900 and 390×844: no long tasks during the
 switch and a 95th-percentile frame time of 16.8 ms in both viewports. The build,
