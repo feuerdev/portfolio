@@ -91,8 +91,12 @@ See `docs/fancy-design-review.md` for the design.
 
 Keep the main document semantic and usable without JavaScript. Use native links,
 buttons, visible keyboard focus and a skip link. Plain mode has no section navigation.
-Fancy mode adds a numbered project contents list. Omit decorative link arrows. Keep copy factual and concise. The introduction combines
-the name, about text, AI sentence and contact links. Do not add a separate masthead
+Fancy mode adds a numbered project contents list. Omit decorative link arrows.
+Fancy anchor navigation uses native CSS smooth scrolling when reduced motion is
+not requested. Preserve native hashes, history and focus behavior. Mode switches
+and direct project links position immediately, without a scrolling tail.
+Keep copy factual and concise. The introduction combines the name, about text,
+AI sentence and contact links. Do not add a separate masthead
 wordmark or repeat about/contact sections below the projects. Start with the name,
 without a role eyebrow or punctuation after the surname. Use ordinary paragraphs
 with linked project headings (inline in plain mode) and one short paragraph per project. All project text stays visible
@@ -163,7 +167,9 @@ desktop Safari identification. It checks intermediate name/zoom frames, native
 scroll position, settling, reversal, Pause, reduced-motion entry and cleanup, plus
 unchanged Chromium/iPad response. It does not replace a real Safari wheel check.
 `scripts/check-universe.mjs` checks wide sky coverage, faded dots, viewport culling,
-sun occlusion and rotation. For paired before/after timings, serve a copy of the
+sun occlusion and rotation. `scripts/check-anchors.mjs` checks smooth project
+navigation, hashes and Back, immediate direct URLs and reduced-motion jumps on
+desktop and narrow layouts. For paired before/after timings, serve a copy of the
 approved `public/js/space.js` under a separate local URL at `/js/space.js`, then run
 `BASELINE_URL=http://127.0.0.1:5003/ node scripts/measure-universe.mjs` with
 `PREVIEW_URL` pointing at the new preview. It alternates seeded renderer samples
