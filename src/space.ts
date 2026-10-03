@@ -21,7 +21,7 @@ function bandPoint(angle: number, radius: number, height: number): Vector {
 }
 const knotAngle = (index: number) => index / KNOTS * TAU + .6;
 
-export function createSpace(amount: number) {
+export function createSpace(amount: number, pointerEnabled = true) {
   type Seed = { a: number; b: number; c: number; knot: number; size: number; colour: number; level: number; glow: boolean };
   const seeds: Seed[] = [];
   const density = (angle: number) => .3 + .7 * (.5 + .5 * Math.sin(angle * 3 + 1.3)) * (.6 + .4 * Math.sin(angle * 7 + .4));
@@ -45,7 +45,17 @@ export function createSpace(amount: number) {
   const knots = new Int8Array(count), sizes = new Float32Array(count), styles = new Uint8Array(count), glows = new Uint8Array(count);
   const delays = new Float32Array(count), twinkles = new Float32Array(count);
   // Per particle: orbital phase, radial displacement and height, plus their velocities.
-  const offsets = new Float32Array(count * 3), velocities = new Float32Array(count * 3), awake = new Uint8Array(count);
+  let offsets: Float32Array | undefined, velocities: Float32Array | undefined, awake: Uint8Array | undefined;
+  function setPointerEnabled(enabled: boolean): void {
+    if (enabled && !offsets) {
+      offsets = new Float32Array(count * 3);
+      velocities = new Float32Array(count * 3);
+      awake = new Uint8Array(count);
+    } else if (!enabled) {
+      offsets = velocities = awake = undefined;
+    }
+  }
+  setPointerEnabled(pointerEnabled);
   seeds.forEach((seed, i) => {
     base.set([seed.a, seed.b, seed.c], i * 3);
     origin.set(times(unit([gaussian(), gaussian(), gaussian()]), 1.6 + Math.random() * 2.6), i * 3);
@@ -149,10 +159,10 @@ export function createSpace(amount: number) {
     const cosI = Math.cos(INCLINE), sinI = Math.sin(INCLINE);
     const centres = positions(turn), forming = formation < 1;
     const [fx, fy, fz] = forward, [rx, ry, rz] = right, [ux, uy, uz] = up;
-    const dt = clamp(elapsed, 0, .064);
-    const flowDecay = Math.exp(-.65 * dt), knotDecay = Math.exp(-1.1 * dt);
+    const dt = offsets ? clamp(elapsed, 0, .064) : 0;
+    const flowDecay = dt ? Math.exp(-.65 * dt) : 1, knotDecay = dt ? Math.exp(-1.1 * dt) : 1;
     const spring = 1.8, damping = .85, frequency = Math.sqrt(spring * spring - damping * damping);
-    const decay = Math.exp(-damping * dt), oscillation = Math.cos(frequency * dt), sway = Math.sin(frequency * dt) / frequency;
+    const decay = dt ? Math.exp(-damping * dt) : 1, oscillation = dt ? Math.cos(frequency * dt) : 1, sway = dt ? Math.sin(frequency * dt) / frequency : 0;
     let highlightX = 0, highlightY = 0, highlightZ = 0, highlightCount = 0;
     const stepX = pointer ? pointer.x - pointer.fromX : 0, stepY = pointer ? pointer.y - pointer.fromY : 0;
     const pathSquared = stepX * stepX + stepY * stepY;
@@ -162,7 +172,7 @@ export function createSpace(amount: number) {
     style = -1;
     for (let i = 0; i < count; i++) {
       const o = i * 3, knot = knots[i];
-      if (awake[i] && dt > 0) {
+      if (awake && offsets && velocities && awake[i] && dt > 0) {
         // Drag settles orbital speed but retains the new phase/spacing. Only
         // radial/vertical scatter returns toward the stream's overall shape.
         const drag = knot < 0 ? .65 : 1.1, orbitDecay = knot < 0 ? flowDecay : knotDecay;
@@ -184,10 +194,11 @@ export function createSpace(amount: number) {
           offsets[o + 1] = offsets[o + 2] = 0;
         }
       }
+      const orbit = offsets ? offsets[o] : 0, radial = offsets ? offsets[o + 1] : 0, vertical = offsets ? offsets[o + 2] : 0;
       let x: number, y: number, z: number, cosA: number, sinA: number, radius: number;
       if (knot < 0) {
-        const angle = base[o] + turn + offsets[o], height = base[o + 2] + offsets[o + 2];
-        radius = base[o + 1] + offsets[o + 1];
+        const angle = base[o] + turn + orbit, height = base[o + 2] + vertical;
+        radius = base[o + 1] + radial;
         cosA = Math.cos(angle); sinA = Math.sin(angle);
         const flat = radius * sinA;
         x = radius * cosA;
@@ -197,14 +208,14 @@ export function createSpace(amount: number) {
         const centre = centres[knot];
         cosA = centre[0] / BAND;
         sinA = (centre[2] * cosI - centre[1] * sinI) / BAND;
-        if (offsets[o] !== 0) {
-          const c = Math.cos(offsets[o]), s = Math.sin(offsets[o]), originalCos = cosA;
+        if (orbit !== 0) {
+          const c = Math.cos(orbit), s = Math.sin(orbit), originalCos = cosA;
           cosA = originalCos * c - sinA * s; sinA = sinA * c + originalCos * s;
         }
-        radius = BAND + offsets[o + 1];
+        radius = BAND + radial;
         x = radius * cosA + base[o];
-        y = offsets[o + 2] * cosI - radius * sinA * sinI + base[o + 1];
-        z = offsets[o + 2] * sinI + radius * sinA * cosI + base[o + 2];
+        y = vertical * cosI - radius * sinA * sinI + base[o + 1];
+        z = vertical * sinI + radius * sinA * cosI + base[o + 2];
       }
       if (forming) {
         const t = clamp((formation - delays[i]) / .6), eased = t * t * (3 - 2 * t);
@@ -214,7 +225,7 @@ export function createSpace(amount: number) {
       const dx = x - px, dy = y - py, dz = z - pz, depth = dx * fx + dy * fy + dz * fz;
       if (depth < .04) continue;
       const sx = cx + (dx * rx + dy * ry + dz * rz) / depth * focal, sy = cy - (dx * ux + dy * uy + dz * uz) / depth * focal;
-      if (wake) {
+      if (wake && velocities && awake) {
         // A swept brush transfers movement into velocity, including behind text.
         // Stopping/leaving the pointer supplies no further force.
         const along = clamp(((sx - wake.fromX) * stepX + (sy - wake.fromY) * stepY) / pathSquared);
@@ -280,6 +291,6 @@ export function createSpace(amount: number) {
     }
   }
 
-  function resetWake(): void { offsets.fill(0); velocities.fill(0); awake.fill(0); }
-  return { overview, nudge, render, resetWake };
+  function resetWake(): void { offsets?.fill(0); velocities?.fill(0); awake?.fill(0); }
+  return { overview, nudge, render, resetWake, setPointerEnabled };
 }

@@ -38,6 +38,10 @@ identification. Check the preview in actual Safari to judge the mouse-wheel feel
 The scroll timing check simulates Android identification and verifies that the
 title and universe use the current native position before each frame is drawn.
 Check physical Android Chrome separately to judge touch-scroll feel.
+The title check covers fade/split appearance, orientation, reduced motion and
+cleanup without inherited root style updates. The mobile checks cover the
+original 1.5x backing resolution, inactive touch physics, mouse connection/removal,
+and stable camera framing under simulated browser-control insets.
 Anchor checks cover native smooth project navigation, hashes and Back, direct
 project URLs and reduced-motion jumps on desktop and narrow layouts.
 

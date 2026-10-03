@@ -10,6 +10,8 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const canvas = document.querySelector<HTMLCanvasElement>('#curiosity');
   const button = document.querySelector<HTMLButtonElement>('.motion-button');
   const hero = document.querySelector<HTMLElement>('.hero');
+  const heading = hero?.querySelector<HTMLElement>('h1');
+  const words = [...(heading?.querySelectorAll<HTMLElement>('span') ?? [])];
   const firstProject = document.querySelector<HTMLElement>('.project');
   const contents = [...document.querySelectorAll<HTMLElement>('.contents a')];
   const context = canvas?.getContext('2d');
@@ -19,7 +21,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const smoothScroll = navigator.vendor === 'Apple Computer, Inc.' &&
     /Macintosh/.test(navigator.userAgent) && /Version\/[\d.]+.*Safari\//.test(navigator.userAgent) &&
     !/Mobile\//.test(navigator.userAgent) && navigator.maxTouchPoints < 2;
-  const space = createSpace(clamp(innerWidth * innerHeight / (1440 * 900), .45, 1));
+  const space = createSpace(clamp(innerWidth * innerHeight / (1440 * 900), .45, 1), finePointer.matches);
   let paused = false, frame = 0, scrollFrame = 0, previous = 0, phase = 0;
   let width = 0, height = 0, overviewX = .5, overviewY = .5, readingX = .5, readingY = .5, readingSunOpacity = 1;
   let exit = 0, zoom = 0, settleAt = 1, lastScroll = scrollY, turn = 0, yaw = 0, drift = 0, highlighted = -1;
@@ -27,6 +29,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   let ready = false, disposed = false, intro = motion.matches ? INTRO : 0;
   let pointerX = 0, pointerY = 0, rotationX = 0, rotationY = 0;
   let pointerInside = false, pointerMoved = false;
+  let titleAnimations: Animation[] = [], titleProgress = -1;
   const wake: PointerWake = { x: 0, y: 0, fromX: 0, fromY: 0, radius: 110 };
   document.querySelectorAll<HTMLTemplateElement>('.fancy-only template').forEach(template => {
     template.replaceWith(template.content.cloneNode(true));
@@ -39,7 +42,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
       yaw + progress * (1.1 + Math.sin(drift * .8) * .05),
       overviewX + (readingX - overviewX) * progress, overviewY + (readingY - overviewY) * progress,
       .3 + progress * (-.18 + Math.sin(drift) * .025));
-    shot = space.nudge(shot, rotationX, rotationY);
+    if (finePointer.matches) shot = space.nudge(shot, rotationX, rotationY);
     const pull = 1 + (1 - ease(intro / INTRO)) * .8;
     return { ...shot, position: shot.target.map((value, i) => value + (shot.position[i] - value) * pull) as Shot['position'] };
   }
@@ -68,16 +71,41 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     if (zoom === 0) yaw += elapsed * .015;
     intro = Math.min(INTRO, intro + elapsed);
     previous = time;
-    rotationX += (pointerX - rotationX) * .05;
-    rotationY += (pointerY - rotationY) * .05;
+    if (finePointer.matches) {
+      rotationX += (pointerX - rotationX) * .05;
+      rotationY += (pointerY - rotationY) * .05;
+    }
     draw(elapsed, pointerInside && pointerMoved && finePointer.matches && intro >= INTRO ? wake : undefined);
     wake.fromX = wake.x; wake.fromY = wake.y;
     pointerMoved = false;
     frame = requestAnimationFrame(tick);
   }
+  function resetTitle(): void {
+    for (const animation of titleAnimations) animation.cancel();
+    titleAnimations = []; titleProgress = -1;
+    for (const element of [heading, ...words]) element?.style.removeProperty('will-change');
+  }
+  function updateTitle(progress: number): void {
+    if (!heading || progress === titleProgress) return;
+    if (!titleAnimations.length) {
+      // Scrub only compositor properties on the name. An inherited root variable
+      // invalidated page styles during touch scrolling and stalled the scene.
+      heading.style.willChange = 'opacity';
+      titleAnimations = [heading.animate([{ opacity: 1 }, { opacity: 0 }],
+        { duration: 1000 / 1.3, fill: 'both' })];
+      words.forEach((word, index) => {
+        word.style.willChange = 'transform';
+        titleAnimations.push(word.animate([{ transform: 'translateX(0)' },
+          { transform: `translateX(${index ? 30 : -30}vw)` }], { duration: 1000, fill: 'both' }));
+      });
+      for (const animation of titleAnimations) animation.pause();
+    }
+    for (const animation of titleAnimations) animation.currentTime = progress * 1000;
+    titleProgress = progress;
+  }
   function applyScroll(position: number): void {
     const nextExit = clamp(position / heroExitAt);
-    if (nextExit !== exit) root.style.setProperty('--hero-exit', nextExit.toFixed(3));
+    updateTitle(nextExit);
     exit = nextExit;
     zoom = clamp(position / settleAt);
     if (ready && !paused) {
@@ -104,7 +132,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   function sync(): void {
     if (paused || motion.matches || document.hidden) leavePointer();
     if (motion.matches) space.resetWake();
-    if (motion.matches) { intro = INTRO; exit = zoom = 0; lastScroll = scrollY; root.style.removeProperty('--hero-exit'); }
+    if (motion.matches) { intro = INTRO; exit = zoom = 0; lastScroll = scrollY; resetTitle(); }
     else { scrolled(); visualScroll = targetScroll; applyScroll(visualScroll); }
     root.dataset.motion = !paused && !motion.matches ? 'on' : 'off';
     if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-pressed', String(paused)); }
@@ -148,6 +176,14 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     }
   }
   function leavePointer(): void { pointerInside = pointerMoved = false; }
+  function pointerCapability(): void {
+    leavePointer();
+    pointerX = pointerY = rotationX = rotationY = 0;
+    space.setPointerEnabled(finePointer.matches);
+    removeEventListener('pointermove', pointer);
+    if (finePointer.matches) addEventListener('pointermove', pointer, { passive: true });
+    resize();
+  }
   function highlight(event: Event): void {
     highlighted = event.type === 'pointerenter' || event.type === 'focus' ? contents.indexOf(event.currentTarget as HTMLElement) : -1;
     if (!running()) draw();
@@ -155,10 +191,10 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   function toggleMotion(): void { paused = !paused; sync(); }
   const dimensions = new ResizeObserver(resize);
   if (canvas) dimensions.observe(canvas);
-  addEventListener('pointermove', pointer, { passive: true });
+  if (finePointer.matches) addEventListener('pointermove', pointer, { passive: true });
   root.addEventListener('pointerleave', leavePointer);
   addEventListener('blur', leavePointer);
-  finePointer.addEventListener('change', leavePointer);
+  finePointer.addEventListener('change', pointerCapability);
   addEventListener('scroll', onScroll, { passive: true });
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', sync);
@@ -173,12 +209,12 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     removeEventListener('pointermove', pointer); removeEventListener('scroll', onScroll);
     root.removeEventListener('pointerleave', leavePointer);
     removeEventListener('blur', leavePointer);
-    finePointer.removeEventListener('change', leavePointer);
+    finePointer.removeEventListener('change', pointerCapability);
     document.removeEventListener('visibilitychange', sync);
     motion.removeEventListener('change', sync);
     button?.removeEventListener('click', toggleMotion);
     for (const link of contents) for (const type of ['pointerenter', 'pointerleave', 'focus', 'blur']) link.removeEventListener(type, highlight);
-    root.style.removeProperty('--hero-exit');
+    resetTitle();
     canvas?.style.removeProperty('opacity');
     delete root.dataset.motion;
     if (button) { button.hidden = true; button.setAttribute('aria-pressed', 'false'); }
