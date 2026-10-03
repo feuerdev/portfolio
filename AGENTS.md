@@ -60,7 +60,7 @@ angle and a sideways camera orbit, placing the sun beside the cards by the time 
 first card is centred. Keep the reading angle low enough to show the particle stream.
 The stream always rotates slowly; further scrolling adds rotation and a few degrees
 of smooth camera angle drift while the sun's position and size stay steady.
-The existing star pass includes a sparse, dim sky around the stream: 1800 additional
+The existing star pass includes a sparse, dim sky around the stream: 5400 additional
 directions at full density, with tiny dots and rotation at 12% of the stream's rate.
 Keep this backdrop cheap: no glow sprites, twinkle or wake physics. Cull offscreen
 stars and stars overlapping the sun, including the dim narrow-screen disc.

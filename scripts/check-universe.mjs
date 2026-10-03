@@ -26,7 +26,7 @@ try {
     const fill = context.fillRect.bind(context);
     let points = [], sun;
     context.fillRect = (x, y, w, h) => {
-      if (context.globalCompositeOperation === 'source-over' && w === h && w < 2 && w !== 1.2) {
+      if (context.globalCompositeOperation === 'source-over' && w === h && w < 3 && w !== 1.2) {
         const alpha = Number(context.fillStyle.match(/,\\s*([\\d.]+)\\)$/)?.[1] ?? 1);
         points.push({ x, y, alpha, size: w });
       }
@@ -49,7 +49,7 @@ try {
     const scene = results[name];
     assert.ok(scene.visible.length >= (name === 'mobile' ? 20 : 60), `${name}: dim background particles should fill the wider sky`);
     assert.ok(scene.quadrants.every(n => n >= 3), `${name}: background particles should reach all four quarters`);
-    assert.ok(scene.visible.every(p => p.alpha <= .3), `${name}: the backdrop must stay faded`);
+    assert.ok(scene.visible.every(p => p.alpha <= .65), `${name}: the backdrop must stay faded`);
     assert.equal(scene.submitted, scene.visible.length, `${name}: offscreen background particles should be culled`);
     assert.ok(scene.visible.every(p => {
       const x = Math.max(p.x, Math.min(scene.sun.x, p.x + p.size));

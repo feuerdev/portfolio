@@ -70,9 +70,9 @@ export function createSpace(amount: number) {
   const bokehSprites = COLOURS.map(colour => sprite([[0, `rgba(${colour}, .28)`], [.75, `rgba(${colour}, .2)`], [1, `rgba(${colour}, 0)`]]));
   const stars = Array.from({ length: Math.round(700 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: pick([5, 3, 1.5, .6]) }))
     // A wider, dimmer sky shares the star pass, without glow sprites or wake physics.
-    .concat(Array.from({ length: Math.round(1800 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: 4 + pick([6, 3, 1]) })))
+    .concat(Array.from({ length: Math.round(5400 * amount) }, () => ({ direction: unit([gaussian(), gaussian(), gaussian()]), level: 4 + pick([5.5, 3, 1.5]) })))
     .sort((p, q) => p.level - q.level);
-  const starFills = [.12, .22, .32, .42, .12, .2, .28].map(alpha => `rgba(214, 226, 255, ${alpha})`);
+  const starFills = [.12, .22, .32, .42, .3, .44, .59].map(alpha => `rgba(214, 226, 255, ${alpha})`);
 
   function positions(turn: number): Vector[] {
     return Array.from({ length: KNOTS }, (_, index) => bandPoint(knotAngle(index) + turn, BAND, 0));
@@ -96,7 +96,7 @@ export function createSpace(amount: number) {
     const sun = sub([0, 0, 0], shot.position), sunZ = dot(sun, forward);
     const sunX = cx + dot(sun, right) / sunZ * focal, sunY = cy - dot(sun, up) / sunZ * focal;
     const sunRadius = SUN * focal / sunZ;
-    const hiddenSkyRadiusSquared = (sunRadius + 2) ** 2;
+    const hiddenSkyRadiusSquared = (sunRadius + 4) ** 2;
     const skyCos = Math.cos(turn * .12), skySin = Math.sin(turn * .12);
 
     let style = -1;
@@ -110,8 +110,8 @@ export function createSpace(amount: number) {
       const sx = cx + (x * right[0] + y * right[1] + depthAxis * right[2]) / z * focal;
       const sy = cy - (x * up[0] + y * up[1] + depthAxis * up[2]) / z * focal;
       if (sx < 0 || sy < 0 || sx >= width || sy >= height) continue;
-      const size = background ? (star.level === 6 ? 1.4 : star.level === 5 ? 1 : .8) : 1.2;
-      // Two pixels include the entire dot, even at the dim sun's edge.
+      const size = background ? (star.level === 6 ? 2.2 : star.level === 5 ? 1.6 : 1.15) : 1.2;
+      // Four pixels include the entire dot, even at the dim sun's edge.
       if (sunZ > SUN && (sx - sunX) ** 2 + (sy - sunY) ** 2 <= hiddenSkyRadiusSquared) continue;
       if (star.level !== style) { context.fillStyle = starFills[star.level]; style = star.level; }
       context.fillRect(sx, sy, size, size);

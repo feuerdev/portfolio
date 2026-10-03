@@ -76,8 +76,8 @@ projects share a steady backdrop while reading.
 - The sun hides rear particles. Fully hidden sprites are skipped; sprites crossing
   the sun's edge are clipped, including their glow. Foreground particles remain visible.
 - The particle count scales with viewport area, down to 45% on small screens.
-- The wider backdrop adds 1800 directions at full density to the existing star
-  pass. Its .8–1.4 pixel dots use three cached, dim fill colours, without glow,
+- The wider backdrop adds 5400 directions at full density to the existing star
+  pass. Its 1.15–2.2 pixel dots use three cached, dim fill colours, without glow,
   twinkle or pointer physics. Offscreen stars and stars over the sun are culled
   before drawing, including over the dim narrow-screen disc. Directions are
   generated once; rotation uses one sine/cosine pair per frame.
@@ -95,8 +95,26 @@ projects share a steady backdrop while reading.
 
 ## Verification
 
-3 October 2026, wider universe backdrop: paired seeded measurements compared the
-approved renderer at `5405533` with the new star field. Each case alternated three
+3 October 2026, approved 5400-direction backdrop: build, static tests and the full
+browser suite passed after the visibility trials. Paired seeded measurements
+used the same approved `5405533` baseline, three 120-frame samples per renderer,
+1.5× backing scale and pointer sweeps on desktop. The narrow viewport used 45%
+particle density.
+
+| Viewport and framing | Median CPU, before → after | P95 CPU, before → after | P95 frame interval, after |
+| --- | --- | --- | --- |
+| 1440×900, opening | 1.3 → 1.4 ms | 1.5 → 1.7 ms | 16.8 ms |
+| 1440×900, reading | 1.2 → 1.6 ms | 1.5 → 1.8 ms | 16.7 ms |
+| 2560×1440, opening | 1.4 → 1.5 ms | 1.5 → 1.7 ms | 16.8 ms |
+| 2560×1440, reading | 1.4 → 1.6 ms | 1.7 → 1.8 ms | 16.8 ms |
+| 390×844, opening | .6 → .6 ms | .9 → .9 ms | 16.8 ms |
+| 390×844, reading | .8 → .9 ms | 1.2 → 1.9 ms | 16.8 ms |
+
+There were no frame intervals over 25 ms in either renderer. The scope and
+limitations of CPU/frame measurements are the same as the initial trial below.
+
+3 October 2026, initial 1800-direction universe trial: paired seeded measurements
+compared the approved renderer at `5405533` with the initial star field. Each case alternated three
 120-frame samples per renderer, with a 1.5× backing scale and pointer sweeps on
 desktop. Small screens used the normal 45% particle density.
 The build, static tests and full browser suite passed. Background checks cover
