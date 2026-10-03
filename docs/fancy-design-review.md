@@ -89,6 +89,13 @@ projects share a steady backdrop while reading.
 - Safari scroll damping runs in the existing frame loop only while the visual
   position differs from the target, with a 40 ms time constant. Hero dimensions
   are cached on resize so interpolation does not read layout on every frame.
+- Title fade/split use paused native opacity/transform animations, scrubbed only
+  when progress changes. Reduced motion and cleanup release the animations and
+  layer hints. No inherited root style is written during scrolling.
+- Touch-only devices skip pointer physics and its arrays, enabling them only
+  when a fine, hover-capable mouse becomes available. Canvas resolution retains
+  its original 1.5x cap. Fixed artwork uses `100lvh` so toolbar motion does not
+  resize the canvas or reframe the camera.
 - Wake contact uses a squared-distance rejection against the swept pointer path
   within the existing particle loop. Only disturbed particles integrate their
   orbital phase/velocities, with orbital drag, damped radial/vertical sway and a
@@ -97,6 +104,21 @@ projects share a steady backdrop while reading.
   There is no particle-to-particle physics, new drawing pass or depth sorting.
 
 ## Verification
+
+3 October 2026, Android Chrome: phone diagnostics isolated the remaining scroll
+choppiness to title effects. Camera only captured 597 scene callbacks in 10 seconds
+(p95 interval 16.8ms, synchronous drawing 2.1ms), while Title only captured 325
+(66.8ms / 2ms). The visitor confirmed Camera only smooth and Title only laggy.
+Replacing inherited root custom-property updates with native title animations
+preserved the split/fade and fixed choppiness in the visitor's subsequent phone
+test. This final confirmation was manual, without a new timing capture.
+The stable artwork height also removed the reported end-of-gesture jump.
+Callback timings do not measure GPU presentation or the precise style/paint cost.
+The resolution reduction trial made no perceptible improvement and was reverted.
+The isolated release passed `npm run build`, `npm test`, `git diff --check` and
+the full browser suite. Checks cover the existing plain default and switch,
+Safari damping, title appearance, Pause/reduced motion, touch physics exclusion,
+mouse interaction, toolbar insets, orientation and project navigation.
 
 3 October 2026, scroll timing: an Android-identified Chromium check reproduced
 stale scroll state at canvas draw time. The scene now samples native scroll before

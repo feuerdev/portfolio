@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { titleProgress } from './title-state.mjs';
 import { execFileSync } from 'node:child_process';
 
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:5001/';
@@ -25,7 +26,7 @@ try {
     const frames = [];
     let current;
     context.clearRect = (...args) => {
-      current = { y: scrollY, exit: Number(document.documentElement.style.getPropertyValue('--hero-exit')), radius: null };
+      current = { y: scrollY, exit: ${titleProgress}, radius: null };
       frames.push(current); clear(...args);
     };
     context.arc = (...args) => { if (current && current.radius === null) current.radius = args[2]; arc(...args); };

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
+import { titleProgress } from './title-state.mjs';
 import { execFileSync } from 'node:child_process';
 
-const base = process.env.PREVIEW_URL || 'http://127.0.0.1:5001/';
+const base = new URL('?mode=plain', process.env.PREVIEW_URL || 'http://127.0.0.1:5001/').href;
 const session = `portfolio-safari-scroll-${process.pid}`;
 const safari = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15';
 function browser(...args) {
@@ -10,8 +11,8 @@ function browser(...args) {
   return result.data;
 }
 const evaluate = code => browser('eval', code).result;
-const exit = () => evaluate('Number(document.documentElement.style.getPropertyValue("--hero-exit"))');
-const settle = () => browser('wait', '--fn', 'Math.abs(Number(document.documentElement.style.getPropertyValue("--hero-exit")) - Math.min(1, scrollY / (document.querySelector(".hero").offsetHeight * .85))) < .002');
+const exit = () => evaluate(titleProgress);
+const settle = () => browser('wait', '--fn', `Math.abs(${titleProgress} - Math.min(1, scrollY / (document.querySelector(".hero").offsetHeight * .85))) < .002`);
 function open(asSafari, touchPoints = 0) {
   browser('open', base);
   browser('wait', '--fn', '!document.querySelector(".mode-control").hidden');
@@ -46,7 +47,7 @@ const step = () => evaluate(`(async () => {
   const native = scrollY, radiusBefore = window.scrollScene.radius, samples = [];
   for (let i = 0; i < 24; i++) {
     await new Promise(requestAnimationFrame);
-    samples.push({ time: performance.now(), radius: window.scrollScene.radius, exit: Number(document.documentElement.style.getPropertyValue('--hero-exit')) });
+    samples.push({ time: performance.now(), radius: window.scrollScene.radius, exit: ${titleProgress} });
   }
   return { native, target, radiusBefore, expected: target / (document.querySelector('.hero').offsetHeight * .85), samples };
 })()`);
@@ -75,7 +76,7 @@ try {
   assert.equal(evaluate('document.querySelector("#curiosity").toDataURL() === window.stillCanvas'), true, 'Pause must stop continuous rendering');
   browser('click', '#mode-toggle');
   browser('wait', '--fn', '!document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
-  assert.equal(evaluate('document.documentElement.style.getPropertyValue("--hero-exit")'), '', 'Cleanup must remove scroll effects');
+  assert.equal(evaluate('document.querySelector(".hero h1 span").getAnimations().length'), 0, 'Cleanup must remove scroll effects');
 
   browser('open', base);
   browser('wait', '--fn', '!document.querySelector(".mode-control").hidden');
@@ -86,11 +87,11 @@ try {
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "off" && document.querySelector(".motion-button").hidden');
   evaluate('scrollTo({ top: 600, behavior: "instant" })');
   evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
-  assert.equal(evaluate('document.documentElement.style.getPropertyValue("--hero-exit")'), '', 'Reduced motion must disable scroll effects');
+  assert.equal(evaluate('document.querySelector(".hero h1 span").getAnimations().length'), 0, 'Reduced motion must disable scroll effects');
   browser('set', 'media', 'light', 'no-preference');
   // Resuming a visible page must also resync after a motion preference change.
   evaluate('document.dispatchEvent(new Event("visibilitychange"))');
-  assert.ok(evaluate('Math.abs(Number(document.documentElement.style.getPropertyValue("--hero-exit")) - Math.min(1, scrollY / (document.querySelector(".hero").offsetHeight * .85))) < .002'),
+  assert.ok(evaluate(`Math.abs(${titleProgress} - Math.min(1, scrollY / (document.querySelector(".hero").offsetHeight * .85))) < .002`),
     'Resuming motion must restore framing at the current reading position');
   open(false);
   const chrome = step();

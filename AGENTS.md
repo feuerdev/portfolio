@@ -76,6 +76,14 @@ scatter returns to the band. Project knots have bounded phase shifts and their
 highlight follows the disturbed cluster. Stationary pointers exert no force; there is no
 hover brightness boost or content mask. Pause freezes the wake; reduced motion
 clears it and touch does not activate it. No particle-to-particle physics or new draws.
+Touch-only devices skip wake arrays, physics integration and pointer listeners.
+Connecting a fine, hover-capable mouse enables them, and removing it clears the wake.
+Keep the original 1.5x canvas backing-resolution cap on all devices.
+The fixed artwork uses `100lvh` with a `100vh` fallback so mobile browser controls
+do not resize the canvas or reframe the camera when a gesture stops.
+Scrub the title's paused native opacity/transform animations in the same scroll loop.
+Do not restore inherited root style updates during scrolling. Cancel animations
+and release layer hints for reduced motion and when leaving fancy mode.
 Desktop Safari smooths visual scroll steps in the existing animation loop with
 time-based damping (40 ms time constant). Native page scrolling is untouched.
 Name splitting, zoom/orbit and scroll rotation use the same visual position.
@@ -165,6 +173,12 @@ offer an explicit page reload because browsers retain failed module imports.
 
 `scripts/check-pointer.mjs` checks orbital momentum, lasting spacing, speed settling,
 stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
+`scripts/check-mobile-rendering.mjs` checks the original backing resolution,
+disabled touch physics and mouse connection/removal.
+`scripts/check-mobile-viewport.mjs` checks canvas, camera and title stability
+under simulated toolbar insets, plus orientation resizing.
+`scripts/check-title.mjs` checks fade/split appearance, reversal, orientation,
+reduced motion and cleanup, and rejects inherited root style updates on scroll.
 `scripts/check-safari-scroll.mjs` simulates stepped scrolling in Chromium with
 desktop Safari identification. It checks intermediate name/zoom frames, native
 scroll position, settling, reversal, Pause, reduced-motion entry and cleanup, plus
