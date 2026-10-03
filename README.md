@@ -35,6 +35,8 @@ exerts no force.
 It uses port 5001 unless `PREVIEW_URL` is set.
 The Safari scroll check simulates discrete input in Chromium using desktop Safari
 identification. Check the preview in actual Safari to judge the mouse-wheel feel.
+Anchor checks cover native smooth project navigation, hashes and Back, direct
+project URLs and reduced-motion jumps on desktop and narrow layouts.
 
 Run `node scripts/measure-pointer.mjs` separately for paired active/inactive renderer
 timings at two desktop sizes. It uses seeded particles, three samples per scene,

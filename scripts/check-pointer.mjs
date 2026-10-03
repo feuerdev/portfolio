@@ -68,13 +68,16 @@ try {
   // Allow the wake to move before freezing it.
   evaluate('new Promise(resolve => setTimeout(resolve, 400))');
   browser('focus', '.motion-button');
+  // The absolute desktop control scrolls into view on focus. Finish that
+  // navigation before isolating pointer input in the paused scene.
+  browser('wait', '--fn', 'scrollY === 0');
   browser('press', 'Space');
-  const paused = evaluate('window.pointerPaused = document.querySelector("#curiosity").toDataURL()');
+  evaluate('window.pointerPaused = document.querySelector("#curiosity").toDataURL(); true');
   evaluate(`window.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', clientX: 1100, clientY: 600 }));
     document.documentElement.dispatchEvent(new PointerEvent('pointerleave'));
     window.dispatchEvent(new Event('blur'));`);
   evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
-  assert.equal(evaluate('document.querySelector("#curiosity").toDataURL()'), paused, 'Pointer movement/departure must not redraw a paused scene');
+  assert.equal(evaluate('document.querySelector("#curiosity").toDataURL() === window.pointerPaused'), true, 'Pointer movement/departure must not redraw a paused scene');
   browser('press', 'Space');
   evaluate(`window.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', clientX: 1270, clientY: 340 }));`);
   browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.pointerPaused');

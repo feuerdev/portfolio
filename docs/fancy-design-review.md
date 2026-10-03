@@ -21,6 +21,9 @@ projects share a steady backdrop while reading.
   rotate at 12% of the stream's rate, keeping the background quiet while reading.
 - Each of the six projects is a bright knot in the stream. Hovering or focusing a
   contents entry circles its knot.
+- Fancy project anchors use the browser's native smooth scrolling, preserving
+  hashes, history and focus behavior. Reduced motion jumps immediately. Mode
+  switches and direct project URLs position immediately as well.
 - Particles swirl in from all around and form the stream after the mode transition.
   The camera follows the pointer.
 - Scrolling the introduction away splits the name apart and performs one zoom,
@@ -94,6 +97,11 @@ projects share a steady backdrop while reading.
   There is no particle-to-particle physics, new drawing pass or depth sorting.
 
 ## Verification
+
+3 October 2026, smooth project anchors: build, static tests and the full browser
+suite passed. Desktop and narrow Chromium checks cover intermediate scrolling
+positions, destination margins, URL hashes and Back, immediate direct project
+URLs and reduced-motion jumps. Mode changes retain immediate positioning.
 
 3 October 2026, approved 5400-direction backdrop: build, static tests and the full
 browser suite passed after the visibility trials. Paired seeded measurements

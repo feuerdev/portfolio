@@ -70,8 +70,9 @@ async function setMode(fancy: boolean, updateURL = true, animate = true): Promis
         else url.searchParams.delete('mode');
         history.replaceState(history.state, '', url);
       }
-      if (atTop) scrollTo({ top: 0, behavior: 'auto' });
-      else anchor?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      // Position mode switches and direct links immediately, even when CSS smooths anchors.
+      if (atTop) scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      else anchor?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
     };
     const transitionDocument = document as TransitionDocument;
     if (animate && !reducedMotion.matches && transitionDocument.startViewTransition) {
