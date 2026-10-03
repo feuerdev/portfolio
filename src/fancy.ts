@@ -53,6 +53,9 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   function tick(time: number): void {
     if (!running()) { frame = 0; return; }
     const elapsed = Math.min(time - previous, 64) / 1000;
+    // Read the current position before drawing. A separate scroll RAF can run
+    // after this frame and leave the universe behind native touch scrolling.
+    scrolled();
     if (smoothScroll && visualScroll !== targetScroll) {
       // Time-based damping: most of a step settles within 120 ms, at any frame rate.
       visualScroll += (targetScroll - visualScroll) * (1 - Math.exp(-elapsed / .04));
@@ -94,7 +97,10 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     }
     if (!running()) draw();
   }
-  function onScroll(): void { if (!scrollFrame) scrollFrame = requestAnimationFrame(scrolled); }
+  function onScroll(): void {
+    // Active motion already samples scroll in its frame; paused views need one draw.
+    if (!running() && !scrollFrame) scrollFrame = requestAnimationFrame(scrolled);
+  }
   function sync(): void {
     if (paused || motion.matches || document.hidden) leavePointer();
     if (motion.matches) space.resetWake();
