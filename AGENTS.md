@@ -4,6 +4,51 @@ Static HTML, CSS and TypeScript, deployed through GitHub Pages. One document has
 two presentations: plain HTML by default, and an optional animated fancy mode.
 Keep the default fast and readable without JavaScript. Preserve all five policy URLs.
 
+## Inline frontend invitation
+
+The entry action is the word "frontend" in the first introductory sentence.
+It starts plain; the word is
+a small dark star window with dust escaping its edges. Clicking uses the existing
+circular reveal from that word to fancy. Use the surrounding plain font,
+normal weight, small vertical padding and a subdued border. In fancy mode the
+word becomes ordinary text, and separate "Back to plain HTML" and pause controls
+appear at the top right on desktop and fixed at the bottom right on mobile.
+Without JavaScript, show ordinary text. Keep focus on the newly available mode
+control after switching. The inline word is an entry action rather than a toggle.
+
+`src/frontend-teaser.ts` draws 48 emitted particles and 18 static stars in a small
+canvas. It shares `src/particle-palette.ts` with the full universe, without starting
+the solar-system renderer or loading fancy fonts/assets in plain mode. Teaser
+particles are round dots with a few pre-baked radial halos, never plus shapes.
+Pointer movement stirs nearby dust on fine mouse devices; stationary pointers and touch
+do not apply forces. Cap the backing resolution at 1.5x. Stop the teaser in fancy
+mode, while switching, offscreen, hidden or under reduced motion. Reduced motion
+keeps a still drawing. Cache geometry on resize/activation; avoid layout reads in
+the animation loop. Bound the canvas to the viewport so the halo cannot introduce
+sideways scrolling. Keep this experiment separate from `feat/fancy-default`.
+Keep the 2.4-second universe formation on interactive activation. Start its motion
+when the transition's new view is ready, so it forms during the 850ms wipe and
+continues for roughly 1.5 seconds afterward. Retain font readiness before capture.
+Desktop uses a CSS keyframe on the native new-view pseudo-element, registered
+before capture rather than attached later through JavaScript. Set its coordinates
+once per switch, never per frame. Narrow screens and coarse pointers instead use
+`src/page-reveal.ts`: an inert temporary Shadow DOM copy of the old view with an
+expanding radial-gradient mask. Paint the old layer before swapping the live
+document. Animate only that layer's mask for 850ms, never inherited root values.
+Android Chrome reported native capture cancellation
+when the viewport changed during the mode swap. Freeze the copy's colours,
+root-relative sizes and current canvas frame; remove it after the 850ms animation,
+including on failure. Reuse loaded CSS and keep only one live universe renderer.
+The Pixel still showed no wipe with the earlier compound clip-path despite a
+finished timeline. Jannik confirmed the radial-mask version works on his Pixel 8
+on 4 October 2026. Desktop emulation alone did not reproduce these device failures.
+`data-reveal-result` and `data-reveal-reason` retain
+the browser's outcome for diagnosis; do not silently label a skipped transition
+as successful. Respect reduced motion. Every fresh load and refresh starts plain,
+including old `?mode=fancy` links. Remove only the legacy `mode` parameter,
+preserving other query parameters and fragments. Switching no longer serializes
+the presentation into the URL or derives it from browser history.
+
 ## Local commands
 
 Use `.nvmrc`: Node 24.15.0, tested with npm 11.12.1. Retain npm's committed lockfile.
@@ -26,8 +71,11 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/index.html`: the shared content, external links, project descriptions and metadata.
 - `public/css/style.css`: hides decorative/accessibility elements, keeps project headings inline, styles the mode switch and keeps plain mode light.
 - `public/css/fancy.css`: optional presentation, loaded on demand. Scope rules to `.fancy`.
-- `src/app.ts`: mode switching, lazy loading, URL state and the optional View Transition.
-- `src/fancy.ts`: fancy-mode lifecycle, single scroll zoom/orbit, reading-view framing, continuous and scroll rotation, pointer and motion controls. Return cleanup and a method to start motion after the reveal.
+- `src/app.ts`: in-memory mode switching, lazy loading, legacy mode-query cleanup and the optional View Transition.
+- `src/frontend-teaser.ts`: the bounded inline particle invitation in plain mode.
+- `src/page-reveal.ts`: the temporary mobile circular reveal, independent of native viewport capture.
+- `src/particle-palette.ts`: the shared universe and teaser colours.
+- `src/fancy.ts`: fancy-mode lifecycle, single scroll zoom/orbit, reading-view framing, continuous and scroll rotation, pointer and motion controls. Return cleanup and a method to start motion once the transition's new view is ready.
 - `src/space.ts`: the particle scene: sun, stream, project knots, stars and origin-centred camera.
 - `public/js/*.js`: generated by TypeScript. Never edit or commit these files.
 - `public/assets/`: local images. Decorative images live in inert HTML templates, instantiated only in fancy mode.
@@ -35,21 +83,22 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/css/policy.css`: shared presentation for the four retained app policy/terms pages. Preserve their legal wording.
 - `tests/site.test.mjs`: static hosting paths, policy URLs and progressive-enhancement checks.
 
-The default is always plain unless the URL explicitly contains `?mode=fancy`.
-The switch updates that parameter without losing other query parameters or fragments.
+Every initial load and refresh starts plain, regardless of old `?mode=fancy` links.
+The switch keeps presentation in memory and does not update the URL. Remove legacy
+`mode` parameters without losing other query parameters or fragments.
 Do not add cookies or storage just to remember the presentation. Switching must keep
 content, keyboard focus and reading position usable.
 
 Plain mode uses browser-default layout, fonts, spacing and colours in light mode.
 Do not centre it, constrain its width or introduce a visual theme. The mode switch
-is the deliberate exception: a prominent fancy pill at the top right, fixed at the
-bottom right with a shorter label on narrow screens. Leave enough bottom space to
-reach the footer without the button covering it. Respect `prefers-reduced-motion`
-in CSS and JavaScript. Keep the compact pause icon beside the mode switch and stop
+is the deliberate exception: an inline star window on the word "frontend" in the
+introduction. Respect `prefers-reduced-motion` in CSS and JavaScript. Keep the
+compact pause icon beside the fancy return control and stop
 rendering when motion is paused, the tab is hidden or fancy mode is disabled. Always show content
 while fancy assets load. Load both font weights before capturing a View Transition,
 allow font failures to use sans-serif, and keep canvas motion stopped until the
-transition finishes. Log transition failures so browser-specific problems are visible.
+new view is captured. Start motion when the transition is ready, so the live
+universe is visible during the reveal. Log transition failures so browser-specific problems are visible.
 Keep content readable if decorative loading or browser features fail. Do not add animation dependencies
 for effects that native browser APIs can handle.
 
@@ -142,7 +191,7 @@ Check the branch and preserve unrelated changes before editing. Use a descriptiv
 Merging and production deployment require user authorization.
 
 For presentation changes, check desktop and narrow mobile layouts in light/dark,
-keyboard navigation, project links, toggling both ways, direct fancy links,
+keyboard navigation, project links, toggling both ways, legacy fancy URLs opening plain,
 reduced motion, pause/resume, and JavaScript/decorative-download failure. Check the
 browser console and network, not just screenshots. Automated accessibility checks
 supplement manual inspection. Do not add tests that merely restate CSS properties.
@@ -161,8 +210,9 @@ and must not be casually rewritten.
 
 Use `npm run test:browser` with agent-browser installed and a preview running.
 It defaults to port 5001. Set `PREVIEW_URL` to use another preview. The check covers
-font readiness and failure, deferred canvas motion, skipped transitions, mobile placement,
-offline recovery, focus, Back navigation and lazy artwork. It also runs
+font readiness and failure, formation during the reveal, skipped native transitions,
+the mobile mask under viewport resizing, mobile placement, offline recovery,
+focus, plain refresh, legacy URL cleanup and lazy artwork. It also runs
 `scripts/check-scroll.mjs` for steady sun framing, the stronger zoom and orbit,
 continuous and scroll rotation, Pause, reverse zoom and narrow/reduced-motion views.
 `scripts/check-occlusion.mjs` checks rear-particle occlusion, glow at the sun's edge,

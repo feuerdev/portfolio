@@ -13,6 +13,7 @@ const evaluate = code => browser('eval', code).result;
 try {
   browser('set', 'device', 'Pixel 7');
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "on" && !document.querySelector("#mode-toggle").disabled && document.querySelector("#curiosity").style.opacity === "1"');
   evaluate(`window.sunGeometry = null;
     const context = document.querySelector('#curiosity').getContext('2d');

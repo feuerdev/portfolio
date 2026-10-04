@@ -12,6 +12,7 @@ const evaluate = code => browser('eval', code).result;
 
 try {
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
   evaluate(`(async () => {
     const images = Array.from(document.querySelectorAll('.project-art img'));

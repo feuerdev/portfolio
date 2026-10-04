@@ -11,10 +11,16 @@ function browser(...args) {
 const evaluate = code => browser('eval', code).result;
 const ready = () => browser('wait', '--fn', 'document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
 function openFancy(hash = '') {
-  // A fragment-only navigation stays in the same document and correctly scrolls
-  // smoothly. Visit plain mode first to exercise actual direct-page loading.
+  // Fresh URLs open plain. Activate in place to check that switching preserves
+  // the project reached by a direct link.
   browser('open', base);
   browser('open', new URL(`?mode=fancy${hash}`, base).href);
+  assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), false, 'Direct URLs must open plain');
+  if (hash) {
+    assert.equal(evaluate('location.hash'), hash);
+    assert.ok(evaluate(`{ const r = document.querySelector(${JSON.stringify(hash)}).getBoundingClientRect(); r.bottom > 0 && r.top < innerHeight; }`), 'A direct plain URL must bring the requested project into view');
+  }
+  evaluate('document.querySelector("#mode-toggle").click()');
   ready();
 }
 const navigate = () => evaluate(`(async () => {
@@ -38,7 +44,8 @@ try {
     assert.ok(Math.abs(smooth.top - smooth.margin) < 2, 'Anchor destinations must respect the project scroll margin');
     browser('back');
     browser('wait', '--fn', 'location.hash === ""');
-    assert.equal(evaluate('new URL(location.href).searchParams.get("mode")'), 'fancy', 'Back must keep the selected presentation');
+    assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), true, 'Back must keep the presentation selected in this visit');
+    assert.equal(evaluate('new URL(location.href).searchParams.has("mode")'), false);
 
     openFancy('#keyboards');
     const arrival = evaluate(`(async () => {
@@ -48,7 +55,7 @@ try {
         margin: parseFloat(getComputedStyle(document.querySelector('#keyboards')).scrollMarginTop) };
     })()`);
     assert.equal(new Set(arrival.positions).size, 1, 'Direct project URLs must arrive without a scrolling tail');
-    assert.ok(Math.abs(arrival.top - arrival.margin) < 2, 'Direct project URLs must land at the requested card');
+    assert.equal(evaluate('location.hash'), '#keyboards', 'Activating fancy must preserve the direct link');
 
     browser('set', 'media', 'dark', 'reduced-motion');
     openFancy();
