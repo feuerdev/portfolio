@@ -15,7 +15,7 @@ const exit = () => evaluate(titleProgress);
 const settle = () => browser('wait', '--fn', `Math.abs(${titleProgress} - Math.min(1, scrollY / (document.querySelector(".hero").offsetHeight * .85))) < .002`);
 function open(asSafari, touchPoints = 0) {
   browser('open', base);
-  browser('wait', '--fn', '!document.querySelector(".mode-control").hidden');
+  browser('wait', '--fn', '!document.querySelector(".frontend-control").hidden');
   browser('set', 'viewport', '1440', '900');
   browser('set', 'media', 'light', 'no-preference');
   if (asSafari) evaluate(`Object.defineProperty(navigator, 'userAgent', { value: ${JSON.stringify(safari)}, configurable: true });
@@ -74,12 +74,12 @@ try {
   evaluate('window.stillCanvas = document.querySelector("#curiosity").toDataURL(); true');
   evaluate('new Promise(resolve => setTimeout(resolve, 100))');
   assert.equal(evaluate('document.querySelector("#curiosity").toDataURL() === window.stillCanvas'), true, 'Pause must stop continuous rendering');
-  browser('click', '#mode-toggle');
+  browser('click', '#plain-toggle');
   browser('wait', '--fn', '!document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
   assert.equal(evaluate('document.querySelector(".hero h1 span").getAnimations().length'), 0, 'Cleanup must remove scroll effects');
 
   browser('open', base);
-  browser('wait', '--fn', '!document.querySelector(".mode-control").hidden');
+  browser('wait', '--fn', '!document.querySelector(".frontend-control").hidden');
   browser('set', 'media', 'dark', 'reduced-motion');
   evaluate(`Object.defineProperty(navigator, 'userAgent', { value: ${JSON.stringify(safari)}, configurable: true });
     Object.defineProperty(navigator, 'vendor', { value: 'Apple Computer, Inc.', configurable: true });`);

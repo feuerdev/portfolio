@@ -11,6 +11,7 @@ const evaluate = code => browser('eval', code).result;
 try {
   browser('set', 'device', 'Pixel 7');
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "on" && !document.querySelector("#mode-toggle").disabled');
   const result = evaluate(`(async () => {
     const heading = document.querySelector('.hero h1'), words = [...heading.querySelectorAll('span')];
@@ -51,7 +52,7 @@ try {
   browser('set', 'media', 'dark', 'no-preference');
   evaluate('document.dispatchEvent(new Event("visibilitychange")); true');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "on" && document.querySelector(".hero h1 span").getAnimations().length === 1');
-  browser('click', '#mode-toggle');
+  browser('click', '#plain-toggle');
   browser('wait', '--fn', '!document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
   assert.equal(evaluate('[...document.querySelectorAll(".hero h1, .hero h1 span")].every(node => node.getAnimations().length === 0 && node.style.willChange === "")'), true, 'Leaving fancy must clear animations and layer hints');
   assert.equal(browser('errors').errors.length, 0);

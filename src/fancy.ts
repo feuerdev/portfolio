@@ -135,7 +135,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     if (motion.matches) { intro = INTRO; exit = zoom = 0; lastScroll = scrollY; resetTitle(); }
     else { scrolled(); visualScroll = targetScroll; applyScroll(visualScroll); }
     root.dataset.motion = !paused && !motion.matches ? 'on' : 'off';
-    if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-pressed', String(paused)); }
+    if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-label', button.title); button.setAttribute('aria-pressed', String(paused)); }
     if (!running()) { cancelAnimationFrame(frame); frame = 0; draw(); }
     else if (!frame) { previous = performance.now(); frame = requestAnimationFrame(tick); }
   }

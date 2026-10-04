@@ -70,16 +70,22 @@
   .fancy .keyboard-art img.scylla-progress { position: absolute; width: 45%; max-width: 300px; height: auto; right: 0; bottom: 0; border: 5px solid var(--surface); }
 
   .fancy .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin: 0; padding-block: 1.5rem 5rem; border-top: 1px solid var(--line); background: var(--space); color: var(--muted); font-size: .85rem; }
-  .fancy #mode-toggle { background: var(--surface); color: var(--ink); border-color: var(--line); box-shadow: 0 3px 16px rgba(0, 0, 0, .4); font-family: 'Plex Sans', sans-serif; font-size: 13px; }
-  .fancy #mode-toggle:hover { border-color: var(--accent); }
-  .fancy #mode-toggle:focus-visible { outline-color: var(--accent); }
-  .fancy .mode-spark { color: var(--accent); }
-  .fancy .mode-control { display: flex; align-items: center; gap: .5rem; }
+  .fancy .mode-control { position: absolute; z-index: 20; display: flex; align-items: center; gap: .5rem; top: max(1rem, env(safe-area-inset-top)); right: max(1rem, env(safe-area-inset-right)); }
+  .fancy #plain-toggle { min-height: 44px; padding: .65rem 1rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); box-shadow: 0 3px 16px #0006; font: 500 13px/1.45 'Plex Sans', sans-serif; cursor: pointer; }
+  .fancy #plain-toggle:hover { border-color: var(--accent); }
+  .fancy #plain-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   .fancy .motion-button { position: relative; flex: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); box-shadow: 0 3px 16px rgba(0, 0, 0, .4); cursor: pointer; }
   .fancy .motion-button:hover { border-color: var(--accent); }
   .fancy .motion-button::before { content: ""; position: absolute; top: 50%; left: 50%; width: 4px; height: 13px; margin: -6.5px 0 0 -5px; border-radius: 1px; background: currentColor; box-shadow: 6px 0 currentColor; }
   .fancy .motion-button[aria-pressed="true"]::before { width: 0; height: 0; margin: -7px 0 0 -4px; border-radius: 0; border: solid transparent; border-width: 7px 0 7px 12px; border-left-color: currentColor; background: none; box-shadow: none; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  :root[data-mode-transition]::view-transition-new(root) {
+    animation: portfolio-reveal 850ms cubic-bezier(.65,0,.25,1) both;
+  }
+  @keyframes portfolio-reveal {
+    from { clip-path: circle(0px at var(--mode-reveal-x) var(--mode-reveal-y)); }
+    to { clip-path: circle(var(--mode-reveal-radius) at var(--mode-reveal-x) var(--mode-reveal-y)); }
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     :root.fancy { scroll-behavior: smooth; }
@@ -90,6 +96,8 @@
     .fancy #curiosity { --orb-x: .74; }
   }
   @media (max-width: 700px) {
+    .fancy .mode-control { position: fixed; top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); }
+    .fancy body { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
     .fancy .hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; min-height: 100svh; padding-block: 1.5rem 1rem; }
     .fancy h1, .fancy .contents { grid-row: auto; grid-column: 1; }
     .fancy h1 { margin: 38vw 0 1.75rem -.05em; font-size: 18.5vw; }

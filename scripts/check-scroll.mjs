@@ -25,6 +25,7 @@ const matchingFraction = (points, reference, tolerance) => points.filter(point =
 
 try {
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('set', 'viewport', '1440', '900');
   browser('set', 'media', 'light', 'no-preference');
   browser('wait', '--fn', 'document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
@@ -95,6 +96,7 @@ try {
   browser('set', 'media', 'dark', 'reduced-motion');
   browser('open', base);
   browser('open', new URL('?mode=fancy#raytracer', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "off" && !document.querySelector("#mode-toggle").disabled');
   settle();
   evaluate('window.reducedScene = document.querySelector("#curiosity").toDataURL(); true');

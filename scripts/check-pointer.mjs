@@ -61,6 +61,7 @@ try {
   browser('set', 'viewport', '1440', '900');
   browser('set', 'media', 'light', 'no-preference');
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "on" && !document.querySelector("#mode-toggle").disabled');
   evaluate(`document.querySelector('.project').scrollIntoView({ block: 'center', behavior: 'instant' });
     window.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', clientX: 1140, clientY: 340 }));
@@ -89,6 +90,7 @@ try {
   browser('set', 'viewport', '390', '844');
   browser('set', 'media', 'light', 'no-preference');
   browser('open', new URL('?mode=fancy', base).href);
+  evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "on" && !document.querySelector("#mode-toggle").disabled');
   evaluate('new Promise(resolve => setTimeout(resolve, 2600))');
   // Hold only the animation timestamp, leaving actual frames and pointer listeners
@@ -102,7 +104,7 @@ try {
   evaluate('new Promise(resolve => window.nativeFrame(() => window.nativeFrame(resolve)))');
   assert.equal(evaluate('document.querySelector("#curiosity").toDataURL()'), touch, 'Touch input must leave the scene unchanged');
   evaluate('window.requestAnimationFrame = window.nativeFrame');
-  browser('click', '#mode-toggle');
+  browser('click', '#plain-toggle');
   browser('wait', '--fn', '!document.documentElement.classList.contains("fancy") && !document.querySelector("#mode-toggle").disabled');
   const plain = evaluate('document.querySelector("#curiosity").toDataURL()');
   evaluate(`window.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', clientX: 300, clientY: 240 }));`);

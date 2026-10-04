@@ -21,16 +21,13 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="mode-control" hidden>
     <button class="motion-button" type="button" title="Pause motion" aria-label="Pause motion" aria-pressed="false" hidden></button>
-    <button id="mode-toggle" type="button" title="Switch to fancy mode">
-      <span class="mode-spark" aria-hidden="true">✳</span> <span id="mode-label">Didn't this guy say he's a frontend dev?</span>
-      <span id="mode-label-mobile">Didn't you say frontend dev?</span>
-    </button>
+    <button id="plain-toggle" type="button">Back to plain HTML</button>
   </div>
   <main id="main">
     <section class="hero" id="top" aria-labelledby="name">
       <div class="hero-copy">
         <h1 id="name"><span>Jannik</span> <span>Feuerhahn</span></h1>
-        <p class="intro" id="about">I'm a software engineer currently building regulated medical software at Ada Health.</p>
+        <p class="intro" id="about">I'm a software engineer currently building regulated medical software at Ada Health, with a <span class="frontend-fallback">frontend</span><span class="frontend-control" hidden><button id="mode-toggle" type="button" title="Show the fancy version" aria-label="Frontend — show the fancy version"><canvas class="frontend-particles" aria-hidden="true"></canvas><span id="mode-label">frontend</span></button></span> focus.</p>
         <p class="intro">I became proficient at software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
         <p class="hero-links" id="contact">
           <a href="mailto:jannik@feuer.dev">jannik@feuer.dev</a> <span class="link-separator" aria-hidden="true">·</span>
@@ -125,7 +122,7 @@
 
   <hr class="document-rule">
   <footer class="footer">
-    <span>Last updated <time datetime="2026-10-02">2 October 2026</time></span>
+    <span>Last updated <time datetime="2026-10-04">4 October 2026</time></span>
     <a href="privacy-policy.html">Privacy</a>
   </footer>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>

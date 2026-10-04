@@ -1,9 +1,10 @@
+import { PARTICLE_COLOURS as COLOURS } from './particle-palette.js';
+
 export type Vector = [number, number, number];
 export type Shot = { position: Vector; target: Vector; x: number; y: number };
 export type PointerWake = { x: number; y: number; fromX: number; fromY: number; radius: number };
 
 const TAU = Math.PI * 2, UP: Vector = [0, 1, 0], SUN = .2, BAND = 1, INCLINE = .24, KNOTS = 6;
-const COLOURS = ['255, 255, 255', '214, 228, 255', '130, 172, 255', '255, 172, 88', '255, 216, 164'];
 const LEVELS = [.35, .55, .75, 1];
 const sub = (a: Vector, b: Vector): Vector => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const plus = (a: Vector, b: Vector): Vector => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
