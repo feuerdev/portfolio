@@ -62,3 +62,19 @@ Player/source/video identity and cache generations now prevent stale cache resul
 The content script now reads the saved enable toggle before changing playback and follows live synchronized-setting changes. A late startup settings read cannot overwrite a newer toggle event. Four regressions reproduced cached skipping while disabled; all19 lifecycle/settings fixtures pass. The final content script also compiles with a focused non-minified webpack check. This does not replace the complete model-dependent bundle or browser validation.
 
 Caption fetches now capture the video state before settings/network awaits and check its identity before using a response. Slow old-video responses and responses after tab removal/cache clearing cannot recreate state. Three failing regressions plus a successful-fetch control verify this with the real background source; no live YouTube/model/browser check was run.
+
+## Agreed near-term direction
+
+Continue reliability and held-out evaluation as a nearer-term project. Start with visible suggestions and manual skipping; automatic skipping must be an explicit opt-in with dependable Undo and stronger evidence. Model failure leaves playback untouched and exposes a clear status. Setup must pin the real artifact revision/hash and document redistribution rights; do not substitute weights. Commercial expansion remains conditional.
+
+## Implementation receipt (draft)
+
+Manual-first skip suggestions, bounded reversible Undo, stale-control invalidation and explicit fail-open classifier errors are implemented. Model initialization is single-flight with retry after failure; invalid output never becomes scores. A shared pinned model specification, streaming staged setup and pre-build hash verification replace the arbitrary cached ONNX selection. The real pinned artifact was downloaded and hash-checked; production webpack passed on Node24.15.0/192MiB heap, with size warnings (~132MiB assets). Six fixture test files pass.
+
+No browser or real inference run, held-out annotations/accuracy, real browser cache/settings/worker restart proof, or model/code redistribution-rights resolution is claimed. Manual mode is the only available playback mode; old automatic opt-ins are ignored until independent evidence supports offering that option. No merge/deployment/distribution.
+
+### Settings, cache and restart receipt
+
+Completed caches now bind the real model revision/hash, pipeline version and label names/thresholds/blocked flags. Legacy/incomplete/expired/malformed entries are ignored. Storage retains at most 30 videos for 48 hours. Label and enable changes invalidate tab state and retained controls; a pending classifier cannot publish or cache its result afterwards. Cache writes happen only after successful analysis. Repeated identical caption requests do not append duplicates; invalid caption intervals report unavailable. Disjoint detected windows never bridge an unclassified gap. Node fixtures simulate a worker restart against the same persisted cache and exercise the positive current-policy path. Clear/category changes require a video reload to request captions again; the popup says this explicitly.
+
+These tests are browser-API fixtures without model inference, independent captions or actual service-worker suspension. Browser and held-out quality gates remain open. Automatic skipping is unavailable, including for legacy saved opt-ins. No production distribution is authorized.

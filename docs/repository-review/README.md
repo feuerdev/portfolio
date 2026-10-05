@@ -1,16 +1,17 @@
 # Public repository continuation review
 
-Reviewed 5 October 2026. Start with keep-mcp; finish one bounded feuer demo; validate Piccy demand before native revival; use sponsor detection as a measured ML portfolio project.
+Reviewed 5 October 2026. Keep MCP is first and stays free/open source. Sponsor reliability/evaluation is nearer term; Feuer remains a persistent shared-world MMORTS with guided onboarding. Piccy and Fish are deferred together to a later native phase with no revival schedule.
 
-[All 25 public repositories ranked and assessed](ranking.md) · [Reviewed commit/metadata inventory](inventory.json) · [Cleanup delivery and verification](delivery.md)
+[All22 current public repositories and25 historical assessments](ranking.md) · [Reviewed source/metadata inventory](inventory.json) · [Current draft changes and actual verification](delivery.md)
 
-Selected product plans and technical specifications:
+Selected specifications:
 
-- [keep-mcp: reliable local integration](plans/keep-mcp.md)
-- [feuer: ten-minute multiplayer demo](plans/feuer.md)
-- [PicChallenge / Piccy: private photo selection](plans/PicChallenge.md)
-- [yt-sponsor-detect: measured local ML](plans/yt-sponsor-detect.md)
+- [Keep MCP: reliable local integration and account evidence](plans/keep-mcp.md)
+- [Sponsor detector: manual suggestions and measured local ML](plans/yt-sponsor-detect.md)
+- [Feuer: persistent-world authority and first-player journey](plans/feuer.md)
+- [Piccy: deferred local photo selection](plans/PicChallenge.md)
+- [Fish: deferred marine-life discovery and provenance](plans/fish.md)
 
-These plans are review-date snapshots of `docs/project-readiness.md` in each selected repository. They describe proposed next work, acceptance tests and business gates; they do not claim those future milestones are already implemented. Scores estimate the value of additional work, not income.
+These plans mirror the selected repositories' readiness documents, including concrete draft progress and explicit release gates. Historical scores estimate additional-work value, not income or current delivery dates. No private repository findings are included. All changes remain draft PRs; no merge or deployment.
 
-The owner retired trade-bot, impfbot, rerun-filter and wsb from the continuation shortlist; historical assessments remain in the inventory.
+trade-bot, impfbot, rerun-filter and wsb remain retired from public continuation work. Their cleanup drafts are closed unmerged; repository archival is a separate pending manual action.

@@ -325,5 +325,19 @@
     "candidates": 20,
     "owner_retired": 4,
     "work_excluded": 1
+  },
+  "final_access_recheck": {
+    "date": "2026-10-06",
+    "owner_listing_count": 35,
+    "public": 22,
+    "private": 13,
+    "second_page_empty": true,
+    "historical_repositories_not_returned": [
+      "awesome-mcp-servers",
+      "awesome-mcp-servers2",
+      "awesome-mcp-servers3"
+    ],
+    "direct_lookup_result": "404 for all three; cause unverified",
+    "source_snapshot_preserved": true
   }
 }

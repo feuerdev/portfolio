@@ -1,6 +1,6 @@
 # Piccy: private photo-selection utility
 
-Status: proposed implementation spec, 5 October 2026. `feuerdev/PicChallenge` is the SwiftUI Piccy implementation. The separate lowercase `pic-challenge` repository is an earlier UIKit experiment; do not continue both.
+Status: deferred to the later native-app phase together with Fish, 5 October 2026. No revival schedule is committed. The implementation milestones below are conditional on starting that phase; do not schedule them as current work. `feuerdev/PicChallenge` is the SwiftUI Piccy implementation. The separate lowercase `pic-challenge` repository is an earlier UIKit experiment; do not continue both.
 
 ## Existing system and cleanup
 
@@ -34,7 +34,7 @@ Non-goals: social voting, uploads, AI judging, library cleanup/deletion, subscri
 
 Recommended dependency strategy: first reproduce the existing sibling-workspace build on a Mac. Then extract only TournamentTree/Node/needed collection helpers to a tested Swift package or local module. Avoid modernizing all feuerlib consumers at once. Replace outdated Podfile references only after confirming whether the app actually needs CocoaPods; do not simply run pod install against stale target names.
 
-## Ordered work packages
+## Deferred work packages
 
 1. **P1 — discovery and native baseline (1–2 days + participant scheduling).** Observe 6–10 users choosing from real photo sets without recording/uploading personal images; ask about repeat use and price. Fresh Mac clone, inspect signing/targets/workspace, document supported iOS and Xcode. Done when picker-to-winner path is reproduced or blockers are ticketed with evidence.
 2. **P2 — deterministic core/import (2–3 days).** Pure tournament/session model with stable IDs, byes and undo; bounded thumbnail import. Add meaningful unit fixtures and stop allowing empty tournament starts. Done when edge counts, order, undo and duplicate policy pass.
@@ -52,3 +52,7 @@ Paid utility: of 10 target users, at least six finish unaided, four report an ac
 ## Verification and rollout
 
 Requires macOS/Xcode: fresh clone with sibling feuerlib, `xcodebuild -list` on the workspace, then a simulator build/test using an available destination. Verify real-device picker cancellation, limited photo access, orientation, high-resolution imports, low-memory behavior, background resume, undo and share cancellation. TestFlight is optional and needs explicit distribution authorization. No Xcode tests were run on this Linux VPS. Ship incremental PRs; session schema migration must be versioned and preserve an export/discard path. No changes to original photo assets are allowed.
+
+## Shared native-app phase
+
+Reproduce both Piccy and Fish native builds on Mac before choosing milestones. Share Mac/Xcode setup, dependency repairs, signing preparation and device testing while preserving each app's purpose. Piccy remains private local photo selection; Fish remains marine-life discovery with provenance/uncertainty review and separate evidence for swimming-safety claims.
