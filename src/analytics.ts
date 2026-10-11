@@ -25,7 +25,7 @@ function count(vars: Count): void {
   try { window.goatcounter?.count?.(vars); } catch {}
 }
 
-export function countEvent(path: string, title: string): void {
+function countEvent(path: string, title: string): void {
   count({ path, title, event: true, referrer: '' });
 }
 
@@ -35,6 +35,11 @@ function referringDomain(referrer: string): string {
     return ['http:', 'https:'].includes(url.protocol) ? url.origin : '';
   } catch { return ''; }
 }
+
+document.addEventListener('portfolio-mode-change', event => {
+  const fancy = (event as CustomEvent<boolean>).detail;
+  countEvent(fancy ? 'mode-fancy' : 'mode-plain', fancy ? 'Fancy mode' : 'Plain HTML mode');
+});
 
 if (trackingAllowed()) {
   window.goatcounter = { no_onload: true };
@@ -70,3 +75,5 @@ if (trackingAllowed()) {
   };
   document.head.append(script);
 }
+
+export {};

@@ -1,5 +1,4 @@
 import { start as startFrontendTeaser } from './frontend-teaser.js';
-import { countEvent } from './analytics.js';
 
 type TransitionDocument = Document & {
   startViewTransition?: (update: () => void) => { ready: Promise<void>; finished: Promise<void> };
@@ -126,7 +125,7 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     resumeArtwork();
     status.textContent = fancy ? 'Fancy mode on.' : 'Plain HTML mode on.';
     if (pendingMode === undefined && wasFancy !== fancy && root.classList.contains('fancy') === fancy) {
-      countEvent(fancy ? 'mode-fancy' : 'mode-plain', fancy ? 'Fancy mode' : 'Plain HTML mode');
+      document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: fancy }));
     }
   } catch (error) {
     root.dataset.revealResult = 'failed';

@@ -125,8 +125,8 @@ test('every project/contact activation uses its stable event and leaves navigati
 test('mode events keep the original page count and session deduplication', () => {
   const current = page();
   current.load();
-  current.context.countEvent('mode-fancy', 'Fancy mode');
-  current.context.countEvent('mode-plain', 'Plain HTML mode');
+  current.document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: true }));
+  current.document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: false }));
   assert.equal(current.hits.filter(hit => !hit.e).length, 1);
   assert.deepEqual(current.hits.slice(1).map(hit => hit.p), ['mode-fancy', 'mode-plain']);
   assert.ok(current.hits.every(hit => hit.ns === undefined));

@@ -201,6 +201,9 @@ mode changes under `mode-fancy` or `mode-plain`. Keep both modes combined and
 GoatCounter's session deduplication. Mode changes never count another pageview.
 Preserve native click and middle-click behavior and ignore right-clicks.
 Analytics failures and early clicks must not block navigation or switching.
+Load analytics independently from the app. Completed switches dispatch a native
+`portfolio-mode-change` event with the target mode as a boolean. Do not make the
+app import the optional analytics module.
 Do not queue events, add a noscript pixel, proxy the collector or persist visitors.
 
 Configure the private hosted account and review consent requirements before
