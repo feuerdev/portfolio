@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="description" content="Jannik Feuerhahn, software engineer. Web, mobile, and open-source projects.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at/count.js; connect-src https://feuerdev.goatcounter.com/count; style-src 'self'; img-src 'self' data: https://feuerdev.goatcounter.com/count; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Jannik Feuerhahn | Software engineer</title>
   <link rel="canonical" href="https://feuer.dev/">
@@ -16,6 +16,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/analytics.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -30,10 +31,10 @@
         <p class="intro" id="about">I'm a software engineer currently building regulated medical software at Ada Health, with a <span class="frontend-fallback">frontend</span><span class="frontend-control" hidden><button id="mode-toggle" type="button" title="Show the fancy version" aria-label="Frontend — show the fancy version"><canvas class="frontend-particles" aria-hidden="true"></canvas><span id="mode-label">frontend</span></button></span> focus.</p>
         <p class="intro">I became proficient at software engineering before LLMs. Now I'm learning how to do it again with AI agents.</p>
         <p class="hero-links" id="contact">
-          <a href="mailto:jannik@feuer.dev">jannik@feuer.dev</a> <span class="link-separator" aria-hidden="true">·</span>
-          <a href="https://github.com/feuerdev">GitHub</a> <span class="link-separator" aria-hidden="true">·</span>
-          <a href="https://www.linkedin.com/in/jannik-feuerhahn/">LinkedIn</a> <span class="link-separator" aria-hidden="true">·</span>
-          <a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing">Résumé</a>
+          <a href="mailto:jannik@feuer.dev" data-goatcounter-click="contact-email" data-goatcounter-title="Email">jannik@feuer.dev</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://github.com/feuerdev" data-goatcounter-click="contact-github" data-goatcounter-title="GitHub profile">GitHub</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://www.linkedin.com/in/jannik-feuerhahn/" data-goatcounter-click="contact-linkedin" data-goatcounter-title="LinkedIn">LinkedIn</a> <span class="link-separator" aria-hidden="true">·</span>
+          <a href="https://docs.google.com/document/d/1knfPBhKP2djGLAoHXkvTYnUqUrRMBjXXYVmUgqrKcM0/edit?usp=sharing" data-goatcounter-click="contact-resume" data-goatcounter-title="Résumé">Résumé</a>
         </p>
       </div>
       <nav class="contents fancy-only" aria-label="Projects">
@@ -68,7 +69,7 @@
           </div>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="keep-mcp-title"><a href="https://github.com/feuerdev/keep-mcp">keep-mcp</a></h3><p><span class="project-separator">: </span>The most popular open-source Google Keep MCP server by GitHub stars.</p>
+          <h3 class="project-name" id="keep-mcp-title"><a href="https://github.com/feuerdev/keep-mcp" data-goatcounter-click="project-keep-mcp" data-goatcounter-title="keep-mcp">keep-mcp</a></h3><p><span class="project-separator">: </span>The most popular open-source Google Keep MCP server by GitHub stars.</p>
         </div>
       </article>
 
@@ -78,7 +79,7 @@
           <template><img class="scylla-progress" src="assets/scylla-build.webp" width="1200" height="904" alt="" loading="lazy" decoding="async"></template>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="keyboards-title"><a href="assets/scylla-built.webp">Split keyboards</a></h3><p><span class="project-separator">: </span>Ergonomic keyboards for tinkerers. I <a href="assets/scylla-build.webp">assembled</a> a Scylla, learned Colemak-DH and customise my <a href="https://github.com/feuerdev/qmk_userspace/tree/main/keyboards/bastardkb/scylla/keymaps/feuerdev">QMK</a> and <a href="https://github.com/feuerdev/zmk-config-totem">ZMK</a> layouts.</p>
+          <h3 class="project-name" id="keyboards-title"><a href="assets/scylla-built.webp" data-goatcounter-click="project-keyboards" data-goatcounter-title="Split keyboards">Split keyboards</a></h3><p><span class="project-separator">: </span>Ergonomic keyboards for tinkerers. I <a href="assets/scylla-build.webp" data-goatcounter-click="project-keyboards" data-goatcounter-title="Split keyboards">assembled</a> a Scylla, learned Colemak-DH and customise my <a href="https://github.com/feuerdev/qmk_userspace/tree/main/keyboards/bastardkb/scylla/keymaps/feuerdev" data-goatcounter-click="project-keyboards" data-goatcounter-title="Split keyboards">QMK</a> and <a href="https://github.com/feuerdev/zmk-config-totem" data-goatcounter-click="project-keyboards" data-goatcounter-title="Split keyboards">ZMK</a> layouts.</p>
         </div>
       </article>
 
@@ -87,7 +88,7 @@
           <template><img src="assets/sponsor-popup.webp" width="520" height="310" alt="" loading="lazy" decoding="async"></template>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="sponsor-detector-title"><a href="https://github.com/feuerdev/yt-sponsor-detect">yt-sponsor-detect</a></h3><p><span class="project-separator">: </span>Can you fit a language model into a Chrome extension? A prototype that detects and skips sponsored segments on YouTube, entirely on your device.</p>
+          <h3 class="project-name" id="sponsor-detector-title"><a href="https://github.com/feuerdev/yt-sponsor-detect" data-goatcounter-click="project-sponsor-detector" data-goatcounter-title="yt-sponsor-detect">yt-sponsor-detect</a></h3><p><span class="project-separator">: </span>Can you fit a language model into a Chrome extension? A prototype that detects and skips sponsored segments on YouTube, entirely on your device.</p>
         </div>
       </article>
 
@@ -96,7 +97,7 @@
           <template><img src="assets/feuer-map.webp" width="912" height="476" alt="" loading="lazy" decoding="async"></template>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="feuer-game-title"><a href="https://github.com/feuerdev/feuer/tree/dev">feuer.io</a></h3><p><span class="project-separator">: </span>A multiplayer browser strategy game and my eternal pet project since 2018. I've used it to try different architectures, frameworks and hosting setups.</p>
+          <h3 class="project-name" id="feuer-game-title"><a href="https://github.com/feuerdev/feuer/tree/dev" data-goatcounter-click="project-feuer-game" data-goatcounter-title="feuer.io">feuer.io</a></h3><p><span class="project-separator">: </span>A multiplayer browser strategy game and my eternal pet project since 2018. I've used it to try different architectures, frameworks and hosting setups.</p>
         </div>
       </article>
 
@@ -105,7 +106,7 @@
           <template><img src="assets/raytracer.png" width="190" height="338" alt="" loading="lazy" decoding="async"></template>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="raytracer-title"><a href="https://github.com/feuerdev/Raytracer">Swift raytracer</a></h3><p><span class="project-separator">: </span>A raytracer I wrote in 2021, with an iOS scene editor.</p>
+          <h3 class="project-name" id="raytracer-title"><a href="https://github.com/feuerdev/Raytracer" data-goatcounter-click="project-raytracer" data-goatcounter-title="Swift raytracer">Swift raytracer</a></h3><p><span class="project-separator">: </span>A raytracer I wrote in 2021, with an iOS scene editor.</p>
         </div>
       </article>
 
@@ -114,7 +115,7 @@
           <template><img src="assets/screenshots_fish.webp" width="600" height="478" alt="" loading="lazy" decoding="async"></template>
         </figure>
         <div class="project-copy">
-          <h3 class="project-name" id="big-pond-title"><a href="https://github.com/feuerdev/fish">Big Pond</a></h3><p><span class="project-separator">: </span>An iOS app for discovering local marine life, built after moving to Taiwan and wondering what was in the water.</p>
+          <h3 class="project-name" id="big-pond-title"><a href="https://github.com/feuerdev/fish" data-goatcounter-click="project-big-pond" data-goatcounter-title="Big Pond">Big Pond</a></h3><p><span class="project-separator">: </span>An iOS app for discovering local marine life, built after moving to Taiwan and wondering what was in the water.</p>
         </div>
       </article>
     </section>
@@ -122,7 +123,7 @@
 
   <hr class="document-rule">
   <footer class="footer">
-    <span>Last updated <time datetime="2026-10-04">4 October 2026</time></span>
+    <span>Last updated <time datetime="2026-10-11">11 October 2026</time></span>
     <a href="privacy-policy.html">Privacy</a>
   </footer>
   <p id="mode-status" class="sr-only" role="status" aria-live="polite"></p>

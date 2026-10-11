@@ -45,6 +45,7 @@ function loadStyles(): Promise<void> {
 async function setMode(fancy: boolean, animate = true): Promise<void> {
   if (!toggle || !back || !inlineControl || !controls || !status) return;
   if (busy) { pendingMode = fancy; return; }
+  const wasFancy = root.classList.contains('fancy');
   busy = true;
   toggle.disabled = back.disabled = true;
   teaser?.setActive(false);
@@ -123,6 +124,9 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     // Also start motion when the transition is unavailable or skipped.
     resumeArtwork();
     status.textContent = fancy ? 'Fancy mode on.' : 'Plain HTML mode on.';
+    if (pendingMode === undefined && wasFancy !== fancy && root.classList.contains('fancy') === fancy) {
+      document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: fancy }));
+    }
   } catch (error) {
     root.dataset.revealResult = 'failed';
     root.dataset.revealReason = error instanceof Error ? error.message : String(error);
