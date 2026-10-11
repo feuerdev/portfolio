@@ -64,6 +64,7 @@ Run `npm run watch` in a second terminal while editing TypeScript, then refresh.
 These commands use a POSIX shell. No Docker, credentials or global compiler needed.
 
 Before handing off a change: `npm run build`, `npm test`, `git diff --check`.
+The Node tests run with one worker to keep verification within the VPS budget.
 For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 
 ## Structure and design rules
@@ -72,6 +73,7 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/css/style.css`: hides decorative/accessibility elements, keeps project headings inline, styles the mode switch and keeps plain mode light.
 - `public/css/fancy.css`: optional presentation, loaded on demand. Scope rules to `.fancy`.
 - `src/app.ts`: in-memory mode switching, lazy loading, legacy mode-query cleanup and the optional View Transition.
+- `src/analytics.ts`: production homepage analytics, privacy preferences and payload sanitization.
 - `src/frontend-teaser.ts`: the bounded inline particle invitation in plain mode.
 - `src/page-reveal.ts`: the temporary mobile circular reveal, independent of native viewport capture.
 - `src/particle-palette.ts`: the shared universe and teaser colours.
@@ -82,6 +84,7 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/assets/fonts/`: locally hosted IBM Plex Sans with its SIL Open Font License. Fonts load only in fancy mode.
 - `public/css/policy.css`: shared presentation for the four retained app policy/terms pages. Preserve their legal wording.
 - `tests/site.test.mjs`: static hosting paths, policy URLs and progressive-enhancement checks.
+- `tests/analytics.test.mjs`: tracker loading, sanitized data, native events and analytics failure checks.
 
 Every initial load and refresh starts plain, regardless of old `?mode=fancy` links.
 The switch keeps presentation in memory and does not update the URL. Remove legacy
@@ -181,8 +184,30 @@ Maintain the footer's "Last updated" date manually in `public/index.html`. Updat
 both the visible date and the `<time datetime>` value when content changes.
 The keep-mcp popularity claim refers to GitHub stars. Recheck it when updating copy.
 
-Keep first-load resources local. The homepage CSP allows same-origin assets and blocks inline script/style.
-Do not weaken it to add a widget. Plain mode has no analytics or external fonts.
+Keep resources local except for the asynchronous GoatCounter tracker at
+`https://gc.zgo.at/count.js`. Load it only on the HTTPS homepage at `feuer.dev`,
+including `/index.html`, after checking Do Not Track and Global Privacy Control.
+Check those preferences again before each count. The homepage CSP permits only
+that tracker and `https://feuerdev.goatcounter.com/count` for analytics, including
+the tracker's JavaScript image fallback. Keep inline script/style blocked.
+Plain mode has no external fonts or active decorative images.
+
+Disable GoatCounter's automatic pageview before loading it. Sanitize `get_data`
+before the first count: use `/` for the homepage, remove the separate query field
+and reduce referrers to HTTP(S) origins. Event paths and titles are fixed HTML
+attributes, never link URLs or arbitrary text. Count all links in each project
+under one project event, four introduction links separately, and successful explicit
+mode changes under `mode-fancy` or `mode-plain`. Keep both modes combined and
+GoatCounter's session deduplication. Mode changes never count another pageview.
+Preserve native click and middle-click behavior and ignore right-clicks.
+Analytics failures and early clicks must not block navigation or switching.
+Do not queue events, add a noscript pixel, proxy the collector or persist visitors.
+
+Configure the private hosted account and review consent requirements before
+publishing. See `docs/analytics.md` for settings and validation. Retain aggregate
+statistics for 24 months. Disable individual pageviews, language and campaign
+collection and location regions. Keep the website privacy notice aligned with the
+actual settings, and leave the separate app policies unchanged.
 
 ## Verification and publishing
 
