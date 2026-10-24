@@ -64,7 +64,6 @@ Run `npm run watch` in a second terminal while editing TypeScript, then refresh.
 These commands use a POSIX shell. No Docker, credentials or global compiler needed.
 
 Before handing off a change: `npm run build`, `npm test`, `git diff --check`.
-The Node tests run with one worker to keep verification within the VPS budget.
 For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 
 ## Structure and design rules
