@@ -278,4 +278,4 @@ CPU render time separately from frame intervals and sun-edge clipping counts;
 do not run other browser checks concurrently with the measurements.
 
 Update this file when commands or behavior change, and the README when commands change. Private server
-operations are out of scope and belong in `feuerdev/server-setup`. Never commit secrets.
+operations are out of scope and belong in `feuerdev/setup`. Never commit secrets.
