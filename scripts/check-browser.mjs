@@ -21,7 +21,7 @@ try {
   browser('set', 'media', 'light', 'no-preference');
   browser('open', base);
   assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), false);
-  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 6);
+  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 7);
   assert.equal(evaluate('performance.getEntriesByType("resource").filter(r => /\\.(png|webp|svg|woff2)$/.test(r.name) && !r.name.endsWith("/favicon.svg")).length'), 0, 'Plain mode must not fetch project artwork or fancy fonts');
   assert.equal(evaluate('performance.getEntriesByType("resource").some(r => ["fancy.js", "space.js", "page-reveal.js"].includes(new URL(r.name).pathname.split("/").at(-1)))'), false, 'Plain mode must not load the full scene');
 
@@ -163,7 +163,7 @@ try {
     browser('click', '#plain-toggle'); settled();
     assert.equal(evaluate('document.documentElement.scrollWidth <= innerWidth'), true);
   }
-  assert.equal(evaluate('document.querySelectorAll(".project-art img").length'), 7, 'Switching must not duplicate artwork');
+  assert.equal(evaluate('document.querySelectorAll(".project-art img").length'), 8, 'Switching must not duplicate artwork');
   browser('set', 'media', 'dark', 'reduced-motion');
   evaluate('document.querySelector("#mode-toggle").click()'); settled();
   assert.equal(evaluate('document.documentElement.dataset.motion'), 'off');
@@ -184,7 +184,7 @@ try {
   browser('open', base);
   assert.equal(evaluate('document.querySelector(".frontend-control").hidden'), true);
   assert.equal(evaluate('getComputedStyle(document.querySelector(".frontend-fallback")).display'), 'inline');
-  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 6);
+  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 7);
   browser('network', 'unroute', '**/js/app.js');
   browser('open', new URL('privacy-policy.html', base).href);
   assert.equal(evaluate('document.title'), 'Privacy | Jannik Feuerhahn');
