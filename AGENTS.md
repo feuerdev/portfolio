@@ -230,9 +230,10 @@ root and under `/portfolio/`. Roll back by reverting and redeploying `master`.
 
 Before publishing this redesign, review the draft copy and legacy project links.
 The website privacy policy describes the static site and GitHub Pages hosting.
-The Impressum still needs a genuine address authorised for this use. Do not invent
-an address or copy one from another source. See `docs/publication-notes.md` for
-the legal sources and unresolved publication details. App policy pages are separate
+`public/impressum.html` holds the provider details in German, with a c/o address
+from the Online-Impressum address service. Keep its wording verbatim and never
+replace the address with another one. See `docs/publication-notes.md` for
+the legal sources and open publication checks. App policy pages are separate
 and must not be casually rewritten.
 
 Use `npm run test:browser` with agent-browser installed and a preview running.

@@ -1,18 +1,18 @@
 # Publication notes
 
 Reviewed 6 September 2026. Production publication of the updated design was
-authorised on 6 September 2026. The contact and privacy details below remain open.
+authorised on 6 September 2026. The privacy details below remain open.
 
-## Remaining decision
+## Impressum
 
-An Impressum needs a genuine address suitable for the applicable disclosure and
-service-of-documents requirements. Jannik does not want to publish his home address.
-No alternative address has been supplied. Do not publish a fabricated address,
-a PO box presented as a compliant address, or an employer's address without authority.
-Once the address is resolved, add an `impressum.html` page with name, address and
-contact details, link it from the homepage and privacy page, and complete the
-controller contact details in the privacy notice. Confirm any additional DDG
-requirements if the site is used to offer freelance or other business services.
+`public/impressum.html` is the only copy of the provider details. Jannik does not
+publish his home address. The c/o address comes from Online-Impressum, an address
+service authorised to receive documents for him. The page reproduces the service's
+text verbatim, in German. The homepage footer and the privacy notice's contact
+section link to it. The site offers no paid services, so it lists name, address
+and email without further business details.
+
+## Open checks
 
 The privacy notice is a draft for this redesign. Check that its email retention
 description matches actual practice. Public MX records point to Google, but the

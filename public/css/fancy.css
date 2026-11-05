@@ -70,6 +70,7 @@
   .fancy .keyboard-art img.scylla-progress { position: absolute; width: 45%; max-width: 300px; height: auto; right: 0; bottom: 0; border: 5px solid var(--surface); }
 
   .fancy .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin: 0; padding-block: 1.5rem 5rem; border-top: 1px solid var(--line); background: var(--space); color: var(--muted); font-size: .85rem; }
+  .fancy .footer-links { display: flex; gap: 1rem; }
   .fancy .mode-control { position: absolute; z-index: 20; display: flex; align-items: center; gap: .5rem; top: max(1rem, env(safe-area-inset-top)); right: max(1rem, env(safe-area-inset-right)); }
   .fancy #plain-toggle { min-height: 44px; padding: .65rem 1rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); box-shadow: 0 3px 16px #0006; font: 500 13px/1.45 'Plex Sans', sans-serif; cursor: pointer; }
   .fancy #plain-toggle:hover { border-color: var(--accent); }
