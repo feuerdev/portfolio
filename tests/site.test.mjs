@@ -53,7 +53,7 @@ test('the homepage defers third-party scripts and decorative media', async () =>
 test('homepage analytics identifies every project link and the four introduction links', async () => {
   const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
   const projects = [...html.matchAll(/<article class="project" id="([^"]+)"[\s\S]*?<\/article>/g)];
-  assert.equal(projects.length, 6);
+  assert.equal(projects.length, 7);
   for (const [article, id] of projects) {
     for (const [anchor] of article.matchAll(/<a\s[^>]+>/g)) {
       assert.match(anchor, new RegExp(`data-goatcounter-click="project-${id}"`));
