@@ -32,6 +32,17 @@ test('all existing policy and terms URLs have published HTML files', async () =>
   }
 });
 
+test('the Impressum is a German page linked from the homepage and privacy notice', async () => {
+  const html = await readFile(new URL('impressum.html', publicDirectory), 'utf8');
+  assert.match(html, /<html lang="de">/);
+  assert.match(html, /<main[\s>]/);
+  assert.equal([...html.matchAll(/<h1[\s>]/g)].length, 1);
+  for (const name of ['index.html', 'privacy-policy.html']) {
+    const page = await readFile(new URL(name, publicDirectory), 'utf8');
+    assert.match(page, /href="impressum.html"/, `${name} must link to the Impressum`);
+  }
+});
+
 test('the homepage works as a document without JavaScript', async () => {
   const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
   assert.doesNotMatch(html, /href="javascript:|\sonclick=/i, 'Navigation must work without JavaScript');
