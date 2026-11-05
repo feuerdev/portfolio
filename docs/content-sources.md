@@ -50,6 +50,8 @@ The README describes the hosting move from a VPS to Vercel and Render. This is a
 - `screenshots_fish.webp` is an existing portfolio asset.
 - The game and Fish images are exported from PNG at their original dimensions using cwebp quality 80 with metadata disabled. Their sizes are 20,290 and 51,560 bytes.
 
+`og-image.png` is the link-preview image named by `og:image`. The page itself never loads it. It is a 1200 by 630 pixel agent-browser capture of the local fancy hero on 5 November 2026 from commit `f4c703d`, taken after the universe formed, with the mode controls and project contents hidden. PNG, 303,714 bytes. Recapture it when the hero changes.
+
 All project images are decorative, local and loaded only in fancy mode. Plain mode provides the same project descriptions and links without fetching artwork.
 Artwork shares a bounded media area, up to 400 pixels tall on desktop and 220 pixels
 on narrow screens. Screenshots retain their aspect ratios. The small raytracer capture
