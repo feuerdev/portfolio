@@ -15,8 +15,10 @@ projects share a steady backdrop while reading.
 
 ## Scene
 
-- A soft pale sun with an orange glow sits inside a tilted, clumpy particle stream of
-  white, blue and amber particles. A few particles carry a soft glow.
+- A sun sits inside a tilted, clumpy particle stream of white, blue and amber
+  particles. A few particles carry a soft glow. The sun's disc follows a filtered
+  solar photograph: limb darkening from a warm white centre to a darker orange
+  edge, and a glare that falls off steeply outside the edge.
 - A sparse, faded star field fills the wider sky around the stream. Tiny dots
   rotate at 12% of the stream's rate, keeping the background quiet while reading.
 - Each of the six projects is a bright knot in the stream. Hovering or focusing a

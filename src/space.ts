@@ -22,6 +22,17 @@ function bandPoint(angle: number, radius: number, height: number): Vector {
 }
 const knotAngle = (index: number) => index / KNOTS * TAU + .6;
 
+const limbStops = Array.from({ length: 12 }, (_, k) => {
+  const r = 1 - (1 - k / 11) ** 2, limb = 1 - Math.sqrt(1 - r * r);
+  return [r, `rgb(${Math.round(255 * (1 - .38 * limb))}, ${Math.round(246 * (1 - .6 * limb))}, ${Math.round(222 * (1 - .84 * limb))})`] as const;
+});
+const GLARE_REACH = 7;
+const glareStops = Array.from({ length: 14 }, (_, k) => {
+  const t = (k / 13) ** 2, falloff = 1 / (1 + t * (GLARE_REACH - 1));
+  const alpha = .3 * falloff ** 4 + .1 * falloff * (1 - t);
+  return [t, `rgba(255, ${Math.round(150 + 70 * falloff)}, ${Math.round(70 + 90 * falloff)}, ${alpha.toFixed(3)})`] as const;
+});
+
 export function createSpace(amount: number, pointerEnabled = true) {
   type Seed = { a: number; b: number; c: number; knot: number; size: number; colour: number; level: number; glow: boolean };
   const seeds: Seed[] = [];
@@ -136,19 +147,13 @@ export function createSpace(amount: number, pointerEnabled = true) {
       outsideSun.arc(x, y, radius, 0, TAU);
       context.globalAlpha = sunOpacity;
       context.globalCompositeOperation = 'lighter';
-      for (const [reach, colour] of [[7, 'rgba(255, 150, 60, .1)'], [2.3, 'rgba(255, 190, 100, .42)']] as const) {
-        const glow = context.createRadialGradient(x, y, radius * .8, x, y, radius * reach);
-        glow.addColorStop(0, colour);
-        glow.addColorStop(1, 'rgba(255, 150, 60, 0)');
-        context.fillStyle = glow;
-        context.fillRect(x - radius * reach, y - radius * reach, radius * reach * 2, radius * reach * 2);
-      }
+      const reach = radius * GLARE_REACH, glare = context.createRadialGradient(x, y, radius, x, y, reach);
+      glareStops.forEach(([stop, colour]) => glare.addColorStop(stop, colour));
+      context.fillStyle = glare;
+      context.fillRect(x - reach, y - reach, reach * 2, reach * 2);
       context.globalCompositeOperation = 'source-over';
       const disc = context.createRadialGradient(x, y, 0, x, y, radius);
-      disc.addColorStop(0, '#fffbe8');
-      disc.addColorStop(.72, '#fff0bd');
-      disc.addColorStop(.94, '#ffd685');
-      disc.addColorStop(1, '#ffbf5c');
+      limbStops.forEach(([stop, colour]) => disc.addColorStop(stop, colour));
       context.fillStyle = disc;
       context.beginPath();
       context.arc(x, y, radius, 0, TAU);
