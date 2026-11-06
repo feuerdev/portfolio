@@ -54,7 +54,7 @@ try {
   assert.ok(first.x - first.radius > evaluate('document.querySelector(".project").getBoundingClientRect().right'), 'The bright sun must sit beside the desktop card');
   const firstStars = evaluate('window.scene.stars.map(([x, y]) => [x - window.scene.sun.x, y - window.scene.sun.y])');
   const beforeScroll = evaluate('window.scene.points');
-  sameSun(centre('sponsor-detector'), first);
+  sameSun(centre('yt-sponsor-detect'), first);
   assert.notDeepEqual(evaluate('window.scene.points'), beforeScroll, 'Scrolling through projects must rotate the particle field');
   const stillPoints = evaluate('window.scene.points');
   const stillStars = evaluate('window.scene.stars');
@@ -68,7 +68,7 @@ try {
     () => assert.ok(matchingFraction(firstStars, openingStars, 15) < .5, 'The transition must change camera angle, not just zoom and framing')
   ]) { try { check(); } catch (error) { failures.push(error); } }
   if (failures.length) throw new AggregateError(failures, 'Reading-view iteration checks failed');
-  sameSun(centre('raytracer'), first);
+  sameSun(centre('swift-raytracer'), first);
   assert.notDeepEqual(evaluate('window.scene.stars'), stillStars, 'Scrolling between projects should gently change the viewing angle while keeping the sun anchored');
 
   evaluate('document.querySelector(".motion-button").click()');
@@ -80,22 +80,22 @@ try {
   sameSun(evaluate('window.scene.sun'), opening);
   assert.equal(evaluate('document.querySelector("#curiosity").toDataURL() === window.pausedScene'), false, 'The zoom must reverse when returning to the introduction, even while paused');
   evaluate('document.querySelector(".motion-button").click()');
-  centre('sponsor-detector');
+  centre('yt-sponsor-detect');
   evaluate('window.resumedScene = document.querySelector("#curiosity").toDataURL(); true');
   browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.resumedScene');
 
   for (const width of [1100, 700, 390, 320]) {
     browser('set', 'viewport', String(width), '844');
     settle();
-    const sun = centre('sponsor-detector');
+    const sun = centre('yt-sponsor-detect');
     assert.ok(sun.x > width && sun.x - sun.radius < width, 'Narrow layouts keep a partially cropped sun at the right edge');
     assert.ok(sun.opacity < .5, 'The cropped sun must be dimmer behind narrow cards');
     assert.ok(evaluate('document.documentElement.scrollWidth <= innerWidth'), 'The scene must not introduce horizontal overflow');
-    sameSun(centre('raytracer'), sun);
+    sameSun(centre('swift-raytracer'), sun);
   }
   browser('set', 'media', 'dark', 'reduced-motion');
   browser('open', base);
-  browser('open', new URL('?mode=fancy#raytracer', base).href);
+  browser('open', new URL('?mode=fancy#swift-raytracer', base).href);
   evaluate('document.querySelector("#mode-toggle").click()');
   browser('wait', '--fn', 'document.documentElement.dataset.motion === "off" && !document.querySelector("#mode-toggle").disabled');
   settle();

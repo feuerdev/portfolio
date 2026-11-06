@@ -13,11 +13,14 @@ analytics. Do Not Track and Global Privacy Control prevent loading and counting.
 | --- | --- |
 | `/` | Homepage visit, combined across plain and fancy mode |
 | `project-keep-mcp` | keep-mcp links |
-| `project-keyboards` | Split keyboard photos, QMK and ZMK links |
-| `project-sponsor-detector` | yt-sponsor-detect links |
-| `project-feuer-game` | feuer.io links |
-| `project-raytracer` | Swift raytracer links |
-| `project-big-pond` | Big Pond links |
+| `project-human-api` | human-api links |
+| `project-llm-autobattler` | llm-autobattler links |
+| `project-split-keyboards` | split-keyboards photos, QMK and ZMK links |
+| `project-yt-sponsor-detect` | yt-sponsor-detect links |
+| `project-agent-box` | agent-box links |
+| `project-feuer-io` | feuer-io links |
+| `project-swift-raytracer` | swift-raytracer links |
+| `project-big-pond` | big-pond links |
 | `contact-email` | Introduction email link |
 | `contact-github` | Introduction GitHub profile link |
 | `contact-linkedin` | Introduction LinkedIn link |

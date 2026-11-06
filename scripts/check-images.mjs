@@ -39,12 +39,12 @@ try {
       () => assert.ok(artwork.every(item => item.contained), `${width}px: artwork must stay inside its card`),
       () => assert.ok(artwork.every(item => item.picturesContained), `${width}px: pictures must not spill into other cards`),
       () => assert.ok(evaluate('document.documentElement.scrollWidth <= innerWidth'), `${width}px: no horizontal overflow`),
-      () => assert.ok(artwork.find(item => item.id === 'raytracer').images[0].height <= 338,
+      () => assert.ok(artwork.find(item => item.id === 'swift-raytracer').images[0].height <= 338,
         `${width}px: the old raytracer capture must not be enlarged`),
       () => assert.ok(width > 700 || artwork.every(item => item.height <= 260), `${width}px: images should not dominate the mobile viewport`)
     ]) { try { check(); } catch (error) { failures.push(error); } }
   }
-  const replacements = evaluate("['keep-mcp', 'sponsor-detector'].map(id => document.getElementById(id).querySelector('img').getAttribute('src'))");
+  const replacements = evaluate("['keep-mcp', 'yt-sponsor-detect'].map(id => document.getElementById(id).querySelector('img').getAttribute('src'))");
   try { assert.ok(replacements.every(src => src.endsWith('.webp')), 'Both placeholder diagrams must be replaced by real captures'); }
   catch (error) { failures.push(error); }
   if (failures.length) throw new AggregateError(failures, 'Project imagery checks failed');
