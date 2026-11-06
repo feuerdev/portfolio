@@ -166,8 +166,11 @@ in both modes. Do not add expandables, repeated technology tag lines or generic
 "Read the source" links. Native horizontal rules separate the plain document's
 intro, projects and footer. Fancy mode restyles this same content.
 
-Project order is keep-mcp, Human API, Two Generals, split keyboards, the sponsor
-detector, feuer.io, the Swift raytracer and Big Pond. Keep Vorsorge off the page for now.
+Project order is keep-mcp, human-api, llm-autobattler, split-keyboards, yt-sponsor-detect,
+heron-deterrent, agent-box, feuer-io, swift-raytracer and big-pond. Each project's heading, anchor and
+analytics event use one lowercase slug: the repository or component name for AI-era
+work, a descriptive slug for older projects. Where the product name differs from the
+slug, the paragraph names it with normal capitalisation. Keep Vorsorge off the page for now.
 Wilo, Twitch Rerun Filter, the Tarkov calculator and the website itself are retired
 from the project list. The earlier Python contract-work paragraph is also removed.
 The sponsor detector is a prototype with a public repository. The Scylla photos show
@@ -178,6 +181,9 @@ Use authentic captures for project artwork. Keep's checklist and tool-call summa
 come from recorded MCP evidence; the sponsor image is its actual settings popup.
 Keep media areas consistent and bounded, preserve screenshot aspect ratios, and
 do not enlarge the old raytracer capture. Images stay static and load only in fancy mode.
+The heron-deterrent clip is the one moving artwork: a muted, looping inline video with
+`preload="none"` and a poster. It plays only while fancy motion runs, so Pause, hidden
+tabs and leaving fancy mode stop it, and reduced motion keeps the poster.
 
 Maintain the footer's "Last updated" date manually in `public/index.html`. Update
 both the visible date and the `<time datetime>` value when content changes.

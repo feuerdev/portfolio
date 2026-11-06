@@ -21,8 +21,8 @@ try {
   browser('set', 'media', 'light', 'no-preference');
   browser('open', base);
   assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), false);
-  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 8);
-  assert.equal(evaluate('performance.getEntriesByType("resource").filter(r => /\\.(png|webp|svg|woff2)$/.test(r.name) && !r.name.endsWith("/favicon.svg")).length'), 0, 'Plain mode must not fetch project artwork or fancy fonts');
+  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 10);
+  assert.equal(evaluate('performance.getEntriesByType("resource").filter(r => /\\.(png|webp|svg|woff2|mp4)$/.test(r.name) && !r.name.endsWith("/favicon.svg")).length'), 0, 'Plain mode must not fetch project artwork or fancy fonts');
   assert.equal(evaluate('performance.getEntriesByType("resource").some(r => ["fancy.js", "space.js", "page-reveal.js"].includes(new URL(r.name).pathname.split("/").at(-1)))'), false, 'Plain mode must not load the full scene');
 
   // Fonts must be ready before capture, while formation overlaps the reveal.
@@ -146,12 +146,16 @@ try {
   settled();
   assert.equal(evaluate('document.documentElement.dataset.revealResult'), 'finished', 'Changing viewport must not abort the mobile reveal');
   assert.equal(evaluate('document.activeElement.id'), 'plain-toggle');
+  browser('wait', '--fn', '!document.querySelector(".project-art video").paused');
   browser('click', '.motion-button');
   assert.equal(evaluate('document.documentElement.dataset.motion'), 'off');
   assert.equal(evaluate('document.querySelector(".motion-button").getAttribute("aria-label")'), 'Play motion');
+  assert.equal(evaluate('document.querySelector(".project-art video").paused'), true, 'Pause must stop the project video');
   browser('click', '.motion-button');
   assert.equal(evaluate('document.documentElement.dataset.motion'), 'on');
+  browser('wait', '--fn', '!document.querySelector(".project-art video").paused');
   browser('click', '#plain-toggle'); settled();
+  assert.equal(evaluate('document.querySelector(".project-art video").paused'), true, 'Leaving fancy mode must stop the project video');
   assert.equal(evaluate('document.activeElement.id'), 'mode-toggle');
 
   for (const width of [320, 390]) {
@@ -163,13 +167,15 @@ try {
     browser('click', '#plain-toggle'); settled();
     assert.equal(evaluate('document.documentElement.scrollWidth <= innerWidth'), true);
   }
-  assert.equal(evaluate('document.querySelectorAll(".project-art img").length'), 9, 'Switching must not duplicate artwork');
+  assert.equal(evaluate('document.querySelectorAll(".project-art img, .project-art video").length'), 11, 'Switching must not duplicate artwork');
   browser('set', 'media', 'dark', 'reduced-motion');
   evaluate('document.querySelector("#mode-toggle").click()'); settled();
   assert.equal(evaluate('document.documentElement.dataset.motion'), 'off');
   assert.equal(evaluate('document.querySelector(".motion-button").hidden'), true);
   assert.equal(evaluate('document.documentElement.dataset.revealResult'), 'reduced-motion');
   assert.equal(evaluate('document.querySelector(".page-reveal")'), null);
+  assert.equal(evaluate('document.querySelector(".project-art video").paused'), true, 'Reduced motion must stop the project video');
+  assert.equal(evaluate('document.querySelector(".project-art video").currentTime'), 0, 'Reduced motion must return the played video to its poster');
   browser('click', '#plain-toggle'); settled();
 
   browser('set', 'viewport', '1440', '1000');
@@ -184,7 +190,7 @@ try {
   browser('open', base);
   assert.equal(evaluate('document.querySelector(".frontend-control").hidden'), true);
   assert.equal(evaluate('getComputedStyle(document.querySelector(".frontend-fallback")).display'), 'inline');
-  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 8);
+  assert.equal(evaluate('document.querySelectorAll("article h3").length'), 10);
   browser('network', 'unroute', '**/js/app.js');
   browser('open', new URL('privacy-policy.html', base).href);
   assert.equal(evaluate('document.title'), 'Privacy | Jannik Feuerhahn');
