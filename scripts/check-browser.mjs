@@ -174,7 +174,8 @@ try {
   assert.equal(evaluate('document.querySelector(".motion-button").hidden'), true);
   assert.equal(evaluate('document.documentElement.dataset.revealResult'), 'reduced-motion');
   assert.equal(evaluate('document.querySelector(".page-reveal")'), null);
-  assert.equal(evaluate('document.querySelector(".project-art video").paused'), true, 'Reduced motion must keep the project video on its poster');
+  assert.equal(evaluate('document.querySelector(".project-art video").paused'), true, 'Reduced motion must stop the project video');
+  assert.equal(evaluate('document.querySelector(".project-art video").currentTime'), 0, 'Reduced motion must return the played video to its poster');
   browser('click', '#plain-toggle'); settled();
 
   browser('set', 'viewport', '1440', '1000');

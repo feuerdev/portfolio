@@ -139,7 +139,11 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     else { scrolled(); visualScroll = targetScroll; applyScroll(visualScroll); }
     root.dataset.motion = !paused && !motion.matches ? 'on' : 'off';
     if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-label', button.title); button.setAttribute('aria-pressed', String(paused)); }
-    for (const video of videos) if (running()) video.play().catch(() => undefined); else video.pause();
+    for (const video of videos) {
+      if (running()) video.play().catch(() => undefined);
+      else if (motion.matches && video.currentTime) video.load();
+      else video.pause();
+    }
     if (!running()) { cancelAnimationFrame(frame); frame = 0; draw(); }
     else if (!frame) { previous = performance.now(); frame = requestAnimationFrame(tick); }
   }

@@ -17,6 +17,7 @@ analytics. Do Not Track and Global Privacy Control prevent loading and counting.
 | `project-llm-autobattler` | llm-autobattler links |
 | `project-split-keyboards` | split-keyboards photos, QMK and ZMK links |
 | `project-yt-sponsor-detect` | yt-sponsor-detect links |
+| `project-heron-deterrent` | heron-deterrent links |
 | `project-agent-box` | agent-box links |
 | `project-feuer-io` | feuer-io links |
 | `project-swift-raytracer` | swift-raytracer links |
