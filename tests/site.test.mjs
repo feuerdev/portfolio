@@ -58,13 +58,13 @@ test('the homepage defers third-party scripts and decorative media', async () =>
   assert.doesNotMatch(html, /<(?:script|img|iframe)[^>]+src="https?:/i);
   assert.doesNotMatch(html, /<link[^>]+href="https?:[^>]+rel="stylesheet"|<link[^>]+rel="stylesheet"[^>]+href="https?:/i);
   const activeHtml = html.replace(/<template>[\s\S]*?<\/template>/g, '');
-  assert.doesNotMatch(activeHtml, /<img[^>]+\ssrc=/i, 'Project artwork stays inert until opting into fancy mode');
+  assert.doesNotMatch(activeHtml, /<(img|video)[^>]+\ssrc=/i, 'Project artwork stays inert until opting into fancy mode');
 });
 
 test('homepage analytics identifies every project link and the four introduction links', async () => {
   const html = await readFile(new URL('index.html', publicDirectory), 'utf8');
   const projects = [...html.matchAll(/<article class="project" id="([^"]+)"[\s\S]*?<\/article>/g)];
-  assert.equal(projects.length, 9);
+  assert.equal(projects.length, 10);
   for (const [article, id] of projects) {
     for (const [anchor] of article.matchAll(/<a\s[^>]+>/g)) {
       assert.match(anchor, new RegExp(`data-goatcounter-click="project-${id}"`));

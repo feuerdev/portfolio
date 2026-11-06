@@ -34,6 +34,9 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   document.querySelectorAll<HTMLTemplateElement>('.fancy-only template').forEach(template => {
     template.replaceWith(template.content.cloneNode(true));
   });
+  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('.project-art video'));
+  // Cloned template content does not carry the parser's muted state, which autoplay policies require.
+  for (const video of videos) video.muted = true;
 
   function camera(): Shot {
     const progress = ease(zoom);
@@ -136,6 +139,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     else { scrolled(); visualScroll = targetScroll; applyScroll(visualScroll); }
     root.dataset.motion = !paused && !motion.matches ? 'on' : 'off';
     if (button) { button.hidden = motion.matches || !context; button.title = paused ? 'Play motion' : 'Pause motion'; button.setAttribute('aria-label', button.title); button.setAttribute('aria-pressed', String(paused)); }
+    for (const video of videos) if (running()) video.play().catch(() => undefined); else video.pause();
     if (!running()) { cancelAnimationFrame(frame); frame = 0; draw(); }
     else if (!frame) { previous = performance.now(); frame = requestAnimationFrame(tick); }
   }
@@ -215,6 +219,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     button?.removeEventListener('click', toggleMotion);
     for (const link of contents) for (const type of ['pointerenter', 'pointerleave', 'focus', 'blur']) link.removeEventListener(type, highlight);
     resetTitle();
+    for (const video of videos) video.pause();
     canvas?.style.removeProperty('opacity');
     delete root.dataset.motion;
     if (button) { button.hidden = true; button.setAttribute('aria-pressed', 'false'); }

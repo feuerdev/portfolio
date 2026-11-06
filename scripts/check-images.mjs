@@ -25,7 +25,7 @@ try {
     const artwork = evaluate(`Array.from(document.querySelectorAll('.project')).map(project => {
       const media = project.querySelector('.project-art').getBoundingClientRect();
       const card = project.getBoundingClientRect();
-      const picturesContained = Array.from(project.querySelectorAll('.project-art > img')).every(image => {
+      const picturesContained = Array.from(project.querySelectorAll('.project-art > img, .project-art > video')).every(image => {
         const picture = image.getBoundingClientRect();
         return picture.top >= media.top - 1 && picture.bottom <= media.bottom + 1;
       });
