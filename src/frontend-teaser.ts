@@ -1,144 +1,137 @@
 import { PARTICLE_COLOURS } from './particle-palette.js';
 
-type Particle = { x: number; y: number; vx: number; vy: number; ox: number; oy: number; fx: number; fy: number; age: number; life: number; size: number; colour: number };
-const PAD_X = 56, PAD_Y = 36, TAU = Math.PI * 2;
-// On white paper the same warm/cool dust needs darker ink to remain visible.
-const PAPER_COLOURS = ['112, 77, 45', '66, 104, 163', '80, 119, 174', '180, 107, 32', '202, 142, 69'];
+type Teaser = { setActive(value: boolean): void; pullIn(): Promise<void> };
+const PAD_Y = 30, TAU = Math.PI * 2;
+const PAPER_COLOURS = ['89, 102, 123', '67, 101, 148', '65, 108, 166', '161, 102, 48', '179, 129, 73'];
 
-export function start(button: HTMLButtonElement): { setActive: (value: boolean) => void } {
+export function start(button: HTMLButtonElement): Teaser | undefined {
   const canvas = button.querySelector<HTMLCanvasElement>('.frontend-particles');
   const context = canvas?.getContext('2d');
-  if (!canvas || !context) return { setActive: () => {} };
+  if (!canvas || !context) return;
   const surface = canvas, paint = context;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(any-hover: hover) and (any-pointer: fine)');
-  // Bake the same small radial halos as the universe; keep the dot cores sharp.
-  const halos = [...PARTICLE_COLOURS, ...PAPER_COLOURS].map(colour => {
-    const sprite = document.createElement('canvas'); sprite.width = sprite.height = 32;
-    const brush = sprite.getContext('2d');
-    if (brush) {
-      const glow = brush.createRadialGradient(16, 16, 0, 16, 16, 16);
-      glow.addColorStop(0, `rgba(${colour},.7)`);
-      glow.addColorStop(.2, `rgba(${colour},.2)`);
-      glow.addColorStop(1, `rgba(${colour},0)`);
-      brush.fillStyle = glow; brush.fillRect(0, 0, 32, 32);
-    }
-    return sprite;
-  });
-  const particles: Particle[] = Array.from({ length: 48 }, (_, index) => ({
-    x: 0, y: 0, vx: 0, vy: 0, ox: 0, oy: 0, fx: 0, fy: 0, age: 0, life: 1,
-    size: index % 13 === 0 ? 1.15 : .35 + Math.random() * .6, colour: index % PARTICLE_COLOURS.length
+  const particles = Array.from({ length: 220 }, (_, index) => ({
+    phase: Math.random() * TAU,
+    depth: Math.random(),
+    lane: Math.random(),
+    size: index % 29 === 0 ? 1.05 : .24 + Math.random() * .45,
+    colour: index % PARTICLE_COLOURS.length
   }));
-  const stars = Array.from({ length: 18 }, () => ({ x: Math.random(), y: Math.random(), size: .3 + Math.random() * .45 }));
-  let active = false, visible = true, listening = false;
-  let width = 0, height = 0, wordWidth = 0, wordHeight = 0, paddingX = PAD_X, left = 0, documentTop = 0;
+  let active = false, visible = true, hovered = false, focused = false, emphasis = 0;
+  let width = 0, height = 0, wordWidth = 0, wordHeight = 0, centerX = 0, centerY = 0;
   let frame = 0, previous = 0, time = 0;
-  let pointerInside = false, moved = false, px = 0, py = 0, fromX = 0, fromY = 0;
+  let pull: { startedAt: number; finish(): void } | undefined;
 
-  function reset(particle: Particle, warm = false): void {
-    const angle = Math.random() * TAU;
-    particle.x = paddingX + wordWidth * (.08 + Math.random() * .84);
-    particle.y = PAD_Y + wordHeight * (.3 + Math.random() * .4);
-    particle.vx = Math.cos(angle) * (12 + Math.random() * 14);
-    particle.vy = Math.sin(angle) * (5 + Math.random() * 8);
-    particle.life = 2.4 + Math.random() * 2;
-    particle.age = warm ? Math.random() * particle.life : 0;
-    particle.x += particle.vx * particle.age; particle.y += particle.vy * particle.age;
-    particle.ox = particle.oy = particle.fx = particle.fy = 0;
-  }
   function measure(): void {
     const rect = button.getBoundingClientRect();
     wordWidth = button.clientWidth; wordHeight = button.clientHeight;
-    // Bound the canvas itself, not just its pixels, to avoid horizontal overflow.
-    paddingX = Math.max(0, Math.min(PAD_X, rect.left + button.clientLeft - 4));
-    const right = Math.max(0, Math.min(PAD_X, innerWidth - rect.left - button.clientLeft - wordWidth - 4));
-    left = rect.left + button.clientLeft - paddingX;
-    documentTop = scrollY + rect.top + button.clientTop - PAD_Y;
-    width = wordWidth + paddingX + right; height = wordHeight + PAD_Y * 2;
-    surface.style.left = `${-paddingX}px`; surface.style.width = `${width}px`;
+    const left = Math.max(0, Math.min(8, rect.left - 3));
+    const right = Math.max(0, Math.min(78, innerWidth - rect.right - 3));
+    centerX = left + wordWidth / 2; centerY = PAD_Y + wordHeight / 2;
+    width = wordWidth + left + right; height = wordHeight + PAD_Y * 2;
+    surface.style.left = `${-left}px`; surface.style.top = `${-PAD_Y}px`;
+    surface.style.width = `${width}px`; surface.style.height = `${height}px`;
     const ratio = Math.min(devicePixelRatio || 1, 1.5);
     surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio);
     paint.setTransform(ratio, 0, 0, ratio, 0, 0);
-    for (const particle of particles) reset(particle, true);
     draw();
   }
-  function draw(): void {
-    paint.clearRect(0, 0, width, height);
-    paint.fillStyle = 'rgba(214,228,255,.6)';
+
+  function aperture(scale: number): void {
+    const x = wordWidth * .5 * scale, y = Math.min(12, wordHeight * .5) * scale;
+    const right = Math.min(wordWidth * 1.04, width - centerX - 6) * scale;
     paint.beginPath();
-    for (const star of stars) {
-      const x = paddingX + 3 + star.x * Math.max(0, wordWidth - 6);
-      const y = PAD_Y + 3 + star.y * Math.max(0, wordHeight - 6);
-      paint.moveTo(x + star.size, y); paint.arc(x, y, star.size, 0, TAU);
-    }
+    paint.moveTo(centerX - x, centerY + 1);
+    paint.bezierCurveTo(centerX - x * .98, centerY - y * .68, centerX - x * .47, centerY - y * .81, centerX + x * .02, centerY - y);
+    paint.bezierCurveTo(centerX + right * .37, centerY - y * 1.6, centerX + right * .6, centerY - y * .86, centerX + right, centerY - y * .92);
+    paint.bezierCurveTo(centerX + right * .73, centerY - y * .26, centerX + right * .88, centerY + y * .31, centerX + right * .47, centerY + y * .57);
+    paint.bezierCurveTo(centerX + x * .69, centerY + y * 1.15, centerX + x * .39, centerY + y * .71, centerX - x * .06, centerY + y * .94);
+    paint.bezierCurveTo(centerX - x * .64, centerY + y * .95, centerX - x * .92, centerY + y * .65, centerX - x, centerY + 1);
+    paint.closePath();
     paint.fill();
-    for (let i = 0; i < particles.length; i++) {
-      const particle = particles[i];
-      const x = particle.x + particle.ox;
-      const y = particle.y + particle.oy + Math.sin(time * 1.4 + i) * particle.age * .6;
-      const life = particle.age / particle.life;
-      const alpha = Math.min(1, life * 6) * (1 - life) * .9;
-      const inside = x > paddingX && x < paddingX + wordWidth && y > PAD_Y && y < PAD_Y + wordHeight;
-      if (i % 13 === 0) {
-        const reach = particle.size * 3.5;
-        paint.globalAlpha = alpha;
-        paint.drawImage(halos[particle.colour + (inside ? 0 : PARTICLE_COLOURS.length)], x - reach, y - reach, reach * 2, reach * 2);
-        paint.globalAlpha = 1;
-      }
-      paint.fillStyle = `rgba(${(inside ? PARTICLE_COLOURS : PAPER_COLOURS)[particle.colour]},${alpha})`;
-      paint.beginPath(); paint.arc(x, y, particle.size, 0, TAU); paint.fill();
-    }
   }
-  function tick(now: number): void {
-    const dt = Math.min(.05, (now - previous) / 1000); previous = now; time += dt;
-    const dx = px - fromX, dy = py - fromY, length = dx * dx + dy * dy;
-    const force = moved && length > .01;
-    const damping = Math.exp(-dt * 5);
+
+  function disk(front: boolean, collapse: number): void {
     for (const particle of particles) {
-      particle.age += dt;
-      if (particle.age >= particle.life) reset(particle);
-      particle.x += particle.vx * dt; particle.y += particle.vy * dt;
-      if (force) {
-        const x = particle.x + particle.ox, y = particle.y + particle.oy;
-        const t = Math.max(0, Math.min(1, ((x - fromX) * dx + (y - fromY) * dy) / length));
-        const awayX = x - (fromX + dx * t), awayY = y - (fromY + dy * t);
-        const distance = Math.hypot(awayX, awayY);
-        if (distance < 42) {
-          const strength = (1 - distance / 42) * Math.min(1, Math.sqrt(length) / 12);
-          particle.fx += (awayX / (distance || 1) * 80 + dx * 3) * strength;
-          particle.fy += (awayY / (distance || 1) * 80 + dy * 3) * strength;
-          particle.fx = Math.max(-160, Math.min(160, particle.fx));
-          particle.fy = Math.max(-160, Math.min(160, particle.fy));
-        }
+      const depth = ((particle.depth - time * .045) % 1 + 1) % 1;
+      const angle = particle.phase + time * (.21 + particle.depth * .18) + collapse * 1.8;
+      const sine = Math.sin(angle), cosine = Math.cos(angle);
+      if ((sine > 0) !== front) continue;
+      const radius = (wordWidth * .52 + depth * 38) * (1 - emphasis * .1) * (1 - collapse * .8);
+      const x = cosine * radius * (cosine < 0 ? .86 : 1.27);
+      const y = sine * (Math.min(11, wordHeight * .53) + depth * 7) - cosine * radius * .17 + (particle.lane - .5) * (1 + depth * 5);
+      const px = centerX + x, py = centerY + y * (1 - collapse * .7);
+      const edge = Math.max(0, Math.min(1, (width - px) / 12, px / 7));
+      const inside = Math.hypot(x / (x > 0 ? Math.min(wordWidth * .85, width - centerX - 9) : wordWidth * .52), (y + x * .11) / (wordHeight * .58)) < 1;
+      const alpha = edge * (.25 + (1 - depth) * .5) * Math.min(1, depth * 12, (1 - depth) * 9) * (1 - collapse);
+      const colour = (inside ? PARTICLE_COLOURS : PAPER_COLOURS)[particle.colour];
+      if (particle.size > 1) {
+        const glow = paint.createRadialGradient(px, py, 0, px, py, 3.2);
+        glow.addColorStop(0, `rgba(${colour},${alpha * .5})`);
+        glow.addColorStop(1, `rgba(${colour},0)`);
+        paint.fillStyle = glow; paint.fillRect(px - 3.2, py - 3.2, 6.4, 6.4);
       }
-      particle.fx = (particle.fx - particle.ox * dt * 16) * damping;
-      particle.fy = (particle.fy - particle.oy * dt * 16) * damping;
-      particle.ox += particle.fx * dt; particle.oy += particle.fy * dt;
+      paint.fillStyle = `rgba(${colour},${alpha * (1 + emphasis * .3)})`;
+      paint.beginPath(); paint.arc(px, py, particle.size, 0, TAU); paint.fill();
     }
-    fromX = px; fromY = py; moved = false;
-    draw(); frame = requestAnimationFrame(tick);
   }
-  function pointer(event: PointerEvent): void {
-    if (event.pointerType !== 'mouse') return;
-    const x = event.clientX - left, y = event.clientY + scrollY - documentTop;
-    if (x < 0 || x > width || y < 0 || y > height) { pointerInside = moved = false; return; }
-    px = x; py = y;
-    if (pointerInside) moved = true;
-    else { fromX = x; fromY = y; }
-    pointerInside = true;
+
+  function draw(collapse = 0): void {
+    paint.clearRect(0, 0, width, height);
+    disk(false, collapse);
+    for (let layer = 5; layer > 0; layer--) {
+      paint.fillStyle = `rgba(8, 13, 22,${.018 + (6 - layer) * .013})`;
+      aperture(1 + layer * .035);
+    }
+    paint.fillStyle = '#06080d';
+    aperture(1);
+    disk(true, collapse);
   }
+
+  function finishPull(): void {
+    const current = pull;
+    pull = undefined;
+    current?.finish();
+  }
+
+  function tick(now: number): void {
+    const dt = Math.max(0, Math.min(.05, (now - previous) / 1000));
+    const target = hovered || focused ? 1 : 0;
+    emphasis += (target - emphasis) * (1 - Math.exp(-dt * 5));
+    time += dt * (1 + emphasis * 1.4);
+    if (pull) {
+      const progress = Math.max(0, Math.min(1, (now - pull.startedAt) / 320));
+      draw(progress * progress);
+      if (progress === 1) {
+        frame = 0;
+        finishPull();
+        return;
+      }
+    } else draw();
+    previous = now;
+    frame = requestAnimationFrame(tick);
+  }
+
   function sync(): void {
     const running = active && visible && !document.hidden && !reduced.matches;
-    if (!running) { cancelAnimationFrame(frame); frame = 0; pointerInside = moved = false; }
-    else if (!frame) { previous = performance.now(); frame = requestAnimationFrame(tick); }
-    const listen = running && fine.matches;
-    if (listen !== listening) {
-      if (listen) addEventListener('pointermove', pointer, { passive: true });
-      else removeEventListener('pointermove', pointer);
-      listening = listen;
+    if (!running) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      finishPull();
+      emphasis = 0;
+      if (active && width && visible) draw();
+    } else if (!frame) {
+      previous = performance.now();
+      frame = requestAnimationFrame(tick);
     }
-    if (active && !running && width) draw();
   }
+
+  button.addEventListener('pointerenter', event => { hovered = fine.matches && event.pointerType === 'mouse'; });
+  button.addEventListener('pointerleave', () => { hovered = false; });
+  button.addEventListener('focus', () => { focused = button.matches(':focus-visible'); });
+  button.addEventListener('blur', () => { focused = false; });
+  fine.addEventListener('change', () => { hovered = false; });
   const resize = new ResizeObserver(() => { if (active) measure(); });
   resize.observe(button);
   const visibility = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, { rootMargin: '40px' });
@@ -146,10 +139,16 @@ export function start(button: HTMLButtonElement): { setActive: (value: boolean) 
   addEventListener('resize', () => { if (active) measure(); }, { passive: true });
   document.addEventListener('visibilitychange', sync);
   reduced.addEventListener('change', sync);
-  fine.addEventListener('change', sync);
-  return { setActive(value: boolean): void {
-    active = value;
-    if (active) measure();
-    sync();
-  } };
+  button.classList.add('has-aperture');
+  return {
+    setActive(value: boolean): void {
+      active = value;
+      if (active) measure();
+      sync();
+    },
+    async pullIn(): Promise<void> {
+      if (!frame) return;
+      await new Promise<void>(finish => { pull = { startedAt: performance.now(), finish }; });
+    }
+  };
 }

@@ -104,7 +104,8 @@ try {
   browser('click', '#plain-toggle'); settled();
   const native = evaluate(`(async () => {
     document.querySelector('#mode-toggle').click();
-    for (let n = 0; n < 60; n++) {
+    const deadline = performance.now() + 3000;
+    while (performance.now() < deadline) {
       await new Promise(requestAnimationFrame);
       if (document.documentElement.dataset.revealResult === 'running') {
         const style = getComputedStyle(document.documentElement, '::view-transition-new(root)');
@@ -125,7 +126,8 @@ try {
   const mask = evaluate(`(async () => {
     document.startViewTransition = () => { throw new Error('Native capture must not run on mobile'); };
     document.querySelector('#mode-toggle').click();
-    for (let n = 0; n < 90; n++) {
+    const deadline = performance.now() + 3000;
+    while (performance.now() < deadline) {
       await new Promise(requestAnimationFrame);
       const layer = document.querySelector('.page-reveal');
       if (layer && document.documentElement.classList.contains('fancy')) {

@@ -6,26 +6,28 @@ Keep the default fast and readable without JavaScript. Preserve all five policy 
 
 ## Inline frontend invitation
 
-The entry action is the word "frontend" in the first introductory sentence.
-It starts plain; the word is
-a small dark star window with dust escaping its edges. Clicking uses the existing
-circular reveal from that word to fancy. Use the surrounding plain font,
-normal weight, small vertical padding and a subdued border. In fancy mode the
-word becomes ordinary text, and separate "Back to plain HTML" and pause controls
+The entry action is the final word "frontend" in the first introductory sentence.
+A soft dark field sits behind the word, with blue and amber dust spiralling inward.
+Once fancy mode is ready, activation pulls the dust into the centre and starts
+the circular reveal from the same point. Use the surrounding plain font at
+normal weight. In fancy mode the word becomes ordinary text, and separate
+"Back to plain HTML" and pause controls
 appear at the top right on desktop and fixed at the bottom right on mobile.
 Without JavaScript, show ordinary text. Keep focus on the newly available mode
 control after switching. The inline word is an entry action rather than a toggle.
 
-`src/frontend-teaser.ts` draws 48 emitted particles and 18 static stars in a small
-canvas. It shares `src/particle-palette.ts` with the full universe, without starting
+`src/frontend-teaser.ts` draws a tilted particle disk around an irregular black
+opening in a small canvas. Its rear particles pass behind the opening, and its
+foreground dust passes across the lower edge. Mouse hover and keyboard focus
+gradually tighten and accelerate the disk.
+It shares `src/particle-palette.ts` with the full universe, without starting
 the solar-system renderer or loading fancy fonts/assets in plain mode. Teaser
-particles are round dots with a few pre-baked radial halos, never plus shapes.
-Pointer movement stirs nearby dust on fine mouse devices; stationary pointers and touch
-do not apply forces. Cap the backing resolution at 1.5x. Stop the teaser in fancy
-mode, while switching, offscreen, hidden or under reduced motion. Reduced motion
-keeps a still drawing. Cache geometry on resize/activation; avoid layout reads in
-the animation loop. Bound the canvas to the viewport so the halo cannot introduce
-sideways scrolling. Keep this experiment separate from `feat/fancy-default`.
+particles are round dots with sparse soft highlights. Cap the backing
+resolution at 1.5x. Stop the teaser after the pull, in fancy mode, offscreen,
+on hidden tabs or under reduced motion. Reduced motion keeps a still drawing and
+skips the pull. Cache geometry on resize and activation. Bound the canvas to the
+viewport so the trail cannot introduce sideways scrolling. Keep this experiment
+separate from `feat/fancy-default`.
 Keep the 2.4-second universe formation on interactive activation. Start its motion
 when the transition's new view is ready, so it forms during the 850ms wipe and
 continues for roughly 1.5 seconds afterward. Retain font readiness before capture.
@@ -93,7 +95,7 @@ content, keyboard focus and reading position usable.
 
 Plain mode uses browser-default layout, fonts, spacing and colours in light mode.
 Do not centre it, constrain its width or introduce a visual theme. The mode switch
-is the deliberate exception: an inline star window on the word "frontend" in the
+is the deliberate exception: an inline black hole on the word "frontend" in the
 introduction. Respect `prefers-reduced-motion` in CSS and JavaScript. Keep the
 compact pause icon beside the fancy return control and stop
 rendering when motion is paused, the tab is hidden or fancy mode is disabled. Always show content
