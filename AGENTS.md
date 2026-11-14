@@ -20,6 +20,15 @@ control after switching. The inline word is an entry action rather than a toggle
 opening in a small canvas. Its rear particles pass behind the opening, and its
 foreground dust passes across the lower edge. Mouse hover and keyboard focus
 gradually tighten and accelerate the disk.
+The opening breathes slowly with uneven edge movement. Its difference-blended
+canvas inverts the text beneath it against the plain document's white background.
+`src/rift-visitors.ts` sends three small particles along eccentric orbits with the
+rift at one focus and the mouse position at launch at the farthest point. Each
+flight takes 3.2 seconds, followed by a 1–2.2 second pause. Capture the trajectory
+once at launch. Skip flights when the pointer is within 48px of the rift centre.
+Visits stop on scroll, pointer press, keyboard input,
+pointer exit, hidden tabs, reduced motion and entry into fancy mode. Create the
+viewport canvas only for a visit and detach it afterward.
 It shares `src/particle-palette.ts` with the full universe, without starting
 the solar-system renderer or loading fancy fonts/assets in plain mode. Teaser
 particles are round dots with sparse soft highlights. Cap the backing

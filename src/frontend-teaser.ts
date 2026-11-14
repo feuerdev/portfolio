@@ -1,8 +1,10 @@
 import { PARTICLE_COLOURS } from './particle-palette.js';
+import { start as startVisitors } from './rift-visitors.js';
 
 type Teaser = { setActive(value: boolean): void; pullIn(): Promise<void> };
 const PAD_Y = 30, TAU = Math.PI * 2;
 const PAPER_COLOURS = ['89, 102, 123', '67, 101, 148', '65, 108, 166', '161, 102, 48', '179, 129, 73'];
+const INVERTED_COLOURS = [...PARTICLE_COLOURS, ...PAPER_COLOURS].map(colour => colour.split(',').map(channel => 255 - Number(channel)).join(', '));
 
 export function start(button: HTMLButtonElement): Teaser | undefined {
   const canvas = button.querySelector<HTMLCanvasElement>('.frontend-particles');
@@ -11,6 +13,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   const surface = canvas, paint = context;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  const visitors = startVisitors();
   const particles = Array.from({ length: 220 }, (_, index) => ({
     phase: Math.random() * TAU,
     depth: Math.random(),
@@ -21,30 +24,37 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   let active = false, visible = true, hovered = false, focused = false, emphasis = 0;
   let width = 0, height = 0, wordWidth = 0, wordHeight = 0, centerX = 0, centerY = 0;
   let frame = 0, previous = 0, time = 0;
+  let documentX = 0, documentY = 0, breathing = 0;
   let pull: { startedAt: number; finish(): void } | undefined;
 
   function measure(): void {
     const rect = button.getBoundingClientRect();
     wordWidth = button.clientWidth; wordHeight = button.clientHeight;
-    const left = Math.max(0, Math.min(8, rect.left - 3));
+    const left = Math.max(0, Math.min(36, rect.left - 3));
     const right = Math.max(0, Math.min(78, innerWidth - rect.right - 3));
     centerX = left + wordWidth / 2; centerY = PAD_Y + wordHeight / 2;
+    documentX = rect.left + wordWidth / 2 + scrollX;
+    documentY = rect.top + wordHeight / 2 + scrollY;
     width = wordWidth + left + right; height = wordHeight + PAD_Y * 2;
     surface.style.left = `${-left}px`; surface.style.top = `${-PAD_Y}px`;
     surface.style.width = `${width}px`; surface.style.height = `${height}px`;
     const ratio = Math.min(devicePixelRatio || 1, 1.5);
     surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio);
     paint.setTransform(ratio, 0, 0, ratio, 0, 0);
+    visitors.clear();
     draw();
   }
 
   function aperture(scale: number): void {
-    const x = wordWidth * .5 * scale, y = Math.min(12, wordHeight * .5) * scale;
-    const right = Math.min(wordWidth * 1.04, width - centerX - 6) * scale;
+    const breath = reduced.matches ? 0 : .5 + .5 * Math.sin(breathing * .92);
+    const ripple = reduced.matches ? 0 : Math.sin(breathing * 1.73) * 1.2 + Math.sin(breathing * 2.63) * .6;
+    const x = (wordWidth * .5 + breath * 13) * scale;
+    const y = (Math.min(12, wordHeight * .5) + breath * 5) * scale;
+    const right = Math.min(wordWidth * (1.04 + breath * .12), width - centerX - 10) * scale;
     paint.beginPath();
     paint.moveTo(centerX - x, centerY + 1);
-    paint.bezierCurveTo(centerX - x * .98, centerY - y * .68, centerX - x * .47, centerY - y * .81, centerX + x * .02, centerY - y);
-    paint.bezierCurveTo(centerX + right * .37, centerY - y * 1.6, centerX + right * .6, centerY - y * .86, centerX + right, centerY - y * .92);
+    paint.bezierCurveTo(centerX - x * .98, centerY - y * .68 + ripple, centerX - x * .47, centerY - y * .81, centerX + x * .02, centerY - y);
+    paint.bezierCurveTo(centerX + right * .37, centerY - y * 1.6 - ripple, centerX + right * .6, centerY - y * .86, centerX + right, centerY - y * .92 + ripple);
     paint.bezierCurveTo(centerX + right * .73, centerY - y * .26, centerX + right * .88, centerY + y * .31, centerX + right * .47, centerY + y * .57);
     paint.bezierCurveTo(centerX + x * .69, centerY + y * 1.15, centerX + x * .39, centerY + y * .71, centerX - x * .06, centerY + y * .94);
     paint.bezierCurveTo(centerX - x * .64, centerY + y * .95, centerX - x * .92, centerY + y * .65, centerX - x, centerY + 1);
@@ -65,7 +75,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
       const edge = Math.max(0, Math.min(1, (width - px) / 12, px / 7));
       const inside = Math.hypot(x / (x > 0 ? Math.min(wordWidth * .85, width - centerX - 9) : wordWidth * .52), (y + x * .11) / (wordHeight * .58)) < 1;
       const alpha = edge * (.25 + (1 - depth) * .5) * Math.min(1, depth * 12, (1 - depth) * 9) * (1 - collapse);
-      const colour = (inside ? PARTICLE_COLOURS : PAPER_COLOURS)[particle.colour];
+      const colour = INVERTED_COLOURS[particle.colour + (inside ? 0 : PARTICLE_COLOURS.length)];
       if (particle.size > 1) {
         const glow = paint.createRadialGradient(px, py, 0, px, py, 3.2);
         glow.addColorStop(0, `rgba(${colour},${alpha * .5})`);
@@ -81,10 +91,10 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
     paint.clearRect(0, 0, width, height);
     disk(false, collapse);
     for (let layer = 5; layer > 0; layer--) {
-      paint.fillStyle = `rgba(8, 13, 22,${.018 + (6 - layer) * .013})`;
+      paint.fillStyle = `rgba(247, 242, 233,${.018 + (6 - layer) * .013})`;
       aperture(1 + layer * .035);
     }
-    paint.fillStyle = '#06080d';
+    paint.fillStyle = '#fff';
     aperture(1);
     disk(true, collapse);
   }
@@ -100,6 +110,8 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
     const target = hovered || focused ? 1 : 0;
     emphasis += (target - emphasis) * (1 - Math.exp(-dt * 5));
     time += dt * (1 + emphasis * 1.4);
+    breathing += dt;
+    visitors.tick(now, documentX - scrollX, documentY - scrollY);
     if (pull) {
       const progress = Math.max(0, Math.min(1, (now - pull.startedAt) / 320));
       draw(progress * progress);
@@ -115,6 +127,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
 
   function sync(): void {
     const running = active && visible && !document.hidden && !reduced.matches;
+    visitors.setActive(running && fine.matches && !pull);
     if (!running) {
       cancelAnimationFrame(frame);
       frame = 0;
@@ -131,7 +144,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   button.addEventListener('pointerleave', () => { hovered = false; });
   button.addEventListener('focus', () => { focused = button.matches(':focus-visible'); });
   button.addEventListener('blur', () => { focused = false; });
-  fine.addEventListener('change', () => { hovered = false; });
+  fine.addEventListener('change', () => { hovered = false; sync(); });
   const resize = new ResizeObserver(() => { if (active) measure(); });
   resize.observe(button);
   const visibility = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, { rootMargin: '40px' });
@@ -148,6 +161,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
     },
     async pullIn(): Promise<void> {
       if (!frame) return;
+      visitors.setActive(false);
       await new Promise<void>(finish => { pull = { startedAt: performance.now(), finish }; });
     }
   };
