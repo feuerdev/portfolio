@@ -6,26 +6,29 @@ Keep the default fast and readable without JavaScript. Preserve all five policy 
 
 ## Inline frontend invitation
 
-The entry action is the word "frontend" in the first introductory sentence.
-It starts plain; the word is
-a small dark star window with dust escaping its edges. Clicking uses the existing
-circular reveal from that word to fancy. Use the surrounding plain font,
-normal weight, small vertical padding and a subdued border. In fancy mode the
-word becomes ordinary text, and separate "Back to plain HTML" and pause controls
-appear at the top right on desktop and fixed at the bottom right on mobile.
-Without JavaScript, show ordinary text. Keep focus on the newly available mode
-control after switching. The inline word is an entry action rather than a toggle.
+The entry action is the final word "frontend" in the first introductory sentence,
+set in the surrounding plain font. Without JavaScript it is ordinary text. In fancy
+mode it becomes ordinary text, and "Back to plain HTML" and pause controls appear
+top right on desktop and bottom right on mobile. Keep focus on the newly available
+mode control after switching.
 
-`src/frontend-teaser.ts` draws 48 emitted particles and 18 static stars in a small
-canvas. It shares `src/particle-palette.ts` with the full universe, without starting
-the solar-system renderer or loading fancy fonts/assets in plain mode. Teaser
-particles are round dots with a few pre-baked radial halos, never plus shapes.
-Pointer movement stirs nearby dust on fine mouse devices; stationary pointers and touch
-do not apply forces. Cap the backing resolution at 1.5x. Stop the teaser in fancy
-mode, while switching, offscreen, hidden or under reduced motion. Reduced motion
-keeps a still drawing. Cache geometry on resize/activation; avoid layout reads in
-the animation loop. Bound the canvas to the viewport so the halo cannot introduce
-sideways scrolling. Keep this experiment separate from `feat/fancy-default`.
+`src/frontend-teaser.ts` draws a torn, breathing black opening behind the word
+with a thin amber rim and a slowly swirling starfield clipped to its inside. No
+dust is drawn outside or over the opening. The canvas uses difference blending
+against the white page, so the word turns white; the opening may spill over
+neighbouring text, so keep its edge crisp to keep letters legible. Hover and
+keyboard focus speed up the swirl. A fine mouse within 200px grows the opening up
+to 30%, stretches its edge toward the pointer and deepens the breathing; the
+stars shift at most 2px against the mouse. A stationary pointer holds the shape
+without adding motion. Activation swirls the stars into the centre for 320ms once
+fancy mode is ready, then starts the circular reveal from the word.
+
+The teaser shares `src/particle-palette.ts` without loading the universe or fancy
+assets. Cap the backing resolution at 1.5x, cache geometry on resize and
+activation, and bound the canvas to the viewport. Stop the teaser after the pull,
+in fancy mode, offscreen, on hidden tabs and under reduced motion, which keeps a
+still drawing and skips the pull and pointer reaction.
+
 Keep the 2.4-second universe formation on interactive activation. Start its motion
 when the transition's new view is ready, so it forms during the 850ms wipe and
 continues for roughly 1.5 seconds afterward. Retain font readiness before capture.
@@ -73,7 +76,7 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/css/fancy.css`: optional presentation, loaded on demand. Scope rules to `.fancy`.
 - `src/app.ts`: in-memory mode switching, lazy loading, legacy mode-query cleanup and the optional View Transition.
 - `src/analytics.ts`: production homepage analytics, privacy preferences and payload sanitization.
-- `src/frontend-teaser.ts`: the bounded inline particle invitation in plain mode.
+- `src/frontend-teaser.ts`: the bounded inline rift invitation in plain mode.
 - `src/page-reveal.ts`: the temporary mobile circular reveal, independent of native viewport capture.
 - `src/particle-palette.ts`: the shared universe and teaser colours.
 - `src/fancy.ts`: fancy-mode lifecycle, single scroll zoom/orbit, reading-view framing, continuous and scroll rotation, pointer and motion controls. Return cleanup and a method to start motion once the transition's new view is ready.
@@ -93,7 +96,7 @@ content, keyboard focus and reading position usable.
 
 Plain mode uses browser-default layout, fonts, spacing and colours in light mode.
 Do not centre it, constrain its width or introduce a visual theme. The mode switch
-is the deliberate exception: an inline star window on the word "frontend" in the
+is the deliberate exception: an inline starry rift on the word "frontend" in the
 introduction. Respect `prefers-reduced-motion` in CSS and JavaScript. Keep the
 compact pause icon beside the fancy return control and stop
 rendering when motion is paused, the tab is hidden or fancy mode is disabled. Always show content
@@ -255,6 +258,9 @@ foreground visibility and the dim sun.
 sizing, the captured assets and the raytracer's original size. Failed fancy downloads
 offer an explicit page reload because browsers retain failed module imports.
 
+`scripts/check-rift.mjs` checks that stars stay inside the opening, reduced motion,
+the pull-in before the reveal and the stopped teaser in fancy mode. Growth and
+stretch toward the pointer need visual review.
 `scripts/check-pointer.mjs` checks orbital momentum, lasting spacing, speed settling,
 stationary pointer behavior, Pause/resume, reduced motion, touch and cleanup.
 `scripts/check-mobile-rendering.mjs` checks the original backing resolution,

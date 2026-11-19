@@ -50,7 +50,7 @@ try {
   browser('click', '#mode-toggle');
   settled();
   assert.ok(evaluate('[...document.fonts].some(font => font.status === "error")'));
-  assert.equal(browser('get', 'text', '#mode-status').text, 'Fancy mode on.');
+  assert.equal(browser('get', 'text', '#mode-status').text, 'Animated version on.');
   evaluate('window.capture = document.querySelector("#curiosity").toDataURL()');
   browser('wait', '--fn', 'document.querySelector("#curiosity").toDataURL() !== window.capture');
   browser('network', 'unroute', '**/*.woff2');
@@ -66,7 +66,7 @@ try {
   settled();
   assert.equal(evaluate('window.transitionWarnings.length'), 1);
   assert.equal(evaluate('document.documentElement.dataset.revealResult'), 'skipped');
-  assert.equal(browser('get', 'text', '#mode-status').text, 'Fancy mode on.');
+  assert.equal(browser('get', 'text', '#mode-status').text, 'Animated version on.');
 
   const entry = new URL(base);
   entry.searchParams.set('mode', 'fancy'); entry.searchParams.set('check', 'preserve'); entry.hash = 'keep-mcp';
@@ -104,7 +104,8 @@ try {
   browser('click', '#plain-toggle'); settled();
   const native = evaluate(`(async () => {
     document.querySelector('#mode-toggle').click();
-    for (let n = 0; n < 60; n++) {
+    const deadline = performance.now() + 3000;
+    while (performance.now() < deadline) {
       await new Promise(requestAnimationFrame);
       if (document.documentElement.dataset.revealResult === 'running') {
         const style = getComputedStyle(document.documentElement, '::view-transition-new(root)');
@@ -125,7 +126,8 @@ try {
   const mask = evaluate(`(async () => {
     document.startViewTransition = () => { throw new Error('Native capture must not run on mobile'); };
     document.querySelector('#mode-toggle').click();
-    for (let n = 0; n < 90; n++) {
+    const deadline = performance.now() + 3000;
+    while (performance.now() < deadline) {
       await new Promise(requestAnimationFrame);
       const layer = document.querySelector('.page-reveal');
       if (layer && document.documentElement.classList.contains('fancy')) {

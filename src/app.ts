@@ -48,7 +48,6 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
   const wasFancy = root.classList.contains('fancy');
   busy = true;
   toggle.disabled = back.disabled = true;
-  teaser?.setActive(false);
   try {
     let enhancement: typeof import('./fancy.js') | undefined;
     let artwork: ReturnType<typeof import('./fancy.js').start> | undefined;
@@ -65,6 +64,10 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
       // A failed font download can still use the stylesheet's sans-serif fallback.
       await Promise.allSettled([400, 500].map(weight => document.fonts.load(`${weight} 18px "Plex Sans"`)));
     }
+    const mobileReveal = innerWidth <= 700 || matchMedia('(pointer: coarse)').matches;
+    const localReveal = animate && !reducedMotion.matches && mobileReveal ? await import('./page-reveal.js') : undefined;
+    if (fancy && animate && !reducedMotion.matches && pendingMode === undefined) await teaser?.pullIn();
+    teaser?.setActive(false);
     const anchor = [...document.querySelectorAll<HTMLElement>('main section[id], main article[id]')]
       .reverse().find(section => section.getBoundingClientRect().top <= 24);
     const atTop = scrollY < 100;
@@ -86,9 +89,7 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
       else anchor?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
     };
     const transitionDocument = document as TransitionDocument;
-    const mobileReveal = innerWidth <= 700 || matchMedia('(pointer: coarse)').matches;
-    if (animate && !reducedMotion.matches && mobileReveal) {
-      const localReveal = await import('./page-reveal.js');
+    if (localReveal) {
       const button = (fancy ? toggle : back).getBoundingClientRect();
       root.dataset.revealResult = 'running'; delete root.dataset.revealReason;
       await localReveal.reveal(update, resumeArtwork, button.left + button.width / 2, button.top + button.height / 2);
@@ -123,7 +124,7 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     }
     // Also start motion when the transition is unavailable or skipped.
     resumeArtwork();
-    status.textContent = fancy ? 'Fancy mode on.' : 'Plain HTML mode on.';
+    status.textContent = fancy ? 'Animated version on.' : 'Plain HTML mode on.';
     if (pendingMode === undefined && wasFancy !== fancy && root.classList.contains('fancy') === fancy) {
       document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: fancy }));
     }
@@ -133,9 +134,9 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     // Failed decorative downloads must not prevent reading the document.
     // Browsers retain failed module imports for this document. A fresh page can recover.
     needsReload = true;
-    toggle.title = 'Reload to try fancy mode';
-    toggle.setAttribute('aria-label', 'Frontend — reload to try fancy mode');
-    status.textContent = 'Fancy mode could not load. Reconnect, then reload using this button.';
+    toggle.title = 'Reload to try the animated version';
+    toggle.setAttribute('aria-label', 'Frontend, reload to try the animated version');
+    status.textContent = 'The animated version could not load. Reconnect, then reload using this button.';
   } finally {
     delete root.dataset.modeTransition;
     for (const property of ['--mode-reveal-x', '--mode-reveal-y', '--mode-reveal-radius']) root.style.removeProperty(property);
@@ -156,7 +157,7 @@ if (inlineControl && controls && toggle && back) {
   inlineControl.hidden = false;
   if (fallback) fallback.hidden = true;
   teaser = startFrontendTeaser(toggle);
-  teaser.setActive(true);
+  teaser?.setActive(true);
   toggle.addEventListener('click', () => {
     if (needsReload) {
       location.reload();
