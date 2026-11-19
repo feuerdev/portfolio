@@ -108,7 +108,7 @@ export function createSpace(amount: number, pointerEnabled = true) {
     return { ...shot, position: plus(shot.position, plus(times(right, x * reach), times(up, -y * reach))) };
   }
 
-  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, turn: number, shot: Shot, highlight: number, formation: number, sunOpacity = 1, pointer?: PointerWake, elapsed = 0): void {
+  function render(context: CanvasRenderingContext2D, width: number, height: number, phase: number, turn: number, shot: Shot, formation: number, sunOpacity = 1, pointer?: PointerWake, elapsed = 0): void {
     const focal = Math.min(width, height) * 1.15, cx = width * shot.x, cy = height * shot.y;
     const forward = unit(sub(shot.target, shot.position)), right = unit(cross(forward, UP)), up = cross(right, forward);
     const [px, py, pz] = shot.position;
@@ -169,7 +169,6 @@ export function createSpace(amount: number, pointerEnabled = true) {
     const flowDecay = dt ? Math.exp(-.65 * dt) : 1, knotDecay = dt ? Math.exp(-1.1 * dt) : 1;
     const spring = 1.8, damping = .85, frequency = Math.sqrt(spring * spring - damping * damping);
     const decay = dt ? Math.exp(-damping * dt) : 1, oscillation = dt ? Math.cos(frequency * dt) : 1, sway = dt ? Math.sin(frequency * dt) / frequency : 0;
-    let highlightX = 0, highlightY = 0, highlightZ = 0, highlightCount = 0;
     const stepX = pointer ? pointer.x - pointer.fromX : 0, stepY = pointer ? pointer.y - pointer.fromY : 0;
     const pathSquared = stepX * stepX + stepY * stepY;
     const wake = !forming && dt > 0 && pointer && pathSquared > .01 ? pointer : undefined;
@@ -227,7 +226,6 @@ export function createSpace(amount: number, pointerEnabled = true) {
         const t = clamp((formation - delays[i]) / .6), eased = t * t * (3 - 2 * t);
         x = origin[o] + (x - origin[o]) * eased; y = origin[o + 1] + (y - origin[o + 1]) * eased; z = origin[o + 2] + (z - origin[o + 2]) * eased;
       }
-      if (highlight >= 0 && knot === highlight) { highlightX += x; highlightY += y; highlightZ += z; highlightCount++; }
       const dx = x - px, dy = y - py, dz = z - pz, depth = dx * fx + dy * fy + dz * fz;
       if (depth < .04) continue;
       const sx = cx + (dx * rx + dy * ry + dz * rz) / depth * focal, sy = cy - (dx * ux + dy * uy + dz * uz) / depth * focal;
@@ -252,8 +250,7 @@ export function createSpace(amount: number, pointerEnabled = true) {
           awake[i] = 1;
         }
       }
-      const lit = knot >= 0 && knot === highlight ? 1.6 : 1;
-      const size = Math.min(60, sizes[i] * focal / depth * (.8 + .2 * Math.sin(phase * 2.2 + twinkles[i])) * lit);
+      const size = Math.min(60, sizes[i] * focal / depth * (.8 + .2 * Math.sin(phase * 2.2 + twinkles[i])));
       if (sx < -size * 4 || sy < -size * 4 || sx > width + size * 4 || sy > height + size * 4) continue;
       let clipped = false;
       if (sunZ > SUN && depth > sunZ) {
@@ -283,18 +280,6 @@ export function createSpace(amount: number, pointerEnabled = true) {
       if (clipped) { context.restore(); style = -1; }
     }
     context.globalCompositeOperation = 'source-over';
-
-    if (highlight >= 0 && !forming) {
-      const centre: Vector = highlightCount ? [highlightX / highlightCount, highlightY / highlightCount, highlightZ / highlightCount] : centres[highlight];
-      const d = sub(centre, shot.position), z = dot(d, forward);
-      if (z > .1) {
-        context.strokeStyle = '#a9c8ff';
-        context.lineWidth = 1.5;
-        context.beginPath();
-        context.arc(cx + dot(d, right) / z * focal, cy - dot(d, up) / z * focal, Math.max(.11 * focal / z, 18), 0, TAU);
-        context.stroke();
-      }
-    }
   }
 
   function resetWake(): void { offsets?.fill(0); velocities?.fill(0); awake?.fill(0); }

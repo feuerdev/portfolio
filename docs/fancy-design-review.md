@@ -4,13 +4,13 @@
 announcements, in particular the glowing sun and particle stream on OpenAI's
 [GPT-6.1 Sol](https://openai.com/index/introducing-gpt-6-1-sol/) page, and Anthropic's
 [Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5) page for its full-screen
-opening and numbered contents. Plain mode is unaffected.
+opening. Plain mode is unaffected.
 
 ## Direction
 
 One cinematic scene carries the decoration, and the content stays calm and readable.
-The opening fills the screen with the large name, the introduction, contact links and a
-numbered contents list over the scene. The scene stays behind the whole page, so the
+The opening fills the screen with the large name, the introduction and contact links
+over the scene. The scene stays behind the whole page, so the
 projects share a steady backdrop while reading.
 
 ## Scene
@@ -21,11 +21,8 @@ projects share a steady backdrop while reading.
   edge, and a glare that falls off steeply outside the edge.
 - A sparse, faded star field fills the wider sky around the stream. Tiny dots
   rotate at 12% of the stream's rate, keeping the background quiet while reading.
-- Each of the six projects is a bright knot in the stream. Hovering or focusing a
-  contents entry circles its knot.
-- Fancy project anchors use the browser's native smooth scrolling, preserving
-  hashes, history and focus behavior. Reduced motion jumps immediately. Mode
-  switches and direct project URLs position immediately as well.
+- Each project is a bright knot in the stream.
+- Mode switches and direct project URLs position immediately.
 - Particles swirl in from all around and form the stream after the mode transition.
   The camera follows the pointer.
 - Scrolling the introduction away splits the name apart and performs one zoom,
@@ -59,7 +56,7 @@ projects share a steady backdrop while reading.
 ## Layout and accessibility
 
 - Fancy mode is always dark. A glowing particle field does not work on a light page.
-- Projects are glass cards with the number, linked title, description and artwork.
+- Projects are glass cards with the linked title, description and artwork.
 - Static, authentic screenshots replace the Keep and sponsor placeholder diagrams.
   Keep pairs a real checklist with its recorded MCP call summary; sponsor shows the
   actual extension settings. All projects share a media area up to 400 pixels tall,
@@ -172,8 +169,7 @@ messages or page errors.
 There were no frame intervals over 25 ms in either renderer. CPU timings cover
 Canvas command submission, not GPU completion or glass-card compositing. These
 are headless Chromium results on the development machine, not phone or Safari
-measurements. Reproduce with `scripts/measure-universe.mjs` and a locally served
-copy of the approved renderer, as described in the README.
+measurements.
 
 3 October 2026: the Safari scroll-smoothing trial passed the build, static tests
 and full browser suite. Discrete-input checks use Chromium with desktop Safari
@@ -221,4 +217,4 @@ and 2560×1440, and a 1.5× canvas backing scale. Inactive p95 CPU render time w
 P95 frame intervals stayed at 16.7–16.8 ms. CPU timing covers Canvas command
 submission, not GPU completion or the live page's glass-card compositing. These
 are development-machine Chromium measurements, not real-phone or cross-browser
-results. The reproducible check is `node scripts/measure-pointer.mjs`.
+results.

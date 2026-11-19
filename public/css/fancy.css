@@ -30,42 +30,33 @@
 
   .fancy #curiosity { --orb-x: .8; --orb-y: .43; display: block; width: 100%; height: 100%; opacity: 0; }
 
-  .fancy .hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 23rem); grid-template-rows: 1fr auto auto auto; column-gap: clamp(2rem, 6vw, 6rem); min-height: max(44rem, 100svh); padding-block: 2rem 4rem; overflow-x: clip; }
-  .fancy .hero-copy { display: contents; }
-  .fancy .hero > *, .fancy .hero-copy > * { position: relative; z-index: 2; }
+  .fancy .hero { position: relative; isolation: isolate; padding-block: 2rem 1rem; overflow-x: clip; }
+  .fancy .hero > * { position: relative; z-index: 2; }
   /* Browser toolbars must not resize/reframe the scene when touch scrolling stops. */
   .fancy .hero > .hero-art { position: fixed; z-index: 0; inset: 0 0 auto; height: 100vh; height: 100lvh; pointer-events: none; }
-  .fancy h1 { grid-column: 1 / -1; grid-row: 1; align-self: center; margin: 0 0 0 -.05em; padding: .1em 0; font-size: clamp(4.2rem, 15.5vw, 15rem); font-weight: 500; letter-spacing: -.055em; line-height: .88; opacity: 1; text-shadow: 0 0 40px rgba(4, 7, 13, .6); }
+  .fancy h1 { margin: 0 0 0 -.05em; padding: .1em 0; font-size: clamp(4.2rem, 15.5vw, 15rem); font-weight: 500; letter-spacing: -.055em; line-height: .88; opacity: 1; text-shadow: 0 0 40px rgba(4, 7, 13, .6); }
   .fancy h1 span { display: block; transform: translateX(0); }
-  .fancy .intro { grid-column: 1; max-width: 30rem; margin: 0 0 .9rem; color: var(--body); }
-  .fancy .hero-links { grid-column: 1; display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin: .8rem 0 0; font-size: .9rem; }
+  .fancy .intro { max-width: 30rem; margin: 0 0 .9rem; color: var(--body); }
+  .fancy .hero-links { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin: .8rem 0 0; font-size: .9rem; }
   .fancy .link-separator, .fancy .project-separator, .fancy .document-rule { display: none; }
   .fancy .intro, .fancy .hero-links, .fancy h2 { text-shadow: 0 0 3px var(--space), 0 0 10px var(--space), 0 0 22px var(--space); }
 
-  .fancy .contents { grid-column: 2; grid-row: 2 / span 3; align-self: end; padding: .9rem 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--card); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); font-size: .9rem; }
-  .fancy .contents ol { margin: 0; padding: 0; list-style: none; }
-  .fancy .contents a { display: flex; align-items: baseline; gap: .7rem; padding: .3rem 0; color: var(--ink); text-decoration: none; }
-  .fancy .contents a:hover { color: var(--link); }
-  .fancy .contents .n { color: var(--accent); font-variant-numeric: tabular-nums; }
-  .fancy .contents .dots { flex: 1; min-width: 1.5rem; border-bottom: 1px dotted var(--muted); opacity: .7; }
-
-
   .fancy .work, .fancy .footer { position: relative; z-index: 1; }
-  .fancy .work { counter-reset: chapter; padding-block: 3rem 8rem; }
-  .fancy h2 { margin: 0 0 3rem; color: var(--muted); font-size: .85rem; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
-  .fancy .project { counter-increment: chapter; display: grid; gap: 1.75rem; width: min(100%, 46rem); margin: 0 0 clamp(4rem, 14vh, 9rem); padding: clamp(1.5rem, 3vw, 2.75rem); border: 1px solid var(--line); border-radius: 22px; background: var(--card); -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); box-shadow: 0 30px 80px rgba(0, 0, 0, .45); }
+  .fancy .work { padding-block: 3rem 8rem; }
+  .fancy h2 { margin: 0 0 3rem; color: var(--muted); font-size: 1rem; font-weight: 500; }
+  .fancy .project { display: grid; gap: 1.75rem; width: min(100%, 46rem); margin: 0 0 clamp(4rem, 14vh, 9rem); padding: clamp(1.5rem, 3vw, 2.75rem); border: 1px solid var(--line); border-radius: 22px; background: var(--card); -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); box-shadow: 0 30px 80px rgba(0, 0, 0, .45); }
   .fancy .project:last-child { margin-bottom: 0; }
   .fancy .project-copy { order: -1; }
   .fancy .project-name { display: block; margin: 0 0 .9rem; font-size: clamp(2rem, 3.6vw, 3rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; }
-  .fancy .project-name::before { content: counter(chapter, decimal-leading-zero); content: counter(chapter, decimal-leading-zero) / ""; display: block; margin-bottom: .9rem; color: var(--accent); font-size: 1rem; font-weight: 500; letter-spacing: .14em; }
   .fancy .project-copy > p { display: block; max-width: 36rem; margin: 0; color: var(--body); }
   .fancy .project-art.fancy-only { display: grid !important; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; position: relative; margin: 0; height: clamp(220px, 36vw, 400px); }
-  .fancy .project-art img, .fancy .project-art video { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
+  .fancy .project-art img, .fancy .project-art video { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
   .fancy .keep-evidence { width: min(100%, 560px); display: grid; gap: .65rem; }
-  .fancy .keep-capture { position: relative; aspect-ratio: 624 / 320; overflow: hidden; border-radius: 10px; }
+  .fancy .keep-capture { position: relative; aspect-ratio: 624 / 320; overflow: hidden; }
   /* Crop the captured note in CSS; the source pixels and title stay intact. */
-  .fancy .keep-capture img { position: absolute; max-width: none; max-height: none; width: 205.128%; height: 225%; left: -52.564%; top: -35%; border-radius: 0; }
+  .fancy .keep-capture img { position: absolute; max-width: none; max-height: none; width: 205.128%; height: 225%; left: -52.564%; top: -35%; }
   .fancy .keep-call { margin: 0; border-left: 2px solid var(--accent); padding: .5rem .8rem; color: var(--body); font: clamp(.6rem, 1vw, .75rem)/1.5 monospace; white-space: pre-wrap; }
+  .fancy .human-art img { filter: brightness(.82); }
   .fancy .keyboard-art img.scylla-finished { width: min(85%, 500px); height: calc(100% - 1rem); object-fit: cover; object-position: center 54%; justify-self: start; align-self: start; }
   .fancy .keyboard-art img.scylla-progress { position: absolute; width: 45%; max-width: 300px; height: auto; right: 0; bottom: 0; border: 5px solid var(--surface); }
 
@@ -88,24 +79,17 @@
     to { clip-path: circle(var(--mode-reveal-radius) at var(--mode-reveal-x) var(--mode-reveal-y)); }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    :root.fancy { scroll-behavior: smooth; }
-  }
-
   @media (max-width: 1000px) {
-    .fancy .hero { grid-template-columns: minmax(0, 1fr) minmax(14rem, 19rem); }
     .fancy #curiosity { --orb-x: .74; }
   }
   @media (max-width: 700px) {
     .fancy .mode-control { position: fixed; top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); }
     .fancy body { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
-    .fancy .hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; min-height: 100svh; padding-block: 1.5rem 1rem; }
-    .fancy h1, .fancy .contents { grid-row: auto; grid-column: 1; }
+    .fancy .hero { padding-block: 1.5rem 1rem; }
     .fancy h1 { margin: 38vw 0 1.75rem -.05em; font-size: 18.5vw; }
     .fancy #curiosity { --orb-x: .5; --orb-y: .2; }
     .fancy .intro { font-size: 1rem; }
     .fancy .hero-links { gap: .6rem 1.1rem; }
-    .fancy .contents { margin-top: 2rem; }
     .fancy .project { margin-bottom: 3rem; border-radius: 18px; }
     .fancy .project-art.fancy-only { height: 220px; }
     .fancy .project-name { font-size: 2rem; }
