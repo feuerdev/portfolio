@@ -89,7 +89,7 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
       else anchor?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
     };
     const transitionDocument = document as TransitionDocument;
-    if (localReveal && !reducedMotion.matches) {
+    if (localReveal) {
       const button = (fancy ? toggle : back).getBoundingClientRect();
       root.dataset.revealResult = 'running'; delete root.dataset.revealReason;
       await localReveal.reveal(update, resumeArtwork, button.left + button.width / 2, button.top + button.height / 2);
@@ -124,7 +124,7 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     }
     // Also start motion when the transition is unavailable or skipped.
     resumeArtwork();
-    status.textContent = fancy ? 'Fancy mode on.' : 'Plain HTML mode on.';
+    status.textContent = fancy ? 'Animated version on.' : 'Plain HTML mode on.';
     if (pendingMode === undefined && wasFancy !== fancy && root.classList.contains('fancy') === fancy) {
       document.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: fancy }));
     }
@@ -134,9 +134,9 @@ async function setMode(fancy: boolean, animate = true): Promise<void> {
     // Failed decorative downloads must not prevent reading the document.
     // Browsers retain failed module imports for this document. A fresh page can recover.
     needsReload = true;
-    toggle.title = 'Reload to try fancy mode';
-    toggle.setAttribute('aria-label', 'Frontend — reload to try fancy mode');
-    status.textContent = 'Fancy mode could not load. Reconnect, then reload using this button.';
+    toggle.title = 'Reload to try the animated version';
+    toggle.setAttribute('aria-label', 'Frontend, reload to try the animated version');
+    status.textContent = 'The animated version could not load. Reconnect, then reload using this button.';
   } finally {
     delete root.dataset.modeTransition;
     for (const property of ['--mode-reveal-x', '--mode-reveal-y', '--mode-reveal-radius']) root.style.removeProperty(property);

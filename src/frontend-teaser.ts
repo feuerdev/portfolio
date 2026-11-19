@@ -1,10 +1,11 @@
 import { PARTICLE_COLOURS } from './particle-palette.js';
-import { start as startVisitors } from './rift-visitors.js';
 
 type Teaser = { setActive(value: boolean): void; pullIn(): Promise<void> };
-const PAD_Y = 30, TAU = Math.PI * 2;
-const PAPER_COLOURS = ['89, 102, 123', '67, 101, 148', '65, 108, 166', '161, 102, 48', '179, 129, 73'];
-const INVERTED_COLOURS = [...PARTICLE_COLOURS, ...PAPER_COLOURS].map(colour => colour.split(',').map(channel => 255 - Number(channel)).join(', '));
+const PAD_Y = 34, PAD_LEFT = 56, PAD_RIGHT = 110, TAU = Math.PI * 2;
+const REACH = 200, LEAN = 9, GROWTH = .3, PARALLAX = 2;
+const RIM = '80, 153, 207';
+const STAR_COLOURS = PARTICLE_COLOURS.map(colour => colour.split(',').map(channel => 255 - Number(channel)).join(', '));
+const clamp = (value: number, low: number, high: number) => Math.max(low, Math.min(high, value));
 
 export function start(button: HTMLButtonElement): Teaser | undefined {
   const canvas = button.querySelector<HTMLCanvasElement>('.frontend-particles');
@@ -13,25 +14,27 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   const surface = canvas, paint = context;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(any-hover: hover) and (any-pointer: fine)');
-  const visitors = startVisitors();
-  const particles = Array.from({ length: 220 }, (_, index) => ({
-    phase: Math.random() * TAU,
+  const stars = Array.from({ length: 90 }, (_, index) => ({
+    angle: Math.random() * TAU,
+    distance: Math.sqrt(Math.random()) * 1.05,
     depth: Math.random(),
-    lane: Math.random(),
-    size: index % 29 === 0 ? 1.05 : .24 + Math.random() * .45,
-    colour: index % PARTICLE_COLOURS.length
+    size: index % 17 === 0 ? 1 : .25 + Math.random() * .5,
+    alpha: .35 + Math.random() * .55,
+    colour: index % STAR_COLOURS.length
   }));
   let active = false, visible = true, hovered = false, focused = false, emphasis = 0;
   let width = 0, height = 0, wordWidth = 0, wordHeight = 0, centerX = 0, centerY = 0;
-  let frame = 0, previous = 0, time = 0;
-  let documentX = 0, documentY = 0, breathing = 0;
+  let frame = 0, previous = 0, time = 0, breathing = 0;
+  let documentX = 0, documentY = 0;
+  let pointer: { x: number; y: number } | undefined;
+  let tidal = 0, leanX = 0, leanY = 0, lookX = 0, lookY = 0;
   let pull: { startedAt: number; finish(): void } | undefined;
 
   function measure(): void {
     const rect = button.getBoundingClientRect();
     wordWidth = button.clientWidth; wordHeight = button.clientHeight;
-    const left = Math.max(0, Math.min(36, rect.left - 3));
-    const right = Math.max(0, Math.min(78, innerWidth - rect.right - 3));
+    const left = Math.max(0, Math.min(PAD_LEFT, rect.left - 3));
+    const right = Math.max(0, Math.min(PAD_RIGHT, innerWidth - rect.right - 3));
     centerX = left + wordWidth / 2; centerY = PAD_Y + wordHeight / 2;
     documentX = rect.left + wordWidth / 2 + scrollX;
     documentY = rect.top + wordHeight / 2 + scrollY;
@@ -41,62 +44,77 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
     const ratio = Math.min(devicePixelRatio || 1, 1.5);
     surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio);
     paint.setTransform(ratio, 0, 0, ratio, 0, 0);
-    visitors.clear();
     draw();
   }
 
-  function aperture(scale: number): void {
-    const breath = reduced.matches ? 0 : .5 + .5 * Math.sin(breathing * .92);
-    const ripple = reduced.matches ? 0 : Math.sin(breathing * 1.73) * 1.2 + Math.sin(breathing * 2.63) * .6;
-    const x = (wordWidth * .5 + breath * 13) * scale;
-    const y = (Math.min(12, wordHeight * .5) + breath * 5) * scale;
-    const right = Math.min(wordWidth * (1.04 + breath * .12), width - centerX - 10) * scale;
-    paint.beginPath();
-    paint.moveTo(centerX - x, centerY + 1);
-    paint.bezierCurveTo(centerX - x * .98, centerY - y * .68 + ripple, centerX - x * .47, centerY - y * .81, centerX + x * .02, centerY - y);
-    paint.bezierCurveTo(centerX + right * .37, centerY - y * 1.6 - ripple, centerX + right * .6, centerY - y * .86, centerX + right, centerY - y * .92 + ripple);
-    paint.bezierCurveTo(centerX + right * .73, centerY - y * .26, centerX + right * .88, centerY + y * .31, centerX + right * .47, centerY + y * .57);
-    paint.bezierCurveTo(centerX + x * .69, centerY + y * 1.15, centerX + x * .39, centerY + y * .71, centerX - x * .06, centerY + y * .94);
-    paint.bezierCurveTo(centerX - x * .64, centerY + y * .95, centerX - x * .92, centerY + y * .65, centerX - x, centerY + 1);
-    paint.closePath();
-    paint.fill();
+  function opening(): { left: number; right: number; top: number } {
+    const depth = 1 + tidal * .6;
+    const breath = reduced.matches ? 0 : (.5 + .5 * Math.sin(breathing * .92)) * depth;
+    const grow = 1 + tidal * GROWTH + emphasis * .06;
+    return {
+      left: Math.min((wordWidth * .5 + 6 + breath * 13) * grow, centerX - 12),
+      right: Math.min(wordWidth * (1.08 + breath * .12) * grow, width - centerX - 12),
+      top: (Math.min(14, wordHeight * .6) + breath * 5) * grow
+    };
   }
 
-  function disk(front: boolean, collapse: number): void {
-    for (const particle of particles) {
-      const depth = ((particle.depth - time * .045) % 1 + 1) % 1;
-      const angle = particle.phase + time * (.21 + particle.depth * .18) + collapse * 1.8;
-      const sine = Math.sin(angle), cosine = Math.cos(angle);
-      if ((sine > 0) !== front) continue;
-      const radius = (wordWidth * .52 + depth * 38) * (1 - emphasis * .1) * (1 - collapse * .8);
-      const x = cosine * radius * (cosine < 0 ? .86 : 1.27);
-      const y = sine * (Math.min(11, wordHeight * .53) + depth * 7) - cosine * radius * .17 + (particle.lane - .5) * (1 + depth * 5);
-      const px = centerX + x, py = centerY + y * (1 - collapse * .7);
-      const edge = Math.max(0, Math.min(1, (width - px) / 12, px / 7));
-      const inside = Math.hypot(x / (x > 0 ? Math.min(wordWidth * .85, width - centerX - 9) : wordWidth * .52), (y + x * .11) / (wordHeight * .58)) < 1;
-      const alpha = edge * (.25 + (1 - depth) * .5) * Math.min(1, depth * 12, (1 - depth) * 9) * (1 - collapse);
-      const colour = INVERTED_COLOURS[particle.colour + (inside ? 0 : PARTICLE_COLOURS.length)];
-      if (particle.size > 1) {
-        const glow = paint.createRadialGradient(px, py, 0, px, py, 3.2);
-        glow.addColorStop(0, `rgba(${colour},${alpha * .5})`);
+  function aperture(): void {
+    const { left: x, right, top: y } = opening();
+    const depth = 1 + tidal * .6;
+    const ripple = reduced.matches ? 0 : (Math.sin(breathing * 1.73) * 1.2 + Math.sin(breathing * 2.63) * .6) * depth;
+    const at = (px: number, py: number): [number, number] => {
+      const toward = (px * leanX + py * leanY) / (Math.hypot(px, py) || 1);
+      const stretch = tidal * LEAN * Math.max(0, toward) ** 2;
+      return [centerX + px + leanX * stretch, centerY + py + leanY * stretch];
+    };
+    paint.beginPath();
+    paint.moveTo(...at(-x, 1));
+    paint.bezierCurveTo(...at(-x * .98, -y * .68 + ripple), ...at(-x * .47, -y * .81), ...at(x * .02, -y));
+    paint.bezierCurveTo(...at(right * .37, -y * 1.6 - ripple), ...at(right * .6, -y * .86), ...at(right, -y * .92 + ripple));
+    paint.bezierCurveTo(...at(right * .73, -y * .26), ...at(right * .88, y * .31), ...at(right * .47, y * .57));
+    paint.bezierCurveTo(...at(x * .69, y * 1.15), ...at(x * .39, y * .71), ...at(-x * .06, y * .94));
+    paint.bezierCurveTo(...at(-x * .64, y * .95), ...at(-x * .92, y * .65), ...at(-x, 1));
+    paint.closePath();
+  }
+
+  function interior(collapse: number): void {
+    const { left, right, top } = opening();
+    for (const star of stars) {
+      const angle = star.angle + time * (.04 + (1.05 - star.distance) * .1) + collapse * 2.4;
+      const distance = star.distance * (1 - collapse * .9);
+      const cosine = Math.cos(angle);
+      const px = centerX + cosine * distance * (cosine < 0 ? left : right) - lookX * PARALLAX * (.3 + star.depth * .7);
+      const py = centerY + Math.sin(angle) * distance * top - lookY * PARALLAX * (.3 + star.depth * .7);
+      const alpha = star.alpha * (1 - collapse * .5);
+      const colour = STAR_COLOURS[star.colour];
+      if (star.size === 1) {
+        const glow = paint.createRadialGradient(px, py, 0, px, py, 2.6);
+        glow.addColorStop(0, `rgba(${colour},${alpha * .45})`);
         glow.addColorStop(1, `rgba(${colour},0)`);
-        paint.fillStyle = glow; paint.fillRect(px - 3.2, py - 3.2, 6.4, 6.4);
+        paint.fillStyle = glow; paint.fillRect(px - 2.6, py - 2.6, 5.2, 5.2);
       }
-      paint.fillStyle = `rgba(${colour},${alpha * (1 + emphasis * .3)})`;
-      paint.beginPath(); paint.arc(px, py, particle.size, 0, TAU); paint.fill();
+      paint.fillStyle = `rgba(${colour},${alpha})`;
+      paint.beginPath(); paint.arc(px, py, star.size, 0, TAU); paint.fill();
     }
   }
 
   function draw(collapse = 0): void {
     paint.clearRect(0, 0, width, height);
-    disk(false, collapse);
-    for (let layer = 5; layer > 0; layer--) {
-      paint.fillStyle = `rgba(247, 242, 233,${.018 + (6 - layer) * .013})`;
-      aperture(1 + layer * .035);
-    }
+    aperture();
     paint.fillStyle = '#fff';
-    aperture(1);
-    disk(true, collapse);
+    paint.fill();
+    paint.save();
+    paint.clip();
+    interior(collapse);
+    paint.restore();
+    aperture();
+    paint.lineJoin = 'round';
+    paint.strokeStyle = `rgba(${RIM},.22)`;
+    paint.lineWidth = 4;
+    paint.stroke();
+    paint.strokeStyle = `rgba(${RIM},.9)`;
+    paint.lineWidth = 1.2;
+    paint.stroke();
   }
 
   function finishPull(): void {
@@ -108,10 +126,17 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   function tick(now: number): void {
     const dt = Math.max(0, Math.min(.05, (now - previous) / 1000));
     const target = hovered || focused ? 1 : 0;
+    const ease = 1 - Math.exp(-dt * 4);
     emphasis += (target - emphasis) * (1 - Math.exp(-dt * 5));
     time += dt * (1 + emphasis * 1.4);
     breathing += dt;
-    visitors.tick(now, documentX - scrollX, documentY - scrollY);
+    const dx = pointer ? pointer.x - (documentX - scrollX) : 0, dy = pointer ? pointer.y - (documentY - scrollY) : 0;
+    const distance = Math.hypot(dx, dy);
+    const proximity = pointer && distance > 0 ? Math.max(0, 1 - distance / REACH) : 0;
+    if (proximity) { leanX = dx / distance; leanY = dy / distance; }
+    tidal += (proximity - tidal) * ease;
+    lookX += ((pointer ? clamp(dx / 400, -1, 1) : 0) - lookX) * ease;
+    lookY += ((pointer ? clamp(dy / 300, -1, 1) : 0) - lookY) * ease;
     if (pull) {
       const progress = Math.max(0, Math.min(1, (now - pull.startedAt) / 320));
       draw(progress * progress);
@@ -127,17 +152,32 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
 
   function sync(): void {
     const running = active && visible && !document.hidden && !reduced.matches;
-    visitors.setActive(running && fine.matches && !pull);
+    if (running && fine.matches && !pull) {
+      document.addEventListener('pointermove', move, { passive: true });
+      document.addEventListener('pointerout', leave);
+    } else {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerout', leave);
+      pointer = undefined;
+    }
     if (!running) {
       cancelAnimationFrame(frame);
       frame = 0;
       finishPull();
-      emphasis = 0;
+      emphasis = tidal = lookX = lookY = 0;
       if (active && width && visible) draw();
     } else if (!frame) {
       previous = performance.now();
       frame = requestAnimationFrame(tick);
     }
+  }
+
+  function move(event: PointerEvent): void {
+    pointer = event.pointerType === 'mouse' ? { x: event.clientX, y: event.clientY } : undefined;
+  }
+
+  function leave(event: PointerEvent): void {
+    if (!event.relatedTarget) pointer = undefined;
   }
 
   button.addEventListener('pointerenter', event => { hovered = fine.matches && event.pointerType === 'mouse'; });
@@ -161,7 +201,6 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
     },
     async pullIn(): Promise<void> {
       if (!frame) return;
-      visitors.setActive(false);
       await new Promise<void>(finish => { pull = { startedAt: performance.now(), finish }; });
     }
   };
