@@ -37,7 +37,6 @@ For dependency changes, verify a fresh `npm ci` and review `npm audit`.
 - `public/assets/`: local images and the locally hosted IBM Plex Sans with its licence.
 - `public/css/policy.css`: shared presentation for the four app policy/terms pages.
 - `tests/`: static hosting paths, policy URLs, progressive enhancement and analytics.
-- `scripts/check-*.mjs`: browser checks run by `npm run test:browser`.
 
 ## Modes
 
@@ -170,18 +169,17 @@ settings, and keep the privacy notice aligned with them.
 Use a `feat/`, `fix/` or `chore/` branch from `master` and preserve unrelated
 changes. Merging and production deployment require user authorization.
 
-For presentation changes, check desktop and narrow mobile layouts with light and
-dark OS preferences, keyboard
-navigation, project links, switching both ways, legacy fancy URLs opening plain,
-reduced motion, pause/resume, and JavaScript or decorative-download failure,
-including the browser console and network. Do not add tests that merely restate
-CSS properties.
+Automated tests cover critical paths only: static hosting paths, policy URLs, the
+document without JavaScript and analytics privacy. Everything else is verified by
+looking at the running page. No test drives the browser.
 
-Run `npm run test:browser` with agent-browser installed and a preview on port 5001
-(or `PREVIEW_URL`). Each script prints what it covered and what still needs a
-real device. For renderer timings, run `scripts/measure-universe.mjs` (against a
-`BASELINE_URL` serving the approved `public/js/space.js`) and
-`scripts/measure-pointer.mjs` on their own, without other browser checks.
+When Jannik wants quick iterations, such as brainstorming, trying ideas or
+prototyping, iterate without running checks or taking screenshots; he looks at the
+running page. Say in one line when you start and when you stop exploring. Exploring
+ends when he wants to keep the result, at the latest when a PR is being prepared.
+
+Before a PR, run `npm run build`, `npm test` and `git diff --check`, and look once at
+plain and fancy mode on desktop and a narrow mobile width.
 
 Pushes to `master` publish `public/` through `.github/workflows/pages.yml`; PRs
 only build and check. Keep actions pinned and deployment permissions restricted.

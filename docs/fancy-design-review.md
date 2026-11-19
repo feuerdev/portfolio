@@ -169,8 +169,7 @@ messages or page errors.
 There were no frame intervals over 25 ms in either renderer. CPU timings cover
 Canvas command submission, not GPU completion or glass-card compositing. These
 are headless Chromium results on the development machine, not phone or Safari
-measurements. Reproduce with `scripts/measure-universe.mjs` and a locally served
-copy of the approved renderer, as described in the README.
+measurements.
 
 3 October 2026: the Safari scroll-smoothing trial passed the build, static tests
 and full browser suite. Discrete-input checks use Chromium with desktop Safari
@@ -218,4 +217,4 @@ and 2560×1440, and a 1.5× canvas backing scale. Inactive p95 CPU render time w
 P95 frame intervals stayed at 16.7–16.8 ms. CPU timing covers Canvas command
 submission, not GPU completion or the live page's glass-card compositing. These
 are development-machine Chromium measurements, not real-phone or cross-browser
-results. The reproducible check is `node scripts/measure-pointer.mjs`.
+results.
