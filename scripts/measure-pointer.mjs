@@ -53,7 +53,7 @@ try {
             wake.y = height * (reading ? .5 : .43) + Math.cos(n * .031) * 180;
             clips = 0;
             const started = performance.now();
-            space.render(context, width, height, 3 + n / 60, .3 + n / 60 * .03, shot, -1, 1, 1, active ? wake : undefined, 1 / 60);
+            space.render(context, width, height, 3 + n / 60, .3 + n / 60 * .03, shot, 1, 1, active ? wake : undefined, 1 / 60);
             const cpu = performance.now() - started;
             if (n >= 0) { values.cpu.push(cpu); values.frames.push(time - previous); values.clips.push(clips); }
             previous = time;

@@ -38,7 +38,7 @@ try {
       const shot = space.overview(reading ? 1.55 : 3.1, reading ? 1.1 : .1, x, reading ? .5 : .43, reading ? .12 : .3);
       sun = { x: width * x, y: height * (reading ? .5 : .43), radius: .2 * Math.min(width, height) * 1.15 / (reading ? 1.55 : 3.1) };
       points = [];
-      (width === 390 ? mobileSpace : space).render(context, width, height, 3, turn, shot, -1, 1, width === 390 && reading ? .25 : 1);
+      (width === 390 ? mobileSpace : space).render(context, width, height, 3, turn, shot, 1, width === 390 && reading ? .25 : 1);
       const visible = points.filter(p => p.x >= 0 && p.y >= 0 && p.x < width && p.y < height);
       return { visible, submitted: points.length, sun, quadrants: [0, 1, 2, 3].map(q => visible.filter(p => (p.x >= width / 2 ? 1 : 0) + (p.y >= height / 2 ? 2 : 0) === q).length) };
     };

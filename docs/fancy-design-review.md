@@ -4,13 +4,13 @@
 announcements, in particular the glowing sun and particle stream on OpenAI's
 [GPT-6.1 Sol](https://openai.com/index/introducing-gpt-6-1-sol/) page, and Anthropic's
 [Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5) page for its full-screen
-opening and numbered contents. Plain mode is unaffected.
+opening. Plain mode is unaffected.
 
 ## Direction
 
 One cinematic scene carries the decoration, and the content stays calm and readable.
-The opening fills the screen with the large name, the introduction, contact links and a
-numbered contents list over the scene. The scene stays behind the whole page, so the
+The opening fills the screen with the large name, the introduction and contact links
+over the scene. The scene stays behind the whole page, so the
 projects share a steady backdrop while reading.
 
 ## Scene
@@ -21,11 +21,8 @@ projects share a steady backdrop while reading.
   edge, and a glare that falls off steeply outside the edge.
 - A sparse, faded star field fills the wider sky around the stream. Tiny dots
   rotate at 12% of the stream's rate, keeping the background quiet while reading.
-- Each of the six projects is a bright knot in the stream. Hovering or focusing a
-  contents entry circles its knot.
-- Fancy project anchors use the browser's native smooth scrolling, preserving
-  hashes, history and focus behavior. Reduced motion jumps immediately. Mode
-  switches and direct project URLs position immediately as well.
+- Each project is a bright knot in the stream.
+- Mode switches and direct project URLs position immediately.
 - Particles swirl in from all around and form the stream after the mode transition.
   The camera follows the pointer.
 - Scrolling the introduction away splits the name apart and performs one zoom,

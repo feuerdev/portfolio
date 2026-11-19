@@ -28,9 +28,9 @@ try {
     const context = canvas.getContext('2d', { willReadFrequently: true });
     const compare = (yaw, pitch, opacity = 1) => {
       const shot = empty.overview(1.55, yaw, .5, .5, pitch);
-      empty.render(context, 600, 600, 0, 0, shot, -1, 1, opacity);
+      empty.render(context, 600, 600, 0, 0, shot, 1, opacity);
       const baseline = context.getImageData(0, 0, 600, 600).data;
-      particle.render(context, 600, 600, 0, 0, shot, -1, 1, opacity);
+      particle.render(context, 600, 600, 0, 0, shot, 1, opacity);
       const actual = context.getImageData(0, 0, 600, 600).data;
       const radius = .2 * 600 * 1.15 / 1.55;
       let inside = 0, outside = 0;

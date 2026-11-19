@@ -32,7 +32,7 @@ try {
     };
     const shot = space.overview(1.55, 0, .5, .5, -.24);
     const render = (wake, elapsed = 0) => {
-      space.render(context, 600, 600, 1, 0, shot, -1, 1, 1, wake, elapsed);
+      space.render(context, 600, 600, 1, 0, shot, 1, 1, wake, elapsed);
       return [...point];
     };
     const baseline = render();

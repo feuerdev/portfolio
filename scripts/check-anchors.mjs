@@ -23,30 +23,12 @@ function openFancy(hash = '') {
   evaluate('document.querySelector("#mode-toggle").click()');
   ready();
 }
-const navigate = () => evaluate(`(async () => {
-  const start = scrollY, frames = [];
-  document.querySelector('.contents a[href="#swift-raytracer"]').click();
-  for (let n = 0; n < 90; n++) { await new Promise(requestAnimationFrame); frames.push(scrollY); }
-  const target = document.querySelector('#swift-raytracer');
-  return { start, frames, hash: location.hash, top: target.getBoundingClientRect().top,
-    margin: parseFloat(getComputedStyle(target).scrollMarginTop) };
-})()`);
 
 try {
   browser('open', base);
   for (const [width, height] of [[1440, 900], [390, 844]]) {
     browser('set', 'viewport', String(width), String(height));
     browser('set', 'media', 'light', 'no-preference');
-    openFancy();
-    const smooth = navigate(), end = smooth.frames.at(-1);
-    assert.equal(smooth.hash, '#swift-raytracer', 'Anchor navigation must retain native URL fragments');
-    assert.ok(smooth.frames.some(y => y > smooth.start + 2 && y < end - 2), 'Anchor links must pass through intermediate scroll positions');
-    assert.ok(Math.abs(smooth.top - smooth.margin) < 2, 'Anchor destinations must respect the project scroll margin');
-    browser('back');
-    browser('wait', '--fn', 'location.hash === ""');
-    assert.equal(evaluate('document.documentElement.classList.contains("fancy")'), true, 'Back must keep the presentation selected in this visit');
-    assert.equal(evaluate('new URL(location.href).searchParams.has("mode")'), false);
-
     openFancy('#split-keyboards');
     const arrival = evaluate(`(async () => {
       const positions = [];
@@ -56,15 +38,10 @@ try {
     })()`);
     assert.equal(new Set(arrival.positions).size, 1, 'Direct project URLs must arrive without a scrolling tail');
     assert.equal(evaluate('location.hash'), '#split-keyboards', 'Activating fancy must preserve the direct link');
-
-    browser('set', 'media', 'dark', 'reduced-motion');
-    openFancy();
-    const reduced = navigate();
-    assert.equal(new Set(reduced.frames).size, 1, 'Reduced motion must jump without scrolling animation');
-    assert.equal(reduced.hash, '#swift-raytracer', 'Reduced motion must still navigate to the project');
+    assert.equal(evaluate('new URL(location.href).searchParams.has("mode")'), false, 'The legacy mode parameter must be removed');
   }
   assert.equal(browser('errors').errors.length, 0, 'Anchor navigation must not cause page errors');
-  console.log('Anchor checks passed: smooth desktop/mobile journeys, hashes, Back, direct URLs and reduced motion.');
+  console.log('Anchor checks passed: direct project URLs in plain and fancy mode on desktop and narrow layouts.');
 } finally {
   browser('close');
 }

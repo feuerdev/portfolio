@@ -35,7 +35,7 @@ try {
     const image = context.drawImage.bind(context);
     context.drawImage = (sprite, x, y, w, h) => { point = [x + w / 2, y + h / 2]; image(sprite, x, y, w, h); };
     const shot = space.overview(1.55, 0, .5, .5, -.24);
-    const render = wake => { space.render(context, 600, 600, 1, 0, shot, -1, 1, 1, wake, 1 / 60); return [...point]; };
+    const render = wake => { space.render(context, 600, 600, 1, 0, shot, 1, 1, wake, 1 / 60); return [...point]; };
     const baseline = render();
     const wake = { fromX: baseline[0] - 70, fromY: baseline[1] - 25, x: baseline[0] + 50, y: baseline[1] - 25, radius: 110 };
     render(wake);

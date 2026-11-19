@@ -55,7 +55,7 @@ try {
               wake.x = centre + Math.sin(n * .027) * 190;
               wake.y = height * (reading ? .5 : .43) + Math.cos(n * .031) * 180;
               const started = performance.now();
-              space.render(context, width, height, 3 + n / 60, .3 + n / 60 * .03, shot, -1, 1, width < 700 && reading ? .25 : 1, width < 700 ? undefined : wake, 1 / 60);
+              space.render(context, width, height, 3 + n / 60, .3 + n / 60 * .03, shot, 1, width < 700 && reading ? .25 : 1, width < 700 ? undefined : wake, 1 / 60);
               if (n >= 0) { cpu.push(performance.now() - started); frames.push(time - previous); }
               previous = time;
             }

@@ -13,7 +13,6 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const heading = hero?.querySelector<HTMLElement>('h1');
   const words = [...(heading?.querySelectorAll<HTMLElement>('span') ?? [])];
   const firstProject = document.querySelector<HTMLElement>('.project');
-  const contents = [...document.querySelectorAll<HTMLElement>('.contents a')];
   const context = canvas?.getContext('2d');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
@@ -24,7 +23,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   const space = createSpace(clamp(innerWidth * innerHeight / (1440 * 900), .45, 1), finePointer.matches);
   let paused = false, frame = 0, scrollFrame = 0, previous = 0, phase = 0;
   let width = 0, height = 0, overviewX = .5, overviewY = .5, readingX = .5, readingY = .5, readingSunOpacity = 1;
-  let exit = 0, zoom = 0, settleAt = 1, lastScroll = scrollY, turn = 0, yaw = 0, drift = 0, highlighted = -1;
+  let exit = 0, zoom = 0, settleAt = 1, lastScroll = scrollY, turn = 0, yaw = 0, drift = 0;
   let targetScroll = scrollY, visualScroll = scrollY, heroExitAt = 1;
   let ready = false, disposed = false, intro = motion.matches ? INTRO : 0;
   let pointerX = 0, pointerY = 0, rotationX = 0, rotationY = 0;
@@ -51,7 +50,7 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   }
   function draw(elapsed = 0, movement?: PointerWake): void {
     if (!context || !width) return;
-    space.render(context, width, height, phase, turn, camera(), highlighted, intro / INTRO,
+    space.render(context, width, height, phase, turn, camera(), intro / INTRO,
       1 + (readingSunOpacity - 1) * ease(zoom), movement, elapsed);
     if (canvas) canvas.style.opacity = String(ease(intro / .8));
   }
@@ -192,10 +191,6 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     if (finePointer.matches) addEventListener('pointermove', pointer, { passive: true });
     resize();
   }
-  function highlight(event: Event): void {
-    highlighted = event.type === 'pointerenter' || event.type === 'focus' ? contents.indexOf(event.currentTarget as HTMLElement) : -1;
-    if (!running()) draw();
-  }
   function toggleMotion(): void { paused = !paused; sync(); }
   const dimensions = new ResizeObserver(resize);
   if (canvas) dimensions.observe(canvas);
@@ -207,7 +202,6 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', sync);
   button?.addEventListener('click', toggleMotion);
-  for (const link of contents) for (const type of ['pointerenter', 'pointerleave', 'focus', 'blur']) link.addEventListener(type, highlight);
   resize();
   sync();
   function cleanup(): void {
@@ -221,7 +215,6 @@ export function start(): { resumeMotion: () => void; cleanup: () => void } {
     document.removeEventListener('visibilitychange', sync);
     motion.removeEventListener('change', sync);
     button?.removeEventListener('click', toggleMotion);
-    for (const link of contents) for (const type of ['pointerenter', 'pointerleave', 'focus', 'blur']) link.removeEventListener(type, highlight);
     resetTitle();
     for (const video of videos) video.pause();
     canvas?.style.removeProperty('opacity');

@@ -117,10 +117,8 @@ including their glow.
 ## Content
 
 Keep the document semantic: native links and buttons, visible keyboard focus and
-a skip link. Plain mode has no section navigation; fancy mode adds a numbered
-project contents list. Anchor navigation in fancy mode scrolls smoothly unless
-reduced motion is requested, while mode switches and direct project links position
-immediately. Preserve native hashes, history and focus.
+a skip link. Neither mode has section navigation. Mode switches and direct
+project links position immediately. Preserve native hashes, history and focus.
 
 Keep copy factual and concise. The introduction is the name, about text, AI
 sentence and contact links, with no masthead, role eyebrow or repeated about or
