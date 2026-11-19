@@ -2,7 +2,7 @@ import { PARTICLE_COLOURS } from './particle-palette.js';
 
 type Teaser = { setActive(value: boolean): void; pullIn(): Promise<void> };
 const PAD_Y = 34, PAD_LEFT = 56, PAD_RIGHT = 110, TAU = Math.PI * 2;
-const REACH = 200, LEAN = 9, GROWTH = .3, PARALLAX = 2;
+const FAR = 420, NEAR = 130, LEAN = 16, GROWTH = .3, SUCK = 4;
 const RIM = '80, 153, 207';
 const STAR_COLOURS = PARTICLE_COLOURS.map(colour => colour.split(',').map(channel => 255 - Number(channel)).join(', '));
 const clamp = (value: number, low: number, high: number) => Math.max(low, Math.min(high, value));
@@ -24,10 +24,10 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   }));
   let active = false, visible = true, hovered = false, focused = false, emphasis = 0;
   let width = 0, height = 0, wordWidth = 0, wordHeight = 0, centerX = 0, centerY = 0;
-  let frame = 0, previous = 0, time = 0, breathing = 0;
+  let frame = 0, previous = 0, time = 0, breathing = 0, tremor = 0;
   let documentX = 0, documentY = 0;
   let pointer: { x: number; y: number } | undefined;
-  let tidal = 0, leanX = 0, leanY = 0, lookX = 0, lookY = 0;
+  let towardX = 0, towardY = 0, violence = 0;
   let pull: { startedAt: number; finish(): void } | undefined;
 
   function measure(): void {
@@ -48,9 +48,9 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   }
 
   function opening(): { left: number; right: number; top: number } {
-    const depth = 1 + tidal * .6;
-    const breath = reduced.matches ? 0 : (.5 + .5 * Math.sin(breathing * .92)) * depth;
-    const grow = 1 + tidal * GROWTH + emphasis * .06;
+    const strength = Math.hypot(towardX, towardY);
+    const breath = reduced.matches ? 0 : (.5 + .5 * Math.sin(breathing * .92)) * (1 + strength * .6);
+    const grow = 1 + strength * GROWTH + emphasis * .06;
     return {
       left: Math.min((wordWidth * .5 + 6 + breath * 13) * grow, centerX - 12),
       right: Math.min(wordWidth * (1.08 + breath * .12) * grow, width - centerX - 12),
@@ -60,11 +60,12 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
 
   function aperture(): void {
     const { left: x, right, top: y } = opening();
-    const depth = 1 + tidal * .6;
-    const ripple = reduced.matches ? 0 : (Math.sin(breathing * 1.73) * 1.2 + Math.sin(breathing * 2.63) * .6) * depth;
+    const strength = Math.hypot(towardX, towardY);
+    const ripple = reduced.matches ? 0 : (Math.sin(tremor * 1.73) * 1.2 + Math.sin(tremor * 2.63) * .6) * (1 + strength * .6 + violence * 2.5);
+    const leanX = strength ? towardX / strength : 0, leanY = strength ? towardY / strength : 0;
     const at = (px: number, py: number): [number, number] => {
-      const toward = (px * leanX + py * leanY) / (Math.hypot(px, py) || 1);
-      const stretch = tidal * LEAN * Math.max(0, toward) ** 2;
+      const facing = (px * leanX + py * leanY) / (Math.hypot(px, py) || 1);
+      const stretch = strength * LEAN * Math.max(0, facing) ** 2;
       return [centerX + px + leanX * stretch, centerY + py + leanY * stretch];
     };
     paint.beginPath();
@@ -83,8 +84,8 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
       const angle = star.angle + time * (.04 + (1.05 - star.distance) * .1) + collapse * 2.4;
       const distance = star.distance * (1 - collapse * .9);
       const cosine = Math.cos(angle);
-      const px = centerX + cosine * distance * (cosine < 0 ? left : right) - lookX * PARALLAX * (.3 + star.depth * .7);
-      const py = centerY + Math.sin(angle) * distance * top - lookY * PARALLAX * (.3 + star.depth * .7);
+      const px = centerX + cosine * distance * (cosine < 0 ? left : right) + towardX * SUCK * (.3 + star.depth * .7);
+      const py = centerY + Math.sin(angle) * distance * top + towardY * SUCK * (.3 + star.depth * .7);
       const alpha = star.alpha * (1 - collapse * .5);
       const colour = STAR_COLOURS[star.colour];
       if (star.size === 1) {
@@ -126,17 +127,19 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
   function tick(now: number): void {
     const dt = Math.max(0, Math.min(.05, (now - previous) / 1000));
     const target = hovered || focused ? 1 : 0;
-    const ease = 1 - Math.exp(-dt * 4);
     emphasis += (target - emphasis) * (1 - Math.exp(-dt * 5));
     time += dt * (1 + emphasis * 1.4);
     breathing += dt;
+    tremor += dt * (1 + violence * 5);
     const dx = pointer ? pointer.x - (documentX - scrollX) : 0, dy = pointer ? pointer.y - (documentY - scrollY) : 0;
-    const distance = Math.hypot(dx, dy);
-    const proximity = pointer && distance > 0 ? Math.max(0, 1 - distance / REACH) : 0;
-    if (proximity) { leanX = dx / distance; leanY = dy / distance; }
-    tidal += (proximity - tidal) * ease;
-    lookX += ((pointer ? clamp(dx / 400, -1, 1) : 0) - lookX) * ease;
-    lookY += ((pointer ? clamp(dy / 300, -1, 1) : 0) - lookY) * ease;
+    const distance = Math.hypot(dx, dy) || 1;
+    const far = pointer ? clamp((FAR - distance) / (FAR - NEAR), 0, 1) : 0;
+    const close = pointer ? clamp(1 - distance / NEAR, 0, 1) : 0;
+    const strength = pointer ? .25 + far * .3 + close * .45 : 0;
+    const follow = 1 - Math.exp(-dt * (.6 + close * 6));
+    towardX += (dx / distance * strength - towardX) * follow;
+    towardY += (dy / distance * strength - towardY) * follow;
+    violence += (close - violence) * (1 - Math.exp(-dt * (close > violence ? 4 : 1.2)));
     if (pull) {
       const progress = Math.max(0, Math.min(1, (now - pull.startedAt) / 320));
       draw(progress * progress);
@@ -164,7 +167,7 @@ export function start(button: HTMLButtonElement): Teaser | undefined {
       cancelAnimationFrame(frame);
       frame = 0;
       finishPull();
-      emphasis = tidal = lookX = lookY = 0;
+      emphasis = towardX = towardY = violence = 0;
       if (active && width && visible) draw();
     } else if (!frame) {
       previous = performance.now();

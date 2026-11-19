@@ -57,8 +57,9 @@ desktop and bottom right on mobile.
 The rift is a torn, breathing black opening with an amber rim and a slowly
 swirling starfield inside it. Nothing is drawn outside the opening. Difference
 blending turns the word white; keep the edge crisp so text crossing it stays
-legible. A fine mouse nearby grows and stretches the opening and shifts the stars
-slightly; a stationary pointer adds no motion. Activation swirls the stars into
+legible. A fine mouse anywhere on the page slowly pulls the opening's edge toward
+it, harder within a few hundred pixels. Close by, the pull is quick, the opening
+grows and its edge trembles. The stars drift toward the mouse. Activation swirls the stars into
 the centre, then starts the reveal from the word. The teaser loads nothing from
 fancy mode, caps its backing resolution at 1.5x, avoids layout reads per frame
 and stays within the viewport. It stops in fancy mode, offscreen, on hidden tabs
