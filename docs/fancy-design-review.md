@@ -59,7 +59,7 @@ projects share a steady backdrop while reading.
 ## Layout and accessibility
 
 - Fancy mode is always dark. A glowing particle field does not work on a light page.
-- Projects are glass cards with the number, linked title, description and artwork.
+- Projects are glass cards with the linked title, description and artwork.
 - Static, authentic screenshots replace the Keep and sponsor placeholder diagrams.
   Keep pairs a real checklist with its recorded MCP call summary; sponsor shows the
   actual extension settings. All projects share a media area up to 400 pixels tall,
